@@ -1,0 +1,553 @@
+fileFormatVersion: 2
+guid: 8531492d136014d4bb7d27afe732081c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7326874168744147815
+    second: ForerunnerFiring_0
+  - first:
+      213: -4390819351745932204
+    second: ForerunnerFiring_1
+  - first:
+      213: 4923415331159665328
+    second: ForerunnerFiring_2
+  - first:
+      213: 7138089496217376506
+    second: ForerunnerFiring_3
+  - first:
+      213: -2947654790686567843
+    second: ForerunnerFiring_4
+  - first:
+      213: -51755972935361971
+    second: ForerunnerFiring_5
+  - first:
+      213: -8251843900422774429
+    second: ForerunnerFiring_6
+  - first:
+      213: 2657335695842255003
+    second: ForerunnerFiring_7
+  - first:
+      213: -6989515251515488078
+    second: ForerunnerFiring_8
+  - first:
+      213: -2019869493611152987
+    second: ForerunnerFiring_9
+  - first:
+      213: -1942403998895216783
+    second: ForerunnerFiring_10
+  - first:
+      213: -8013387955750608631
+    second: ForerunnerFiring_11
+  - first:
+      213: 1060590331896503923
+    second: ForerunnerFiring_12
+  - first:
+      213: 6054131836729565542
+    second: ForerunnerFiring_13
+  - first:
+      213: -4028627430141569053
+    second: ForerunnerFiring_14
+  - first:
+      213: -6370884842688388899
+    second: ForerunnerFiring_15
+  - first:
+      213: 4294828618261053533
+    second: ForerunnerFiring_16
+  - first:
+      213: -2916749543626301418
+    second: ForerunnerFiring_0
+  - first:
+      213: -1715950870820135618
+    second: ForerunnerFiring_1
+  - first:
+      213: 6046708300400171176
+    second: ForerunnerFiring_2
+  - first:
+      213: -4957801865393565257
+    second: ForerunnerFiring_3
+  - first:
+      213: -8965924132450613266
+    second: ForerunnerFiring_4
+  - first:
+      213: 276735229770303935
+    second: ForerunnerFiring_5
+  - first:
+      213: 4769942872852763998
+    second: ForerunnerFiring_6
+  - first:
+      213: 7916761251934222185
+    second: ForerunnerFiring_7
+  - first:
+      213: -6949188017296439622
+    second: ForerunnerFiring_8
+  - first:
+      213: -4819917255244127311
+    second: ForerunnerFiring_9
+  - first:
+      213: -7350389908646159430
+    second: ForerunnerFiring_10
+  - first:
+      213: 2275825590109255383
+    second: ForerunnerFiring_11
+  - first:
+      213: -3873377156004936252
+    second: ForerunnerFiring_12
+  - first:
+      213: 9106333728155520819
+    second: ForerunnerFiring_13
+  - first:
+      213: -6225949677801934828
+    second: ForerunnerFiring_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ForerunnerFiring_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ab605af01568f8f90800000000000000
+      internalID: -6989515251515488078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_9
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 0
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b3e56a1bc63c1db0800000000000000
+      internalID: -2019869493611152987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_10
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 0
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: abb9786725b2ef990800000000000000
+      internalID: -1942403998895216783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_11
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 0
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d6b43df05b559f10800000000000000
+      internalID: -8013387955750608631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_12
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 0
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c58637affffe3ac0800000000000000
+      internalID: 1060590331896503923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_13
+      rect:
+        serializedVersion: 2
+        x: 325
+        y: 0
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 33f4ed04742306e70800000000000000
+      internalID: 6054131836729565542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_14
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 0
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 410782921cbf899a0800000000000000
+      internalID: -4028627430141569053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 17
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6102f516ebf9587d0800000000000000
+      internalID: -7326874168744147815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_1
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 17
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3d5eb446c7bf28e0800000000000000
+      internalID: -4390819351745932204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_2
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 17
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a812c199293ae350800000000000000
+      internalID: 4923415331159665328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_3
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 17
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b192729879523bb0800000000000000
+      internalID: 7138089496217376506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_4
+      rect:
+        serializedVersion: 2
+        x: 260
+        y: 17
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee7cd2a4183a29380800000000000000
+      internalID: -2947654790686567843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_5
+      rect:
+        serializedVersion: 2
+        x: 325
+        y: 17
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb98b4ba93927d300800000000000000
+      internalID: -51755972935361971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_6
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 17
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e559b4745cd323240800000000000000
+      internalID: -8251843900422774429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ForerunnerFiring_7
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 17
+        width: 65
+        height: 17
+      alignment: 9
+      pivot: {x: 0.339, y: 0.35}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 967bd11f96cfddd60800000000000000
+      internalID: 2657335695842255003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      ForerunnerFiring_0: -7326874168744147815
+      ForerunnerFiring_1: -4390819351745932204
+      ForerunnerFiring_10: -1942403998895216783
+      ForerunnerFiring_11: -8013387955750608631
+      ForerunnerFiring_12: 1060590331896503923
+      ForerunnerFiring_13: 6054131836729565542
+      ForerunnerFiring_14: -4028627430141569053
+      ForerunnerFiring_2: 4923415331159665328
+      ForerunnerFiring_3: 7138089496217376506
+      ForerunnerFiring_4: -2947654790686567843
+      ForerunnerFiring_5: -51755972935361971
+      ForerunnerFiring_6: -8251843900422774429
+      ForerunnerFiring_7: 2657335695842255003
+      ForerunnerFiring_8: -6989515251515488078
+      ForerunnerFiring_9: -2019869493611152987
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

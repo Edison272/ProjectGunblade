@@ -1,0 +1,603 @@
+fileFormatVersion: 2
+guid: 9db3aee8d2f6bcf458c5edfdf87fdb22
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2550606314407754957
+    second: Artemis_0
+  - first:
+      213: -5555299935088128282
+    second: Artemis_1
+  - first:
+      213: -1958394000785348664
+    second: Artemis_2
+  - first:
+      213: 8219488294547104111
+    second: Artemis_3
+  - first:
+      213: -2528916240235238736
+    second: Artemis_4
+  - first:
+      213: -6934011340301520234
+    second: Artemis_5
+  - first:
+      213: 5847395165498939548
+    second: Artemis_6
+  - first:
+      213: -1155888401614638045
+    second: Artemis_7
+  - first:
+      213: -3144452501359839355
+    second: Artemis_8
+  - first:
+      213: -6620114128610517924
+    second: Artemis_9
+  - first:
+      213: 4486537217647768842
+    second: Artemis_10
+  - first:
+      213: 1523697965428894629
+    second: Artemis_11
+  - first:
+      213: 3583978682199052869
+    second: Artemis_12
+  - first:
+      213: 6125493657260740844
+    second: Artemis_13
+  - first:
+      213: -266484137676524057
+    second: Artemis_14
+  - first:
+      213: 4443613234639974557
+    second: Artemis_0
+  - first:
+      213: -4768089074043053102
+    second: Artemis_1
+  - first:
+      213: 8704911886846720893
+    second: Artemis_2
+  - first:
+      213: -9139661931376259767
+    second: Artemis_3
+  - first:
+      213: 7863531298897747958
+    second: Artemis_4
+  - first:
+      213: 8265968046265865105
+    second: Artemis_5
+  - first:
+      213: -6006318158895887535
+    second: Artemis_6
+  - first:
+      213: 5811826879591871812
+    second: Artemis_7
+  - first:
+      213: -1574290479872436407
+    second: Artemis_8
+  - first:
+      213: 6679382891298170778
+    second: Artemis_9
+  - first:
+      213: 8994870462253293487
+    second: Artemis_10
+  - first:
+      213: 8184215364331091330
+    second: Artemis_11
+  - first:
+      213: 1717856760399199805
+    second: Artemis_12
+  - first:
+      213: 4360871910450531921
+    second: Artemis_13
+  - first:
+      213: -5677939051318166278
+    second: Artemis_14
+  - first:
+      213: -5205950112037582364
+    second: Artemis_15
+  - first:
+      213: -2138789134827295703
+    second: Artemis_15
+  - first:
+      213: -2504399201140766769
+    second: Artemis_16
+  - first:
+      213: -3673860384740786291
+    second: Artemis_17
+  - first:
+      213: -5384068861199469752
+    second: Artemis_18
+  - first:
+      213: 8503288250119439796
+    second: Artemis_19
+  - first:
+      213: 6756829541078582899
+    second: Artemis_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 9
+  spritePivot: {x: 0.28, y: 0.32}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Artemis_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 120
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d90b0f191b2eaad30800000000000000
+      internalID: 2550606314407754957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_1
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 120
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2db1e34ef3854ddb0800000000000000
+      internalID: -5555299935088128282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_2
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 120
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d7bf2909d3f0ec870800000000000000
+      internalID: -1958394000785348664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94d482db5e5692180800000000000000
+      internalID: 8219488294547104111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_4
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 96
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ff57f6bd00e02d60800000000000000
+      internalID: -2528916240235238736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_5
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 96
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1931862a42e96b270800000000000000
+      internalID: -6934011340301520234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 72
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15b4803157545aca0800000000000000
+      internalID: 5847395165498939548
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_7
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 72
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 445f32e21c1c7a050800000000000000
+      internalID: -1155888401614638045
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_8
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 72
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9479ce5462ff62ae0800000000000000
+      internalID: -3144452501359839355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9726aac95fe1bc50800000000000000
+      internalID: -6620114128610517924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_10
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 48
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fafd24f470334dc70800000000000000
+      internalID: 4486537217647768842
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_11
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 48
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 285bf34138c249170800000000000000
+      internalID: 1523697965428894629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 24
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3ef89a3f9d07d710800000000000000
+      internalID: 3583978682199052869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_13
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 24
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15e026dc5ede48c30800000000000000
+      internalID: 6125493657260740844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 43
+        height: 19
+      alignment: 9
+      pivot: {x: 0.4883721, y: 0.47368422}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: afcbcdd0488e331b0800000000000000
+      internalID: -266484137676524057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Artemis_15
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 0
+        width: 71
+        height: 24
+      alignment: 9
+      pivot: {x: 0.2535211, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92c67291d9e7152e0800000000000000
+      internalID: -5205950112037582364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Artemis_0: 2550606314407754957
+      Artemis_1: -5555299935088128282
+      Artemis_10: 4486537217647768842
+      Artemis_11: 1523697965428894629
+      Artemis_12: 3583978682199052869
+      Artemis_13: 6125493657260740844
+      Artemis_14: -266484137676524057
+      Artemis_15: -5205950112037582364
+      Artemis_2: -1958394000785348664
+      Artemis_3: 8219488294547104111
+      Artemis_4: -2528916240235238736
+      Artemis_5: -6934011340301520234
+      Artemis_6: 5847395165498939548
+      Artemis_7: -1155888401614638045
+      Artemis_8: -3144452501359839355
+      Artemis_9: -6620114128610517924
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

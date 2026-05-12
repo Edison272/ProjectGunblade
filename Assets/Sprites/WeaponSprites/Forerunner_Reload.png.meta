@@ -1,0 +1,1103 @@
+fileFormatVersion: 2
+guid: cbbd0f71699e21548ae324ae5b101938
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6980163732175533432
+    second: Forerunner_Reload_0
+  - first:
+      213: 8106209226372425325
+    second: Forerunner_Reload_1
+  - first:
+      213: -603198173427769527
+    second: Forerunner_Reload_2
+  - first:
+      213: 6115010905470921567
+    second: Forerunner_Reload_3
+  - first:
+      213: -7297309859131986809
+    second: Forerunner_Reload_4
+  - first:
+      213: -735964102364317301
+    second: Forerunner_Reload_5
+  - first:
+      213: 3046358530845552486
+    second: Forerunner_Reload_6
+  - first:
+      213: 5616975858658897201
+    second: Forerunner_Reload_7
+  - first:
+      213: 8763767693859096153
+    second: Forerunner_Reload_8
+  - first:
+      213: -1854598315242643833
+    second: Forerunner_Reload_9
+  - first:
+      213: 9002575233817543378
+    second: Forerunner_Reload_10
+  - first:
+      213: 6996169530472775820
+    second: Forerunner_Reload_11
+  - first:
+      213: -2465777033895900258
+    second: Forerunner_Reload_12
+  - first:
+      213: -7354722345911975028
+    second: Forerunner_Reload_13
+  - first:
+      213: 1256666868178530202
+    second: Forerunner_Reload_14
+  - first:
+      213: 264698866948389491
+    second: Forerunner_Reload_15
+  - first:
+      213: -4232257758599392521
+    second: Forerunner_Reload_16
+  - first:
+      213: 8622364778076065041
+    second: Forerunner_Reload_17
+  - first:
+      213: -1040205999543438000
+    second: Forerunner_Reload_18
+  - first:
+      213: -9033218932115587043
+    second: Forerunner_Reload_19
+  - first:
+      213: -346848505763373592
+    second: Forerunner_Reload_20
+  - first:
+      213: -8682182434200488227
+    second: Forerunner_Reload_21
+  - first:
+      213: 4199737995495250320
+    second: Forerunner_Reload_22
+  - first:
+      213: 5318521653199838794
+    second: Forerunner_Reload_23
+  - first:
+      213: -8395616156806094132
+    second: Forerunner_Reload_24
+  - first:
+      213: 2706619425275043298
+    second: Forerunner_Reload_25
+  - first:
+      213: -2365198936327209664
+    second: Forerunner_Reload_26
+  - first:
+      213: 1259861695487320421
+    second: Forerunner_Reload_27
+  - first:
+      213: 887387959209352129
+    second: Forerunner_Reload_28
+  - first:
+      213: 125286619863858888
+    second: Forerunner_Reload_29
+  - first:
+      213: 3706668969341566850
+    second: Forerunner_Reload_30
+  - first:
+      213: 7518110574078368431
+    second: Forerunner_Reload_31
+  - first:
+      213: -2843135333196410196
+    second: Forerunner_Reload_32
+  - first:
+      213: 5050580781576526301
+    second: Forerunner_Reload_33
+  - first:
+      213: 1422679843721608818
+    second: Forerunner_Reload_34
+  - first:
+      213: 1052772633125062756
+    second: Forerunner_Reload_35
+  - first:
+      213: -5398913154470316527
+    second: Forerunner_Reload_36
+  - first:
+      213: 5714555425811344148
+    second: Forerunner_Reload_37
+  - first:
+      213: 2620489949988660754
+    second: Forerunner_Reload_38
+  - first:
+      213: 2332190741658028912
+    second: Forerunner_Reload_39
+  - first:
+      213: 8344030232066685620
+    second: Forerunner_Reload_40
+  - first:
+      213: -5998831720940721045
+    second: Forerunner_Reload_41
+  - first:
+      213: 3389378779828453413
+    second: Forerunner_Reload_0
+  - first:
+      213: -4618972825943785425
+    second: Forerunner_Reload_1
+  - first:
+      213: 4287386415491605414
+    second: Forerunner_Reload_2
+  - first:
+      213: -1181898891645188190
+    second: Forerunner_Reload_3
+  - first:
+      213: 6251922234576854284
+    second: Forerunner_Reload_4
+  - first:
+      213: 2510695244525748186
+    second: Forerunner_Reload_5
+  - first:
+      213: 8980643032534060059
+    second: Forerunner_Reload_6
+  - first:
+      213: -1486240721060343206
+    second: Forerunner_Reload_7
+  - first:
+      213: 4366530088548615977
+    second: Forerunner_Reload_8
+  - first:
+      213: 3562560486581044698
+    second: Forerunner_Reload_9
+  - first:
+      213: 4543818438490060625
+    second: Forerunner_Reload_10
+  - first:
+      213: -4112258727252213600
+    second: Forerunner_Reload_11
+  - first:
+      213: -5183300837298474121
+    second: Forerunner_Reload_12
+  - first:
+      213: 1083552235639225938
+    second: Forerunner_Reload_13
+  - first:
+      213: 4927812102463839900
+    second: Forerunner_Reload_14
+  - first:
+      213: -4437354872174366579
+    second: Forerunner_Reload_15
+  - first:
+      213: 2109384117344423036
+    second: Forerunner_Reload_16
+  - first:
+      213: -7474291086904652615
+    second: Forerunner_Reload_17
+  - first:
+      213: 2991330577791229512
+    second: Forerunner_Reload_18
+  - first:
+      213: -2727093859202528521
+    second: Forerunner_Reload_19
+  - first:
+      213: 5351136766619067914
+    second: Forerunner_Reload_20
+  - first:
+      213: -6734663069389688181
+    second: Forerunner_Reload_21
+  - first:
+      213: -9139350930865581938
+    second: Forerunner_Reload_22
+  - first:
+      213: -16747205207757842
+    second: Forerunner_Reload_23
+  - first:
+      213: -5801166069165379628
+    second: Forerunner_Reload_24
+  - first:
+      213: -7785633302885315890
+    second: Forerunner_Reload_25
+  - first:
+      213: 7764737304251330752
+    second: Forerunner_Reload_26
+  - first:
+      213: 5469349256474857694
+    second: Forerunner_Reload_27
+  - first:
+      213: -3786025905408600172
+    second: Forerunner_Reload_28
+  - first:
+      213: -1304279279572589648
+    second: Forerunner_Reload_29
+  - first:
+      213: 5610765144111301115
+    second: Forerunner_Reload_30
+  - first:
+      213: -5293335887640338070
+    second: Forerunner_Reload_31
+  - first:
+      213: 5563393303900566367
+    second: Forerunner_Reload_32
+  - first:
+      213: 5738605882905776437
+    second: Forerunner_Reload_33
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Forerunner_Reload_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 63
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5200ce4ea0e790f20800000000000000
+      internalID: -6980163732175533432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_1
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 63
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f20407aefac16efb0800000000000000
+      internalID: 8106209226372425325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_2
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 63
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a36636ba3bdf7b30800000000000000
+      internalID: -603198173427769527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_3
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 63
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a78f03583d099fe0800000000000000
+      internalID: 6115010905470921567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_4
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 63
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0dd153f52a43c650800000000000000
+      internalID: -7297309859131986809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_5
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 63
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: adf383dc508c7d220800000000000000
+      internalID: -735964102364317301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_6
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 63
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1c87c0b147a1ac70800000000000000
+      internalID: 3046358530845552486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_7
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a525a7a40ffcf5be0800000000000000
+      internalID: 5616975858658897201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_8
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 927cefc0bf7099c30800000000000000
+      internalID: 8763767693859096153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_9
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ad5818523e1c07130800000000000000
+      internalID: -1854598315242643833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_10
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 157f11eabc2ee0f30800000000000000
+      internalID: 9002575233817543378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_11
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a0c1a9a9725ee6c0800000000000000
+      internalID: 6996169530472775820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_12
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 773f6dcc9573118b0800000000000000
+      internalID: -2465777033895900258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_13
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 25e3bd4740d890f00800000000000000
+      internalID: -7354722345911975028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_14
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9e5a3f9ffa136440800000000000000
+      internalID: 1256666868178530202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_15
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d80b2bdf0495b62c0800000000000000
+      internalID: 264698866948389491
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_16
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c7c4a21cda9064d10800000000000000
+      internalID: -4232257758599392521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_17
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 42
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9bc0e216bdbf54890800000000000000
+      internalID: 8622364778076065041
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84e920fcf47538920800000000000000
+      internalID: -1040205999543438000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_19
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7fa8515759a672ad0800000000000000
+      internalID: -9033218932115587043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_20
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a06acd6a98e034a40800000000000000
+      internalID: -346848505763373592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_21
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b82f513ce9ba982a0800000000000000
+      internalID: -8682182434200488227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_22
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e801f1030c08a2180800000000000000
+      internalID: 4199737995495250320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_23
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eeb6c9e618084cff0800000000000000
+      internalID: 5318521653199838794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_24
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4df295c223e1e7fa0800000000000000
+      internalID: -8395616156806094132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_25
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ecac116d2cfd3f390800000000000000
+      internalID: 2706619425275043298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_26
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c0ff1a5073e1cb60800000000000000
+      internalID: -2365198936327209664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_27
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 21
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed01bb0cb2807eb40800000000000000
+      internalID: 1259861695487320421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49791bd8f75557bc0800000000000000
+      internalID: 887387959209352129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_29
+      rect:
+        serializedVersion: 2
+        x: 43
+        y: 0
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b36c25d7e446ede0800000000000000
+      internalID: 125286619863858888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_30
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 0
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bf1c5e4eb217ddd40800000000000000
+      internalID: 3706668969341566850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_31
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 0
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a61ee543e0b4a86b0800000000000000
+      internalID: 7518110574078368431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_32
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 0
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f53b7c8dbb4253d40800000000000000
+      internalID: -2843135333196410196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Forerunner_Reload_33
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 0
+        width: 43
+        height: 21
+      alignment: 9
+      pivot: {x: 0.35, y: 0.475}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 531d09465af93af40800000000000000
+      internalID: 5050580781576526301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Forerunner_Reload_0: -6980163732175533432
+      Forerunner_Reload_1: 8106209226372425325
+      Forerunner_Reload_10: 9002575233817543378
+      Forerunner_Reload_11: 6996169530472775820
+      Forerunner_Reload_12: -2465777033895900258
+      Forerunner_Reload_13: -7354722345911975028
+      Forerunner_Reload_14: 1256666868178530202
+      Forerunner_Reload_15: 264698866948389491
+      Forerunner_Reload_16: -4232257758599392521
+      Forerunner_Reload_17: 8622364778076065041
+      Forerunner_Reload_18: -1040205999543438000
+      Forerunner_Reload_19: -9033218932115587043
+      Forerunner_Reload_2: -603198173427769527
+      Forerunner_Reload_20: -346848505763373592
+      Forerunner_Reload_21: -8682182434200488227
+      Forerunner_Reload_22: 4199737995495250320
+      Forerunner_Reload_23: 5318521653199838794
+      Forerunner_Reload_24: -8395616156806094132
+      Forerunner_Reload_25: 2706619425275043298
+      Forerunner_Reload_26: -2365198936327209664
+      Forerunner_Reload_27: 1259861695487320421
+      Forerunner_Reload_28: 887387959209352129
+      Forerunner_Reload_29: 125286619863858888
+      Forerunner_Reload_3: 6115010905470921567
+      Forerunner_Reload_30: 3706668969341566850
+      Forerunner_Reload_31: 7518110574078368431
+      Forerunner_Reload_32: -2843135333196410196
+      Forerunner_Reload_33: 5050580781576526301
+      Forerunner_Reload_4: -7297309859131986809
+      Forerunner_Reload_5: -735964102364317301
+      Forerunner_Reload_6: 3046358530845552486
+      Forerunner_Reload_7: 5616975858658897201
+      Forerunner_Reload_8: 8763767693859096153
+      Forerunner_Reload_9: -1854598315242643833
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

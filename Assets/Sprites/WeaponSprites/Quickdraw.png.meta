@@ -1,0 +1,634 @@
+fileFormatVersion: 2
+guid: b44795c4e00e3634db4d2cd1df71a64f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5236377112281480220
+    second: Quickdraw_0
+  - first:
+      213: -5898048793123232481
+    second: Quickdraw_1
+  - first:
+      213: 5345876322413956263
+    second: Quickdraw_2
+  - first:
+      213: -6947891473373905896
+    second: Quickdraw_3
+  - first:
+      213: -6145384336851251412
+    second: Quickdraw_4
+  - first:
+      213: -4727179605214153661
+    second: Quickdraw_5
+  - first:
+      213: -3112886276609326601
+    second: Quickdraw_6
+  - first:
+      213: 3382487511145298125
+    second: Quickdraw_7
+  - first:
+      213: -2842577011446378302
+    second: Quickdraw_8
+  - first:
+      213: 4672374665886483524
+    second: Quickdraw_9
+  - first:
+      213: 6784978971642226654
+    second: Quickdraw_10
+  - first:
+      213: 2127977208574794529
+    second: Quickdraw_11
+  - first:
+      213: -2110607562630409976
+    second: Quickdraw_12
+  - first:
+      213: 3301299375025970162
+    second: Quickdraw_13
+  - first:
+      213: -2744476159458710197
+    second: Quickdraw_14
+  - first:
+      213: 8642298441483728795
+    second: Quickdraw_15
+  - first:
+      213: -471590602416367953
+    second: Quickdraw_16
+  - first:
+      213: -2383150137413050489
+    second: Quickdraw_17
+  - first:
+      213: 4721099991649270000
+    second: Quickdraw_18
+  - first:
+      213: -8382015258069936265
+    second: Quickdraw_0
+  - first:
+      213: 1563823575550409326
+    second: Quickdraw_1
+  - first:
+      213: 4394157337256372179
+    second: Quickdraw_2
+  - first:
+      213: -5808160020822737441
+    second: Quickdraw_3
+  - first:
+      213: 8199363459186304848
+    second: Quickdraw_4
+  - first:
+      213: 9161492109400463640
+    second: Quickdraw_5
+  - first:
+      213: 6856213982752010391
+    second: Quickdraw_6
+  - first:
+      213: 3595852303988966345
+    second: Quickdraw_7
+  - first:
+      213: -5502112003773944110
+    second: Quickdraw_8
+  - first:
+      213: 3440185330426907830
+    second: Quickdraw_9
+  - first:
+      213: -1048988143670051525
+    second: Quickdraw_10
+  - first:
+      213: -6335310486491597563
+    second: Quickdraw_11
+  - first:
+      213: 3999960520529395332
+    second: Quickdraw_12
+  - first:
+      213: 7793341145423957475
+    second: Quickdraw_13
+  - first:
+      213: 6685151103317902357
+    second: Quickdraw_14
+  - first:
+      213: 2897339623468600987
+    second: Quickdraw_15
+  - first:
+      213: 6557272553580248068
+    second: Quickdraw_16
+  - first:
+      213: -420535195132397804
+    second: Quickdraw_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Quickdraw_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 70
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77756d858891dab80800000000000000
+      internalID: -5236377112281480220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_1
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 70
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6a3018a141d3b510800000000000000
+      internalID: -5898048793123232481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_2
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 70
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d7a75621de2bfc30800000000000000
+      internalID: 5345876322413956263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 56
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fdd3c38eb35456fa0800000000000000
+      internalID: -6947891473373905896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_4
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 56
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0572e11cf9df9c170800000000000000
+      internalID: -6145384336851251412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_5
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 56
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 819db59a888242f70800000000000000
+      internalID: -4727179605214153661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 42
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 790fff1aa4a262f50800000000000000
+      internalID: -3112886276609326601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_7
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 42
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c3480c6e9807e130800000000000000
+      internalID: 3382487511145298125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_8
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 42
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2de24a4b84294a3b0800000000000000
+      internalID: -2842577011446378302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 28
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.335, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6bc0b95c45efdbf20800000000000000
+      internalID: 4672374665886483524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_10
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 28
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.335, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3d33f257de3171f0800000000000000
+      internalID: 6784978971642226654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_11
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 28
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.335, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5057cdeada47418a0800000000000000
+      internalID: 2127977208574794529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 14
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.335, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48ebdb596e6b28730800000000000000
+      internalID: -2110607562630409976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_13
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 14
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.335, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ed4e6a1b72872c60800000000000000
+      internalID: 3301299375025970162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_14
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 14
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.335, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 514031f428d66cc50800000000000000
+      internalID: -2744476159458710197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.335, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9e828a690b653820800000000000000
+      internalID: 8642298441483728795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_16
+      rect:
+        serializedVersion: 2
+        x: 45
+        y: 0
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.335, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40cb19345ac100b50800000000000000
+      internalID: -471590602416367953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quickdraw_17
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 0
+        width: 45
+        height: 14
+      alignment: 9
+      pivot: {x: 0.335, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4177596d775f92af0800000000000000
+      internalID: -2383150137413050489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Quickdraw_0: -5236377112281480220
+      Quickdraw_1: -5898048793123232481
+      Quickdraw_10: 6784978971642226654
+      Quickdraw_11: 2127977208574794529
+      Quickdraw_12: -2110607562630409976
+      Quickdraw_13: 3301299375025970162
+      Quickdraw_14: -2744476159458710197
+      Quickdraw_15: 8642298441483728795
+      Quickdraw_16: -471590602416367953
+      Quickdraw_17: -2383150137413050489
+      Quickdraw_2: 5345876322413956263
+      Quickdraw_3: -6947891473373905896
+      Quickdraw_4: -6145384336851251412
+      Quickdraw_5: -4727179605214153661
+      Quickdraw_6: -3112886276609326601
+      Quickdraw_7: 3382487511145298125
+      Quickdraw_8: -2842577011446378302
+      Quickdraw_9: 4672374665886483524
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,573 @@
+fileFormatVersion: 2
+guid: 09dae1df29e11834dbc1d87375abcc9d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6470103475252679996
+    second: BreachGun_0
+  - first:
+      213: 5269204889446716881
+    second: BreachGun_1
+  - first:
+      213: 6019278333940569111
+    second: BreachGun_2
+  - first:
+      213: -1942759971207620520
+    second: BreachGun_3
+  - first:
+      213: -4641006455610445417
+    second: BreachGun_4
+  - first:
+      213: 8047766706012816318
+    second: BreachGun_5
+  - first:
+      213: 2173280949545269757
+    second: BreachGun_6
+  - first:
+      213: -3266809601108021979
+    second: BreachGun_7
+  - first:
+      213: -3480120878177114130
+    second: BreachGun_8
+  - first:
+      213: 6578826838201812728
+    second: BreachGun_9
+  - first:
+      213: 5836110812670333579
+    second: BreachGun_10
+  - first:
+      213: -4481955964845780278
+    second: BreachGun_11
+  - first:
+      213: 2999754346690290070
+    second: BreachGun_12
+  - first:
+      213: 8124512129372133153
+    second: BreachGun_13
+  - first:
+      213: -8509216581191627632
+    second: BreachGun_14
+  - first:
+      213: 8379301878133038634
+    second: BreachGun_0
+  - first:
+      213: -7564756865897718495
+    second: BreachGun_1
+  - first:
+      213: 489158289127685866
+    second: BreachGun_2
+  - first:
+      213: -1489848665937190864
+    second: BreachGun_3
+  - first:
+      213: -2981255038508496064
+    second: BreachGun_4
+  - first:
+      213: -4725035432202471733
+    second: BreachGun_5
+  - first:
+      213: 4528022798331719784
+    second: BreachGun_6
+  - first:
+      213: -8608612024316859810
+    second: BreachGun_7
+  - first:
+      213: 1436327649550797115
+    second: BreachGun_8
+  - first:
+      213: 8443719269563883674
+    second: BreachGun_9
+  - first:
+      213: 5821492600594108822
+    second: BreachGun_10
+  - first:
+      213: 313733415858588307
+    second: BreachGun_11
+  - first:
+      213: 747949467850718959
+    second: BreachGun_12
+  - first:
+      213: 5006546627881696208
+    second: BreachGun_13
+  - first:
+      213: -2062405514698404109
+    second: BreachGun_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 1
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BreachGun_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 133
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2e12e7a9a2494470800000000000000
+      internalID: 6470103475252679996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_1
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 133
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12d18f3d5b5940790800000000000000
+      internalID: 5269204889446716881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 114
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aeeb46e4fd6d9c600800000000000000
+      internalID: 6019278333940569111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_3
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 114
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03069b9288ef25be0800000000000000
+      internalID: -1942759971207620520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 95
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04b8bdc765470a6d0800000000000000
+      internalID: -4641006455610445417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_5
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 95
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc6ff680f4d4d6eb0800000000000000
+      internalID: 8047766706012816318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 76
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 860be6d9eb4c6de30800000000000000
+      internalID: 2173280949545269757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_7
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 76
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5aef6969f0188880800000000000000
+      internalID: -3266809601108021979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 57
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b390c84236cdee310800000000000000
+      internalID: -3480120878177114130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_9
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 57
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a90e97d50fd1e2570800000000000000
+      internalID: 6578826838201812728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 38
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6911af83da81ac050800000000000000
+      internalID: 5836110812670333579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_11
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 38
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39acb6621ea9a5400800000000000000
+      internalID: -4481955964845780278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 19
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fee3f250410416a00800000000000000
+      internalID: 2999754346690290070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_13
+      rect:
+        serializedVersion: 2
+        x: 57
+        y: 19
+        width: 34
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0db715ad1a3da7540800000000000000
+      internalID: 8124512129372133153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BreachGun_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 55
+        height: 19
+      alignment: 9
+      pivot: {x: 0.1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3fe48998c1dd063e0800000000000000
+      internalID: -8509216581191627632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      BreachGun_0: 6470103475252679996
+      BreachGun_1: 5269204889446716881
+      BreachGun_10: 5836110812670333579
+      BreachGun_11: -4481955964845780278
+      BreachGun_12: 2999754346690290070
+      BreachGun_13: 8124512129372133153
+      BreachGun_14: -8509216581191627632
+      BreachGun_2: 6019278333940569111
+      BreachGun_3: -1942759971207620520
+      BreachGun_4: -4641006455610445417
+      BreachGun_5: 8047766706012816318
+      BreachGun_6: 2173280949545269757
+      BreachGun_7: -3266809601108021979
+      BreachGun_8: -3480120878177114130
+      BreachGun_9: 6578826838201812728
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
