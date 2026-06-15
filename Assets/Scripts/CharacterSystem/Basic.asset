@@ -17,7 +17,7 @@ MonoBehaviour:
   description: bleh
   health: 100
   spawn_shield: 0
-  speed: 10
+  speed: 150
   accel_time: 0.5
   range: 4
   close_range: 3

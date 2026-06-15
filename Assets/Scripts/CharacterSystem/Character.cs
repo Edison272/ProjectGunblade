@@ -213,6 +213,7 @@ public class Character : MonoBehaviour, IMovement
     public void ConnectPlayer(PlayerController player_controller)
     {
         player_controller.player_movement.started += StartMove;
+        player_controller.player_movement.performed += StartMove;
         player_controller.player_movement.canceled += StopMove;
     }
 
