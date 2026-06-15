@@ -105,78 +105,26 @@ public class MovementComponent
         //     }
         //     move_speed = base_move_speed * net_speed_modifier;
         // }
+
+        if (move_dir.sqrMagnitude > 0)
+        {
+            entity_rb.AddForce(move_dir * move_speed, ForceMode2D.Force);
+        }
+        
     }
     #endregion
 
     #region Core
+    // get normalized input direction, movement component starts moving!
     public void StartMove(Vector2 move_dir)
     {
-        
+        this.move_dir = move_dir;
     }
-    public bool Move(bool current_move_state) 
+
+    // resets internal movement data
+    public void StopMove()
     {
-        bool set_is_moving = current_move_state;
-        // if under the affect of knocknack, dash, etc, input movement only slightly influences movement
-        if (force_move_time == 1)
-        {
-            // move against knockback
-            if (move_dir != Vector2.zero)
-            {
-                curr_speed = Accelerate();
-                entity_rb.AddForce(move_dir * curr_speed, ForceMode2D.Impulse);
-                set_is_moving = true;
-            }
-            // stop knockback & movement after velocity is low enough
-            if (entity_rb.linearVelocity.sqrMagnitude - move_dir.sqrMagnitude <= 0.1f)
-            {
-                force_move_time = 0;
-                entity_rb.linearVelocity = Vector2.zero;
-            }
-        } 
-        // standard movement. Keep moving if you're too far from your target position (1st conditional), or forcibly stopped (2nd conditional)
-        else if ((move_pos - GetPosition()).sqrMagnitude > 0.01f && !destination_reached)
-        {
-            curr_speed = Accelerate();
-
-            // // control speed for smooth destination arrival
-            // float speed_rate = (move_pos - GetPosition()).magnitude/curr_speed;
-            // if (speed_rate < 1)
-            // {
-            //     curr_speed *= speed_rate;
-            // }
-
-            lerp_move_pos = Vector2.Lerp(lerp_move_pos, move_pos, Mathf.Max(0.5f, 0.1f + max_accel_time/(curr_accel_time+0.001f)));
-            
-            // movement
-            set_is_moving = true;
-            Vector2 move_toward = Vector2.MoveTowards(GetPosition(), lerp_move_pos, Time.fixedDeltaTime * curr_speed);
-            entity_rb.MovePosition(move_toward);
-        } 
-        else if (move_dir != Vector2.zero)
-        {
-            set_is_moving = false;
-        }
-
-        if (!set_is_moving)
-        {
-            StopMove(false);
-        }
-        return set_is_moving;
-    }
-    public void StopMove(bool is_AI_active)
-    {
-        // add some drift if the player was running for too long at top speed
-        if (!is_AI_active && curr_accel_time > max_accel_time * 0.5f)
-        {
-            ForceMove(move_dir, base_move_speed * (curr_accel_time/(max_accel_time + 0.001f)), true);
-        }
-        curr_accel_time = 0;
-
-        // stop movement
-        destination_reached = true;
-        last_move_dir = move_dir;
-        move_dir = Vector2.zero;
-        move_pos = GetPosition();
+        this.move_dir = Vector2.zero;
     }
     private float Accelerate(float modifier = 1f)
     {

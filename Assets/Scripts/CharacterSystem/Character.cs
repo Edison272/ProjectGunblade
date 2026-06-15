@@ -179,7 +179,7 @@ public class Character : MonoBehaviour, IMovement
         //EquipActive(0);
         // equip items
         // SetSwitchItem();
-        // SetAimStyle(alt_item);
+        SetAimStyle(true);
         // initialize default look position
         aim_dir = SingleWeaponRestPosition;
         Look(entity_rb.position + aim_dir);
@@ -262,7 +262,7 @@ public class Character : MonoBehaviour, IMovement
         // }
 
         // update ui helpers
-        health_ui.UpdateHealthUI();
+        //health_ui.UpdateHealthUI();
 
         // update vfx at the very end
         UpdateBodyVFX();
@@ -285,11 +285,11 @@ public class Character : MonoBehaviour, IMovement
 
     protected virtual void LateUpdate()
     {
-        if (!is_alive)
-        {
-            OnDeath(this);
-            Destroy(this.gameObject);
-        }
+        // if (!is_alive)
+        // {
+        //     OnDeath(this);
+        //     Destroy(this.gameObject);
+        // }
     }
     #endregion
 
@@ -398,22 +398,15 @@ public class Character : MonoBehaviour, IMovement
     public void SetMovePos(Vector2 set_move_pos) {movement_component.SetMovePos(set_move_pos);}
     public void Move() 
     {
-        bool move_state = animator.GetBool("Moving");
-        move_state = movement_component.Move(move_state);
-        animator.SetBool("Moving", move_state);
+        // bool move_state = animator.GetBool("Moving");
+        // move_state = movement_component.Move(move_state);
+        // animator.SetBool("Moving", move_state);
     }
-    public void StartMove(InputAction.CallbackContext context) {
-        Debug.Log("start move ");
-        //movement_component.SetPosition(context.ReadValue<Vector2>());
-    }
-    public void StopMove(InputAction.CallbackContext context) {
-        Debug.Log("stoop");
-    }
-    public void StopMove()
-    {
-        movement_component.StopMove(true);
-        animator.SetBool("Moving", false);
-    }
+    public void StartMove(InputAction.CallbackContext context) {movement_component.StartMove(context.ReadValue<Vector2>());}
+    public void StartMove(Vector2 move_dir) {movement_component.StartMove(move_dir);}
+    public void StopMove(InputAction.CallbackContext context) {movement_component.StopMove();}
+    public void StopMove() {movement_component.StopMove();}
+
     // return how long it is expected to take for the operator to reach their position
     public float GetTravelTime() {return movement_component.GetTravelTime();}
     public void ForceMove(Vector2 direction, float scalar, bool movement_override = false)
@@ -689,7 +682,7 @@ public class Character : MonoBehaviour, IMovement
 
     public void UpdateBodyVFX()
     {
-        body_outline.GetComponent<SpriteRenderer>().sprite = body_sprite.GetComponent<SpriteRenderer>().sprite;
+        //body_outline.GetComponent<SpriteRenderer>().sprite = body_sprite.GetComponent<SpriteRenderer>().sprite;
         float curr_sprite_height = body_sprite.GetComponent<SpriteRenderer>().bounds.size.y;
         head.transform.localPosition = new Vector3(0, base_head_height * curr_sprite_height/base_sprite_height, 0);
     }
