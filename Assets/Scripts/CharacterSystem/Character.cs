@@ -282,6 +282,7 @@ public class Character : MonoBehaviour, IMovement
         // {
         //     behavior_controller.UpdateAI();
         // }
+        movement_component.FixedUpdateMovement();
     }
 
     protected virtual void LateUpdate()

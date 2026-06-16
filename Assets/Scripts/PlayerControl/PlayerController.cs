@@ -16,6 +16,11 @@ public class PlayerController : MonoBehaviour
     public InputAction player_use_alt {get; private set;}
     public InputAction player_interact {get; private set;}
 
+    // Camera Control
+    [SerializeField] CinemachineCamera main_cinema_cam;
+    [SerializeField] Camera main_cam;
+
+
 
     // temporary. testing for player input
     public Character active_character;
@@ -35,7 +40,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        active_character?.ConnectPlayer(this);
+        SetPlayerCharacter(active_character);
     }
 
     // update the accel values on input
@@ -56,5 +61,20 @@ public class PlayerController : MonoBehaviour
 
     void OnInteract(InputAction.CallbackContext context)
     {
+    }
+
+    // get player control
+    void SetPlayerCharacter(Character set_character)
+    {
+        active_character?.ConnectPlayer(this);
+
+        // set camera target
+        main_cinema_cam.Target.TrackingTarget = active_character.transform;
+    }
+
+    void Update()
+    {
+        Vector2 mouseScreenPos = main_cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        active_character.Look(mouseScreenPos);
     }
 }

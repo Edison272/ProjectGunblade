@@ -82,6 +82,14 @@ public class MovementComponent
     #endregion
     #region Update
     // Called by the controlling character or whoever. Updates speed modifiers, and physics data
+
+    public void FixedUpdateMovement()
+    {
+        if (move_dir.sqrMagnitude > 0)
+        {
+            entity_rb.AddForce(move_dir * move_speed, ForceMode2D.Force);
+        }
+    }
     public void UpdateMovement()
     {
         // if (move_speed_modifiers.Count > 0)
@@ -105,11 +113,6 @@ public class MovementComponent
         //     }
         //     move_speed = base_move_speed * net_speed_modifier;
         // }
-
-        if (move_dir.sqrMagnitude > 0)
-        {
-            entity_rb.AddForce(move_dir * move_speed, ForceMode2D.Force);
-        }
         
     }
     #endregion
