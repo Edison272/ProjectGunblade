@@ -19,7 +19,7 @@ public class Character : MonoBehaviour, IMovement
     public Transform body;
     public Transform body_sprite;
     public Transform body_outline;
-    public Transform main_hand; //always set to main hand object
+    public Transform main_hand; //always set to main hand object 
     public Transform alt_hand; //always set to off hand object
     public Transform head;
     public Transform front_particles;
@@ -56,11 +56,6 @@ public class Character : MonoBehaviour, IMovement
     public Vector2 force_dir => movement_component.force_dir;
     public Rigidbody2D entity_rb {get; private set;}
     public Vector2Int current_tile_pos = Vector2Int.zero;
-
-    [Header("Acceleration")]
-    public float curr_speed => movement_component.curr_speed;
-    public float curr_accel_time => movement_component.curr_accel_time;
-    public float max_accel_time => movement_component.max_accel_time; // amount of time operator needs to get to top move speed
 
     [field: Header("Health Stuff")]
     [field: SerializeField] public HealthComponent health_component {get; private set;}
@@ -139,7 +134,7 @@ public class Character : MonoBehaviour, IMovement
         health_ui.InitializeHealthUI(health_component);
 
         // setup movement
-        movement_component = new MovementComponent(base_data.speed, base_data.accel_time, entity_rb);
+        movement_component = new MovementComponent(base_data, entity_rb);
         
         // // setup inventory
         // Item[] init_inventory = new Item[base_data.inventory.Length];
@@ -212,9 +207,8 @@ public class Character : MonoBehaviour, IMovement
 
     public void ConnectPlayer(PlayerController player_controller)
     {
-        player_controller.player_movement.started += StartMove;
-        player_controller.player_movement.performed += StartMove;
-        player_controller.player_movement.canceled += StopMove;
+        player_controller.OnMoveStart += StartMove;
+        player_controller.OnMoveEnd += StopMove;
     }
 
     public void DisconnectPlayer(PlayerController player_controller)
@@ -239,6 +233,8 @@ public class Character : MonoBehaviour, IMovement
         // Update health
         health_component.UpdateHealth();
         movement_component.UpdateMovement();
+        animator.SetBool("Moving", entity_rb.linearVelocity.sqrMagnitude > 0.1f);
+        animator.speed = movement_component.speed_scale;
 
         // // set switch item time duration
         // if (curr_switch_cd > 0)
@@ -404,9 +400,7 @@ public class Character : MonoBehaviour, IMovement
         // move_state = movement_component.Move(move_state);
         // animator.SetBool("Moving", move_state);
     }
-    public void StartMove(InputAction.CallbackContext context) {movement_component.StartMove(context.ReadValue<Vector2>());}
     public void StartMove(Vector2 move_dir) {movement_component.StartMove(move_dir);}
-    public void StopMove(InputAction.CallbackContext context) {movement_component.StopMove();}
     public void StopMove() {movement_component.StopMove();}
 
     // return how long it is expected to take for the operator to reach their position

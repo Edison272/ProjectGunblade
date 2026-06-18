@@ -9,7 +9,8 @@ public class MovementComponent
 {
     [field: Header("Base Data")]
     public readonly float base_move_speed;
-    public readonly float base_accel_time;
+    public readonly float base_mass;
+    public readonly float base_lin_damp;
     [field: Header("Movement")]
     [field: SerializeField] public float move_speed {get; private set;} = 1; // maximum speed an operator can move at
     public Vector2 move_dir {get; private set;} = Vector2.zero;
@@ -22,30 +23,29 @@ public class MovementComponent
     public float force_move_time {get; private set;}
     public Vector2Int current_tile_pos = Vector2Int.zero;
 
-    [field: Header("Acceleration")]
-    public float curr_speed {get; private set;} = 0; // how fast operator is currently moving at
-    public float curr_accel_time {get; private set;} = 0;
-    public float max_accel_time; // amount of time operator needs to get to top move speed
-
     [field: Header("Stat Changes")]
     public List<SpeedModifier> move_speed_modifiers = new List<SpeedModifier>();
 
+    // speed data scalar
+    [field: SerializeField] public float speed_scale {get; private set;} = 1; // maximum speed an operator can move at
+    [field: SerializeField] public float weight_scale {get; private set;} = 1; // maximum speed an operator can move at
+
     #region Constructor
-    public MovementComponent(float base_move_speed, float max_accel_time, Rigidbody2D entity_rb)
+    public MovementComponent(CharacterSO character_data, Rigidbody2D entity_rb)
     {
-        this.base_move_speed = base_move_speed;
-        this.move_speed = base_move_speed;
-        this.base_accel_time = max_accel_time;
-        this.max_accel_time = max_accel_time;
         this.entity_rb = entity_rb;
+        base_move_speed = character_data.speed;
+        base_mass = character_data.mass;
+        move_speed = base_move_speed;
+        entity_rb.mass = base_mass;
+        base_lin_damp = entity_rb.linearDamping;
+
+        // set rb stats
+        entity_rb.mass = character_data.mass;
     }
     public void ResetMovementComponent()
     {
         move_speed = base_move_speed;
-        max_accel_time = base_accel_time;
-        curr_speed = 0;
-        curr_accel_time = 0;
-
         move_dir = Vector2.zero;
         move_pos = Vector2.zero;
         destination_reached = true;
@@ -67,7 +67,6 @@ public class MovementComponent
     {
         last_move_dir = move_dir;
         destination_reached = false;
-        curr_accel_time *= Vector2.Dot(last_move_dir, move_dir);
         move_dir = set_move_dir.normalized;
         move_pos = GetPosition() + move_dir * 1000;
     }
@@ -75,7 +74,6 @@ public class MovementComponent
     {
         last_move_dir = move_dir;
         destination_reached = false;
-        curr_accel_time *= Vector2.Dot(last_move_dir, move_dir);
         move_dir = (set_move_pos - GetPosition()).normalized;
         move_pos = set_move_pos;
     }
@@ -92,6 +90,10 @@ public class MovementComponent
     }
     public void UpdateMovement()
     {
+        entity_rb.mass = base_mass * weight_scale;
+        entity_rb.linearDamping = base_lin_damp * weight_scale;
+        move_speed = base_move_speed * weight_scale * weight_scale * speed_scale;
+        
         // if (move_speed_modifiers.Count > 0)
         // {
         //     float net_speed_modifier = 1f;
@@ -131,22 +133,14 @@ public class MovementComponent
     }
     private float Accelerate(float modifier = 1f)
     {
-        if (curr_accel_time < max_accel_time)
-        {
-            curr_accel_time += Time.fixedDeltaTime;
-        }
-        if (curr_accel_time > max_accel_time)
-        {
-            curr_accel_time = max_accel_time;
-        }
-        return move_speed * Mathf.Min(1, curr_accel_time/max_accel_time) * modifier;
+        return 0;
     }
     #endregion
     #region Get Values
     private Vector2 GetPosition() {return entity_rb.position;}
     public float GetTravelTime() // return how long it is expected to take for the operator to reach their position
     {
-        return (move_pos - GetPosition()).magnitude / base_move_speed + max_accel_time;
+        return (move_pos - GetPosition()).magnitude / base_move_speed;
     }
     #endregion
     #region Change Stats

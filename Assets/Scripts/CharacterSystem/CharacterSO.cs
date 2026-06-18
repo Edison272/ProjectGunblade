@@ -12,8 +12,12 @@ public class CharacterSO : ScriptableObject
     public string description = "bleh";
 
     //stats
+    [field: Header("Health")]
     public int health = 100;
     public int spawn_shield = 0;
+
+    [field: Header("Movement")]
+    public float mass = 10;
     public float speed = 3;
     [Range(0.01f,5f)] public float accel_time = 0.5f;
     public float range = 4;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -8,13 +9,17 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {    
     // Input Map
-    public PlayerInput player_input {get; private set;}
+    private PlayerInput player_input;
 
     // Input Actions - direct input information from input map
-    public InputAction player_movement {get; private set;}
-    public InputAction player_use_main {get; private set;}
-    public InputAction player_use_alt {get; private set;}
-    public InputAction player_interact {get; private set;}
+    private InputAction player_movement;
+    private InputAction player_use_main;
+    private InputAction player_use_alt;
+    private InputAction player_interact;
+
+    // Publically accessible events
+    public event Action<Vector2> OnMoveStart; // called when the player goes from not moving to moving
+    public event Action OnMoveEnd; // called when player stops moving
 
     // Camera Control
     [SerializeField] CinemachineCamera main_cinema_cam;
@@ -35,6 +40,9 @@ public class PlayerController : MonoBehaviour
         player_use_alt = player_input.actions["UseAlt"];
         player_interact = player_input.actions["Interact"];
 
+        // connect public events to input actions
+        player_movement.performed += ctx => {OnMoveStart?.Invoke(ctx.ReadValue<Vector2>());};
+        player_movement.canceled += ctx => {OnMoveEnd?.Invoke();};
 
     }
 
@@ -44,24 +52,6 @@ public class PlayerController : MonoBehaviour
     }
 
     // update the accel values on input
-    void OnMoveStart(InputAction.CallbackContext context)
-    {
-        Debug.Log("vroom vroom!");
-    }
-
-    void OnMoveUpdate(InputAction.CallbackContext context)
-    {
-        Debug.Log("moving!");
-    }
-
-    void OnMoveEnd(InputAction.CallbackContext context)
-    {
-        Debug.Log("skrrrryyy!");
-    }
-
-    void OnInteract(InputAction.CallbackContext context)
-    {
-    }
 
     // get player control
     void SetPlayerCharacter(Character set_character)
@@ -75,6 +65,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Vector2 mouseScreenPos = main_cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        
         active_character.Look(mouseScreenPos);
     }
 }

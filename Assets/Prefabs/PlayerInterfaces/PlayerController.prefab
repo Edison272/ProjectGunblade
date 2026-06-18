@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d090f8aa6148fa04ea255e65deeee8f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  main_cam: {fileID: 4857097571171129144}
+  main_cinema_cam: {fileID: 4857097571171129144}
+  main_cam: {fileID: 0}
   active_character: {fileID: 0}
 --- !u!114 &6272541334924136745
 MonoBehaviour:
@@ -182,8 +183,8 @@ MonoBehaviour:
   TargetOffset: {x: 0, y: 0.85, z: 0}
   Damping: {x: 1, y: 1, z: 1}
   Lookahead:
-    Enabled: 1
-    Time: 0.25
+    Enabled: 0
+    Time: 0
     Smoothing: 0
     IgnoreY: 0
 --- !u!114 &320713966474037461

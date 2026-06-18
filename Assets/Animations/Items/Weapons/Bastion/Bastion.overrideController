@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Bastion
+  m_Controller: {fileID: 9100000, guid: f165c61f7baaf124b82c06c7eaca3fb0, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 238d0f326fc3ed9459c32188828ef540, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b79f76a7b2ad3dd4e87202f69a966f48, type: 2}
