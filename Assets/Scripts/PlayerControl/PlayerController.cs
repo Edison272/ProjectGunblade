@@ -21,6 +21,10 @@ public class PlayerController : MonoBehaviour
     public event Action<Vector2> OnMoveStart; // called when the player goes from not moving to moving
     public event Action OnMoveEnd; // called when player stops moving
 
+    public event Action OnMainActionStart;
+    public event Action OnMainActionEnd;
+    public event Action OnAltActionStart;
+    public event Action OnAltActionEnd;
     // Camera Control
     [SerializeField] CinemachineCamera main_cinema_cam;
     [SerializeField] Camera main_cam;
@@ -34,15 +38,22 @@ public class PlayerController : MonoBehaviour
     {
         if (!player_input) {player_input = GetComponent<PlayerInput>();}
 
+
         // map input actions to the controls
         player_movement = player_input.actions["Move"];
         player_use_main = player_input.actions["UseMain"];
         player_use_alt = player_input.actions["UseAlt"];
         player_interact = player_input.actions["Interact"];
 
+
         // connect public events to input actions
         player_movement.performed += ctx => {OnMoveStart?.Invoke(ctx.ReadValue<Vector2>());};
         player_movement.canceled += ctx => {OnMoveEnd?.Invoke();};
+
+        player_use_main.performed += ctx => {OnMainActionStart?.Invoke();};
+        player_use_main.canceled += ctx => {OnMainActionEnd?.Invoke();};
+        player_use_alt.performed += ctx => {OnAltActionStart?.Invoke();};
+        player_use_alt.canceled += ctx => {OnAltActionEnd?.Invoke();};
 
     }
 

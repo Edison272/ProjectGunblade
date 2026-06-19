@@ -38,6 +38,11 @@ public class Character : MonoBehaviour, IMovement
     protected (bool, bool) direction_state = (true, true);
     protected (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.6f), new Vector2 (0.5f, 0.6f));  // (main pos (left), alt pos (right))
     Vector2 single_hand_pos = new Vector2 (0, 0.6f);  // (main pos, alt pos)
+    // actions
+    public event Action MainActionStart;
+    public event Action MainActionEnd;
+    public event Action AltActionStart;
+    public event Action AltActionEnd;
     //aim & handling
     [field: Header("Aiming")]
     public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
@@ -207,6 +212,11 @@ public class Character : MonoBehaviour, IMovement
 
     public void ConnectPlayer(PlayerController player_controller)
     {
+        player_controller.OnMoveStart += StartMove;
+        player_controller.OnMoveEnd += StopMove;
+
+        player_controller.OnMoveStart += StartMove;
+        player_controller.OnMoveEnd += StopMove;
         player_controller.OnMoveStart += StartMove;
         player_controller.OnMoveEnd += StopMove;
     }
