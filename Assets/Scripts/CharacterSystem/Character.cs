@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using CustomDataStructures;
 public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 public class Character : MonoBehaviour, IMovement
 {
@@ -39,10 +40,10 @@ public class Character : MonoBehaviour, IMovement
     protected (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.6f), new Vector2 (0.5f, 0.6f));  // (main pos (left), alt pos (right))
     Vector2 single_hand_pos = new Vector2 (0, 0.6f);  // (main pos, alt pos)
     // actions
-    public event Action MainActionStart;
-    public event Action MainActionEnd;
-    public event Action AltActionStart;
-    public event Action AltActionEnd;
+    public HashedEvent MainActionStart = new();
+    public HashedEvent MainActionEnd = new();
+    public HashedEvent AltActionStart = new();
+    public HashedEvent AltActionEnd = new();
     //aim & handling
     [field: Header("Aiming")]
     public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
@@ -171,6 +172,11 @@ public class Character : MonoBehaviour, IMovement
         // // setup AI
         // CreateBehaviorController();
 
+        MainActionStart += () => {Debug.Log("MainStart");};
+        MainActionEnd += () => {Debug.Log("MainEnd");};
+        AltActionStart += () => {Debug.Log("AltStart");};
+        AltActionEnd += () => {Debug.Log("AltEnd");};
+
         GetReady();
     }
     // make sure the operator LOOKS ready
@@ -215,10 +221,10 @@ public class Character : MonoBehaviour, IMovement
         player_controller.OnMoveStart += StartMove;
         player_controller.OnMoveEnd += StopMove;
 
-        player_controller.OnMoveStart += StartMove;
-        player_controller.OnMoveEnd += StopMove;
-        player_controller.OnMoveStart += StartMove;
-        player_controller.OnMoveEnd += StopMove;
+        player_controller.OnMainActionStart += MainActionStart.Invoke;
+        player_controller.OnMainActionEnd += MainActionEnd.Invoke;
+        player_controller.OnAltActionStart += AltActionStart.Invoke;
+        player_controller.OnAltActionEnd += AltActionEnd.Invoke;
     }
 
     public void DisconnectPlayer(PlayerController player_controller)
