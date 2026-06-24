@@ -40,10 +40,12 @@ public class Character : MonoBehaviour, IMovement
     protected (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.6f), new Vector2 (0.5f, 0.6f));  // (main pos (left), alt pos (right))
     Vector2 single_hand_pos = new Vector2 (0, 0.6f);  // (main pos, alt pos)
     // actions
-    public HashedEvent MainActionStart = new();
-    public HashedEvent MainActionEnd = new();
-    public HashedEvent AltActionStart = new();
-    public HashedEvent AltActionEnd = new();
+    public HashedEvent MainActionStartEvent = new();
+    public HashedEvent MainActionEndEvent = new();
+    public HashedEvent AltActionStartEvent = new();
+    public HashedEvent AltActionEndEvent = new();
+    public HashedEvent ResetEvent = new();
+    public HashedEvent InteractEvent = new();
     //aim & handling
     [field: Header("Aiming")]
     public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
@@ -85,9 +87,9 @@ public class Character : MonoBehaviour, IMovement
     // protected float curr_switch_cd = 0;
     // private int holding_capacity = 0;
 
-    [field: Header("Interactables")]
-    List<Collider2D> interactables_in_range = new List<Collider2D>();
-    public float interaction_range = 1;
+    [field: Header("InteractEventables")]
+    List<Collider2D> interactEventables_in_range = new List<Collider2D>();
+    public float interactEvention_range = 1;
 
     [field: Header("Detection")]
     // [SerializeField] CircleCollider2D range_collider;
@@ -98,7 +100,7 @@ public class Character : MonoBehaviour, IMovement
     public float close_range => base_data.close_range;
 
     // [field: Header("AI")]
-    // public int faction_tag = 1;
+    public int faction_tag = 1;
     // [SerializeField] protected bool is_AI_active = true;
     //public BehaviorController behavior_controller;    
     
@@ -160,7 +162,7 @@ public class Character : MonoBehaviour, IMovement
         // item_indexes = init_item_indexes.ToList<Vector2Int>();
         // holding_capacity = Mathf.Max(item_indexes.Count, base_data.holding_capacity);
 
-        // interaction_range = base_data.interaction_range;
+        // interactEvention_range = base_data.interactEvention_range;
 
         // // set initial active items
         // foreach(Item item in inventory)
@@ -171,11 +173,6 @@ public class Character : MonoBehaviour, IMovement
 
         // // setup AI
         // CreateBehaviorController();
-
-        MainActionStart += () => {Debug.Log("MainStart");};
-        MainActionEnd += () => {Debug.Log("MainEnd");};
-        AltActionStart += () => {Debug.Log("AltStart");};
-        AltActionEnd += () => {Debug.Log("AltEnd");};
 
         GetReady();
     }
@@ -192,7 +189,7 @@ public class Character : MonoBehaviour, IMovement
     }
 
     // public virtual void CreateBehaviorController() {behavior_controller = new BehaviorController(this);}
-    public virtual void ResetData()
+    public virtual void ResetEventData()
     {
         
     }
@@ -221,10 +218,13 @@ public class Character : MonoBehaviour, IMovement
         player_controller.OnMoveStart += StartMove;
         player_controller.OnMoveEnd += StopMove;
 
-        player_controller.OnMainActionStart += MainActionStart.Invoke;
-        player_controller.OnMainActionEnd += MainActionEnd.Invoke;
-        player_controller.OnAltActionStart += AltActionStart.Invoke;
-        player_controller.OnAltActionEnd += AltActionEnd.Invoke;
+        player_controller.OnMainActionStart += MainActionStartEvent.Invoke;
+        player_controller.OnMainActionEnd += MainActionEndEvent.Invoke;
+        player_controller.OnAltActionStart += AltActionStartEvent.Invoke;
+        player_controller.OnAltActionEnd += AltActionEndEvent.Invoke;
+
+        player_controller.OnReset += ResetEvent.Invoke;
+        player_controller.OnInteract += InteractEvent.Invoke;
     }
 
     public void DisconnectPlayer(PlayerController player_controller)
@@ -545,19 +545,19 @@ public class Character : MonoBehaviour, IMovement
     //     EquipActive(curr_item_index); // set up the new shi
     //     curr_switch_cd = switch_cd; // set timer before equipping new weapons
     // }
-    // public IInteractable FindInteractables()
+    // public IInteractEventable FindInteractEventables()
     // {
-    //     ContactFilter2D interactable_filter = new ContactFilter2D();
-    //     interactable_filter.SetLayerMask(GameOverseer.find_interactable_mask);
-    //     interactable_filter.useLayerMask = true; // Actively use the mask
-    //     interactable_filter.useTriggers = true;
-    //     Physics2D.OverlapCircle(GetPosition(), hitbox_radius + interaction_range, interactable_filter, interactables_in_range);
-    //     IInteractable closest_interactable = null;
-    //     if (interactables_in_range.Count > 0)
+    //     ContactFilter2D interactEventable_filter = new ContactFilter2D();
+    //     interactEventable_filter.SetLayerMask(GameOverseer.find_interactEventable_mask);
+    //     interactEventable_filter.useLayerMask = true; // Actively use the mask
+    //     interactEventable_filter.useTriggers = true;
+    //     Physics2D.OverlapCircle(GetPosition(), hitbox_radius + interactEvention_range, interactEventable_filter, interactEventables_in_range);
+    //     IInteractEventable closest_interactEventable = null;
+    //     if (interactEventables_in_range.Count > 0)
     //     {
-    //         closest_interactable = interactables_in_range[0].GetComponent<IInteractable>();
+    //         closest_interactEventable = interactEventables_in_range[0].GetComponent<IInteractEventable>();
     //     }
-    //     return closest_interactable;
+    //     return closest_interactEventable;
     // }
     // public int AddItem(Item new_item)
     // {
@@ -575,68 +575,37 @@ public class Character : MonoBehaviour, IMovement
     //     alt_item?.EquipItem();
     //     SetAimStyle(alt_item); // adjust how the item(s) look in the player's hands
     // }
-    // public void ResetItemData(int specific_index = -1)
+    // public void ResetEventItemData(int specific_index = -1)
     // {
     //     if (specific_index != -1)
     //     {
-    //         inventory[item_indexes[specific_index].x].ResetData();
+    //         inventory[item_indexes[specific_index].x].ResetEventData();
     //         if (item_indexes[specific_index].y != -1)
     //         {
-    //             inventory[item_indexes[-1].y].ResetData();
+    //             inventory[item_indexes[-1].y].ResetEventData();
     //         }
     //     } 
     //     else
     //     {
     //         foreach(Item item in inventory)
     //         {
-    //             item.ResetData();
+    //             item.ResetEventData();
     //         }            
     //     }
     // }
 
     #endregion
-    #region Item Interaction
-    // public void UseInteractable(IInteractable interactable)
+    #region Item InteractEvention
+    // public void UseInteractEventable(IInteractEventable interactEventable)
     // {
-    //     interactable.Interact(this);
+    //     interactEventable.InteractEvent(this);
     // }
 
-    // public void StartMainAction()
+
+    // public void ResetEventItems()
     // {
-    //     main_item.Use();
-    //     if (current_indexes.Item2 != -1)
-    //     {
-    //         alt_item.Use();
-    //     }
-    // }
-    // public void StopMainAction()
-    // {
-    //     main_item.Stop();
-    //     if (current_indexes.Item2 != -1)
-    //     {
-    //         alt_item.Stop();
-    //     }
-    // }
-    // public void UseMainItem()
-    // {
-    //     main_item.Use();
-    // }
-    // public void StopMainItem()
-    // {
-    //     main_item.Stop();
-    // }
-    // public void UseAltItem()
-    // {
-    //     alt_item.Use();
-    // }
-    // public void StopAltItem()
-    // {
-    //     alt_item.Stop();
-    // }
-    // public void ResetItems()
-    // {
-    //     main_item.Reset();
-    //     alt_item?.Reset(); // reset if there's an alt item
+    //     main_item.ResetEvent();
+    //     alt_item?.ResetEvent(); // resetEvent if there's an alt item
     // }
     #endregion
     // public int GetRangeScalar()

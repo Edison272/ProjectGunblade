@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401ed04a628f55e46808c6fa2347d8f7, type: 3}
+  m_Name: Items
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  attackTypes:
+  - rid: 117341523871269036
+  - rid: 117341523871269029
+  itemEffects: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 117341523871269029
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        atk_stats:
+          damage: 0
+          pierce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          projectile_speed: 0
+          homing_strength: 0
+          projectile_count: 0
+          projectile_spread: 0
+          even_spread: 0
+    - rid: 117341523871269036
+      type: {class: Linecast, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        atk_stats:
+          damage: 0
+          pierce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          projectile_speed: 0
+          homing_strength: 0
+          projectile_count: 0
+          projectile_spread: 0
+          even_spread: 0

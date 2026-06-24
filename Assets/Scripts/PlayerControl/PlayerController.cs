@@ -12,10 +12,11 @@ public class PlayerController : MonoBehaviour
     private PlayerInput player_input;
 
     // Input Actions - direct input information from input map
-    private InputAction player_movement;
-    private InputAction player_use_main;
-    private InputAction player_use_alt;
-    private InputAction player_interact;
+    private InputAction input_movement;
+    private InputAction input_use_main;
+    private InputAction input_use_alt;
+    private InputAction input_reset;
+    private InputAction input_interact;
 
     // Publically accessible events
     public event Action<Vector2> OnMoveStart; // called when the player goes from not moving to moving
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
     public event Action OnMainActionEnd;
     public event Action OnAltActionStart;
     public event Action OnAltActionEnd;
+    public event Action OnReset;
+    public event Action OnInteract;
     // Camera Control
     [SerializeField] CinemachineCamera main_cinema_cam;
     [SerializeField] Camera main_cam;
@@ -40,21 +43,24 @@ public class PlayerController : MonoBehaviour
 
 
         // map input actions to the controls
-        player_movement = player_input.actions["Move"];
-        player_use_main = player_input.actions["UseMain"];
-        player_use_alt = player_input.actions["UseAlt"];
-        player_interact = player_input.actions["Interact"];
+        input_movement = player_input.actions["Move"];
+        input_use_main = player_input.actions["UseMain"];
+        input_use_alt = player_input.actions["UseAlt"];
+        input_reset = player_input.actions["Reset"];
+        input_interact = player_input.actions["Interact"];
 
 
         // connect public events to input actions
-        player_movement.performed += ctx => {OnMoveStart?.Invoke(ctx.ReadValue<Vector2>());};
-        player_movement.canceled += ctx => {OnMoveEnd?.Invoke();};
+        input_movement.performed += ctx => {OnMoveStart?.Invoke(ctx.ReadValue<Vector2>());};
+        input_movement.canceled += ctx => {OnMoveEnd?.Invoke();};
 
-        player_use_main.performed += ctx => {OnMainActionStart?.Invoke();};
-        player_use_main.canceled += ctx => {OnMainActionEnd?.Invoke();};
-        player_use_alt.performed += ctx => {OnAltActionStart?.Invoke();};
-        player_use_alt.canceled += ctx => {OnAltActionEnd?.Invoke();};
+        input_use_main.performed += ctx => {OnMainActionStart?.Invoke();};
+        input_use_main.canceled += ctx => {OnMainActionEnd?.Invoke();};
+        input_use_alt.performed += ctx => {OnAltActionStart?.Invoke();};
+        input_use_alt.canceled += ctx => {OnAltActionEnd?.Invoke();};
 
+        input_reset.started += ctx => {OnReset?.Invoke();};
+        input_interact.started += ctx => {OnInteract?.Invoke();};
     }
 
     void Start()
