@@ -5,6 +5,7 @@ using UnityEngine;
 using AttackSystem;
 
 using Random = UnityEngine.Random;
+using JetBrains.Annotations;
 
 public enum AttackEnum { Projectile, Linecast, MeleeAttack }
 [Serializable]
@@ -100,16 +101,19 @@ public class Projectile : AttackType
 
     public override void Attack(AttackTarget atk_targ)
     {
-        Vector2 target_pos = atk_targ.target_pos;
-        Vector2 source_pos = atk_targ.source_pos;
+        Vector2 target_pos_og = atk_targ.target_pos;
+        Vector2 source_pos_og = atk_targ.source_pos;
         
         // declare info that doesn't need to be in a loop
-        float target_dist = (target_pos - source_pos).magnitude;
+        float target_dist = (target_pos_og - source_pos_og).magnitude;
         float og_speed = typeData.projectile_speed;
-        Vector2 target_dir = (target_pos - source_pos).normalized;
+        Vector2 target_dir = (target_pos_og - source_pos_og).normalized;
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < typeData.projectile_count; i++)
         {
+            AttackTarget atk_targ_copy = atk_targ;
+            Vector2 source_pos = atk_targ_copy.source_pos;
+            
             GameObject projectile = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
             ProjectileBehavior projectile_data = projectile.GetComponent<ProjectileBehavior>();
 
@@ -122,17 +126,17 @@ public class Projectile : AttackType
 
                 Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
                 
-                target_pos = source_pos + dir * target_dist;
+                atk_targ_copy.target_pos = source_pos + dir * target_dist;
             }
             else
             {
-                Vector2 og_targ_pos = target_pos;
-                target_pos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
+                Vector2 og_targ_pos = atk_targ_copy.target_pos;
+                atk_targ_copy.target_pos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
                 
-                typeData.projectile_speed *= Mathf.Clamp(1 - (target_pos - og_targ_pos).magnitude / target_dist, 0.5f, 1);
+                typeData.projectile_speed *= Mathf.Clamp(1 - (atk_targ_copy.target_pos - og_targ_pos).magnitude / target_dist, 0.5f, 1);
             }
             // new projectile! 
-            projectile_data.StartProjectile(this, atk_targ);
+            projectile_data.StartProjectile(this, atk_targ_copy);
             typeData.projectile_speed = og_speed;
         }
     }
@@ -155,15 +159,18 @@ public class Linecast : Projectile
 
     public override void Attack(AttackTarget atk_targ)
     {
-        Vector2 target_pos = atk_targ.target_pos;
-        Vector2 source_pos = atk_targ.source_pos;
+        Vector2 target_pos_og = atk_targ.target_pos;
+        Vector2 source_pos_og = atk_targ.source_pos;
         
         // declare info that doesn't need to be in a loop
-        float target_dist = (target_pos - source_pos).magnitude;
-        Vector2 target_dir = (target_pos - source_pos).normalized;
+        float target_dist = (target_pos_og - source_pos_og).magnitude;
+        Vector2 target_dir = (target_pos_og - source_pos_og).normalized;
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < typeData.projectile_count; i++)
         {
+            AttackTarget atk_targ_copy = atk_targ;
+            Vector2 source_pos = atk_targ_copy.source_pos;
+            
             GameObject linecast = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
             LinecastBehavior linecast_data = linecast.GetComponent<LinecastBehavior>();
 
@@ -176,14 +183,14 @@ public class Linecast : Projectile
 
                 Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
                 
-                target_pos = source_pos + dir * target_dist;
+                atk_targ_copy.target_pos = source_pos + dir * target_dist;
             }
             else
             {
-                target_pos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
+                atk_targ_copy.target_pos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
             }
             // new linecast! 
-            linecast_data.StartLinecast(this, atk_targ);
+            linecast_data.StartLinecast(this, atk_targ_copy);
         }
     }
 
@@ -209,15 +216,18 @@ public class MeleeAttack : AttackType
 
     public override void Attack(AttackTarget atk_targ)
     {
-        Vector2 target_pos = atk_targ.target_pos;
-        Vector2 source_pos = atk_targ.source_pos;    
+        Vector2 target_pos_og = atk_targ.target_pos;
+        Vector2 source_pos_og = atk_targ.source_pos;   
     
         // declare info that doesn't need to be in a loop
-        float target_dist = (target_pos - source_pos).magnitude;
-        Vector2 target_dir = (target_pos - source_pos).normalized;
+        float target_dist = (target_pos_og - source_pos_og).magnitude;
+        Vector2 target_dir = (target_pos_og - source_pos_og).normalized;
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < typeData.melee_count; i++)
         {
+            AttackTarget atk_targ_copy = atk_targ;
+            Vector2 source_pos = atk_targ_copy.source_pos;
+            
             GameObject melee_ins = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
             MeleeBehavior melee_data = melee_ins.GetComponent<MeleeBehavior>();
 
@@ -230,14 +240,14 @@ public class MeleeAttack : AttackType
 
                 Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
                 
-                target_pos = source_pos + dir * target_dist;
+                atk_targ_copy.target_pos = source_pos + dir * target_dist;
             }
             else
             {
-                target_pos += Random.insideUnitCircle * target_dist * typeData.melee_spread/360;
+                atk_targ_copy.target_pos += Random.insideUnitCircle * target_dist * typeData.melee_spread/360;
             }
             // new projectile! 
-            melee_data.StartMelee(this, atk_targ);
+            melee_data.StartMelee(this, atk_targ_copy);
         }
     }
 

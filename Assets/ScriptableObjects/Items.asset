@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   attackTypes:
   - rid: 117341523871269036
-  - rid: 117341523871269029
+  - rid: 117341544649326669
   itemEffects: []
   references:
     version: 2
     RefIds:
-    - rid: 117341523871269029
-      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+    - rid: 117341523871269036
+      type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
-        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
         atk_stats:
           damage: 0
           pierce: 0
@@ -37,12 +37,12 @@ MonoBehaviour:
           projectile_count: 0
           projectile_spread: 0
           even_spread: 0
-    - rid: 117341523871269036
-      type: {class: Linecast, ns: , asm: Assembly-CSharp}
+    - rid: 117341544649326669
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
       data:
-        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
         atk_stats:
-          damage: 0
+          damage: 5
           pierce: 0
           knockback_amt: 0
           effect_time: 0

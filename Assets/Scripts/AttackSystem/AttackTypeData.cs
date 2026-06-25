@@ -6,7 +6,7 @@ public class ProjectileTypeData
 {
     public float projectile_speed;
     public float homing_strength;
-    public int projectile_count;
+    public int projectile_count = 1;
     public float projectile_spread;
     public bool even_spread;
 }
@@ -15,8 +15,8 @@ public class ProjectileTypeData
 public class MeleeTypeData
 {
     public float melee_duration;
-    public int melee_count;
+    public int melee_count = 1;
     public float melee_spread;
     public bool even_spread;
-    public float melee_size;
+    public float melee_size = 1;
 }
