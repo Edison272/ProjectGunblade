@@ -9,13 +9,13 @@ using JetBrains.Annotations;
 
 public enum AttackEnum { Projectile, Linecast, MeleeAttack }
 [Serializable]
-public abstract class AttackType
+public abstract class AttackObject
 {
     protected Character user;
     [SerializeField] public GameObject instance;
     [ShowIf("instance")] public AttackStats atk_stats;
     #region Initializers
-    public AttackType(GameObject instance = null)
+    public AttackObject(GameObject instance = null)
     {
         this.instance = instance;
     }
@@ -24,7 +24,7 @@ public abstract class AttackType
     public abstract float GetAtkSpread();
 
     #region Recasting
-    /// Basic AttackType can be recast into its inheritor scripts
+    /// Basic AttackObject can be recast into its inheritor scripts
     public virtual Projectile RecastToProjectileType()
     {
         return new Projectile(instance, atk_stats, new ProjectileTypeData());
@@ -38,9 +38,9 @@ public abstract class AttackType
         return new MeleeAttack(instance, atk_stats, new MeleeTypeData());
     }
     // Will automatically recast its type based on the instance it's holding
-    public virtual AttackType SmartRecast()
+    public virtual AttackObject SmartRecast()
     {
-        AttackType new_type = null;
+        AttackObject new_type = null;
         switch(instance.GetComponent<MonoBehaviour>())
         {
             case ProjectileBehavior:
@@ -56,13 +56,13 @@ public abstract class AttackType
         return new_type;
     }
 
-    /// Returns either Projectile, Linecast, or MeleeAttack, but in the form of a AttackType
+    /// Returns either Projectile, Linecast, or MeleeAttack, but in the form of a AttackObject
     /// Used by ItemSO to check if the attack's instance type matches with the attack data
-    public virtual Type GetSpecificAttackType()
+    public virtual Type GetSpecificAttackObject()
     {
         if (instance == null)
         {
-            return typeof(AttackType);
+            return typeof(AttackObject);
         }
         switch(instance.GetComponent<MonoBehaviour>())
         {
@@ -86,7 +86,7 @@ public abstract class AttackType
 }
 #region Projectile
 [System.Serializable]
-public class Projectile : AttackType
+public class Projectile : AttackObject
 {
     [ShowIf("instance")] public ProjectileTypeData typeData;
     
@@ -199,7 +199,7 @@ public class Linecast : Projectile
 #endregion
 #region Melee Attack
 [System.Serializable]
-public class MeleeAttack : AttackType
+public class MeleeAttack : AttackObject
 {
     [ShowIf("instance")] public MeleeTypeData typeData;
 

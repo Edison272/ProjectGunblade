@@ -10,27 +10,42 @@ using Unity.VisualScripting;
 [CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Items", order = 1)]
 public class ItemSO : ScriptableObject
 {
-    [SerializeReference] public AttackType[] attackTypes = new AttackType[] {};
-    public ItemEffectInit[] itemEffects;
+    
+    public ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
+    [SerializeReference] public AttackObject[] attackObjects = new Projectile[] {}; // a collection of attack types
+    [SerializeReference] public StackCounter[] stackCounters = new StackCounter[] {}; // control when different item effects trigger
 
     public void OnValidate()
     {
-        for(int i = 0; i < attackTypes.Length; i++)
+        for(int i = 0; i < attackObjects.Length; i++)
         {
-            AttackType attackType = attackTypes[i];
+            AttackObject attackType = attackObjects[i];
             if (attackType == null)
             {
-                attackTypes[i] = new Projectile();
-                attackType = attackTypes[i];
+                attackObjects[i] = new Projectile();
+                attackType = attackObjects[i];
             }
             if (attackType.instance != null)
             {
-                if (attackType.GetSpecificAttackType() != attackType.GetType())
+                if (attackType.GetSpecificAttackObject() != attackType.GetType())
                 {
-                    attackTypes[i] = attackType.SmartRecast();
-                    attackType = attackTypes[i];
+                    attackObjects[i] = attackType.SmartRecast();
+                    attackType = attackObjects[i];
                 }
             }
+        }
+        for(int i = 0; i < stackCounters.Length; i++)
+        {
+            StackCounter stackCounter = stackCounters[i];
+            if (stackCounter == null)
+            {
+                stackCounter = new StackCounter();
+            }
+            if (stackCounter.stackCounterType != stackCounter.GetExpectedStackCountType())
+            {
+                stackCounters[i] = stackCounter.SmartRecast();
+            }
+            
         }
     }
 

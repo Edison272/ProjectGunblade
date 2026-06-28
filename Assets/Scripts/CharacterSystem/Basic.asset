@@ -17,6 +17,7 @@ MonoBehaviour:
   description: bleh
   health: 100
   spawn_shield: 0
+  mass: 10
   speed: 150
   accel_time: 0.5
   range: 4
@@ -27,4 +28,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   holding_capacity: 2
-  item_indexes: []
+  item_indexes:
+  - {x: 0, y: 0}

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using CustomDataStructures;
+public enum InputEvent {MainStart, MainEnd, AltStart, AltEnd, Reset}
 public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 public class Character : MonoBehaviour, IMovement
 {

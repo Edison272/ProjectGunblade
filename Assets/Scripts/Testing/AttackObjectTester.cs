@@ -2,7 +2,7 @@ using UnityEngine;
 using AttackSystem;
 using Unity.VisualScripting;
 
-public class AttackTypeTester : MonoBehaviour
+public class AttackObjectTester : MonoBehaviour
 {
     [Header("Transform")]
     public Transform source_transform;
@@ -12,7 +12,7 @@ public class AttackTypeTester : MonoBehaviour
 
 
     [Header("Attack Type")]
-    [SerializeReference] AttackType attackType = new Projectile();
+    [SerializeReference] AttackObject attackObject = new Projectile();
     void Awake()
     {
         if (!source_transform) {source_transform = this.transform;}
@@ -21,7 +21,7 @@ public class AttackTypeTester : MonoBehaviour
     public void Attack()
     {
         AttackTarget target_data = new AttackTarget(source_transform.position, target_transform.position, output_transform.position, vfx_offset);
-        attackType.Attack(target_data);
+        attackObject.Attack(target_data);
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -38,15 +38,15 @@ public class AttackTypeTester : MonoBehaviour
 
     public void OnValidate()
     {
-        if (attackType == null)
+        if (attackObject == null)
         {
-            attackType = new Projectile();
+            attackObject = new Projectile();
         }
-        if (attackType.instance != null)
+        if (attackObject.instance != null)
         {
-            if (attackType.GetSpecificAttackType() != attackType.GetType())
+            if (attackObject.GetSpecificAttackObject() != attackObject.GetType())
             {
-                attackType = attackType.SmartRecast();
+                attackObject = attackObject.SmartRecast();
             }
         }
     }

@@ -10,17 +10,17 @@ public class Item : MonoBehaviour
     [field: SerializeField] public ItemSO base_data {get; private set;} // SO contains important base data
     public Character user;
 
-    public ItemEffect[] ItemEffects;
-    // Input Instance
-
-
+    private ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
+    private StackCounter[] stackCounters = new AmmoCounter[] {}; // determines the resources the attacks relies on / update
 
 
     #region Initializers
     // Setup immutable item data when this object is made
     public void Setup(ItemSO base_data)
     {            
-
+        // build functionality from SO
+        itemEffects = base_data.itemEffects;
+        stackCounters = base_data.stackCounters;
     }
 
     // adjust item everytime theres a new user
@@ -30,10 +30,10 @@ public class Item : MonoBehaviour
 
         // subscribe to old user events
         user = new_user;
-        foreach (ItemEffect effect in ItemEffects)
-        {
-            effect.AssignInputs(new_user);
-        }
+        // foreach (ItemEffect effect in itemEffects)
+        // {
+        //     effect.AssignInputs(new_user);
+        // }
 
         new_user.ResetEvent += ResetItem;
     }
