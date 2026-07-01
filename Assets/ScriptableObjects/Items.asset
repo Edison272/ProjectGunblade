@@ -13,21 +13,32 @@ MonoBehaviour:
   m_Name: Items
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemEffects:
-  - attackTypes:
-    - rid: 117341568547422289
-    stackCounters:
-    - rid: -2
-  - attackTypes: []
-    stackCounters: []
-  - attackTypes: []
-    stackCounters: []
-  stackCounters: []
+  - attackObjectRefs: 
+    stackCounterRefs: 00000000
+  attackObjects:
+  - rid: 117341637006589952
+  stackCounters:
+  - rid: 117341645918437468
+  - rid: 117341614481342606
+  - rid: -2
   references:
     version: 2
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 117341568547422289
+    - rid: 117341614481342606
+      type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 1
+        maxAmmo: 0
+        curr_ammo: 0
+        reloadSpeed: 0
+        UseAmmoEvent: 1
+        ReloadEvent: 5
+        regenAmmo: 0
+        roundsReload: 0
+        rounds_per_load: 1
+    - rid: 117341637006589952
       type: {class: Projectile, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 0}
@@ -45,3 +56,7 @@ MonoBehaviour:
           projectile_count: 1
           projectile_spread: 0
           even_spread: 0
+    - rid: 117341645918437468
+      type: {class: StackCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 0

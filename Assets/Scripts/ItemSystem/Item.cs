@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
 public enum ItemType {Weapon, Support}
 public class Item : MonoBehaviour
 {   
@@ -11,31 +12,54 @@ public class Item : MonoBehaviour
     public Character user;
 
     private ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
-    private StackCounter[] stackCounters = new AmmoCounter[] {}; // determines the resources the attacks relies on / update
-
+    private StackCounter[] stackCounters; // determines the resources the attacks relies on / update
+    public InputEventRelay inputRelay; // reference to another input relay
 
     #region Initializers
+
+    public void Awake()
+    {
+    }
+
+    public void Start()
+    {
+        
+    }
+
     // Setup immutable item data when this object is made
     public void Setup(ItemSO base_data)
     {            
         // build functionality from SO
         itemEffects = base_data.itemEffects;
-        stackCounters = base_data.stackCounters;
+
+        // Deep copy of stack counters
+        int counter_amt= base_data.stackCounters.Length;
+        stackCounters = new AmmoCounter[counter_amt];
+        for (int i = 0; i < counter_amt; i++)
+        {
+            stackCounters[i] = base_data.stackCounters[i].GetCopy();
+        }
     }
 
     // adjust item everytime theres a new user
-    public void NewUser(Character new_user)
+    public void NewUser(InputEventRelay newInputRelay)
     {
         //unsubscribe from old user if they exist
 
         // subscribe to old user events
-        user = new_user;
+        inputRelay = newInputRelay;
+        inputRelay.ConnectEvent(InputEvent.MainStart, () => {Debug.Log($"main start");});
+        inputRelay.ConnectEvent(InputEvent.MainEnd, () => {Debug.Log($"main end");});
+        inputRelay.ConnectEvent(InputEvent.AltStart, () => {Debug.Log($"alt start");});
+        inputRelay.ConnectEvent(InputEvent.AltEnd, () => {Debug.Log($"alt end");});
+        inputRelay.ConnectEvent(InputEvent.Reset, () => {Debug.Log($"reset");});
+
         // foreach (ItemEffect effect in itemEffects)
         // {
-        //     effect.AssignInputs(new_user);
+        //     effect.SetupEventListeners(new_user);
         // }
 
-        new_user.ResetEvent += ResetItem;
+        // new_user.ResetEvent += ResetItem;
     }
     public void DropItem()
     {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,16 +19,9 @@ public class PlayerController : MonoBehaviour
     private InputAction input_reset;
     private InputAction input_interact;
 
-    // Publically accessible events
-    public event Action<Vector2> OnMoveStart; // called when the player goes from not moving to moving
-    public event Action OnMoveEnd; // called when player stops moving
+    // Input Relay!
+    public InputEventRelay inputRelay;
 
-    public event Action OnMainActionStart;
-    public event Action OnMainActionEnd;
-    public event Action OnAltActionStart;
-    public event Action OnAltActionEnd;
-    public event Action OnReset;
-    public event Action OnInteract;
     // Camera Control
     [SerializeField] CinemachineCamera main_cinema_cam;
     [SerializeField] Camera main_cam;
@@ -51,16 +45,29 @@ public class PlayerController : MonoBehaviour
 
 
         // connect public events to input actions
-        input_movement.performed += ctx => {OnMoveStart?.Invoke(ctx.ReadValue<Vector2>());};
-        input_movement.canceled += ctx => {OnMoveEnd?.Invoke();};
+        input_movement.performed += ctx => {inputRelay.Invoke(InputEvent.MoveStart, ctx.ReadValue<Vector2>());};
+        input_movement.canceled += ctx => {inputRelay.Invoke(InputEvent.MoveEnd);};
 
-        input_use_main.performed += ctx => {OnMainActionStart?.Invoke();};
-        input_use_main.canceled += ctx => {OnMainActionEnd?.Invoke();};
-        input_use_alt.performed += ctx => {OnAltActionStart?.Invoke();};
-        input_use_alt.canceled += ctx => {OnAltActionEnd?.Invoke();};
+        input_use_main.performed += ctx => {inputRelay.Invoke(InputEvent.MainStart);};
+        input_use_main.canceled += ctx => {inputRelay.Invoke(InputEvent.MainEnd);};
+        input_use_alt.performed += ctx => {inputRelay.Invoke(InputEvent.AltStart);};
+        input_use_alt.canceled += ctx => {inputRelay.Invoke(InputEvent.AltEnd);};
 
-        input_reset.started += ctx => {OnReset?.Invoke();};
-        input_interact.started += ctx => {OnInteract?.Invoke();};
+        input_reset.started += ctx => {inputRelay.Invoke(InputEvent.Reset);};
+        //input_interact.started += ctx => {inputRelay.Invoke(InputEvent.Reset);};
+
+        // Setup Input Relay
+        inputRelay = new InputEventRelay(
+            new Dictionary<InputEvent, Type>{
+                {InputEvent.MoveStart, typeof(Action<Vector2>)},
+                {InputEvent.MoveEnd, typeof(Action)},
+                {InputEvent.MainStart, typeof(Action)}, 
+                {InputEvent.MainEnd, typeof(Action)}, 
+                {InputEvent.AltStart, typeof(Action)}, 
+                {InputEvent.AltEnd, typeof(Action)}, 
+                {InputEvent.Reset, typeof(Action)}, 
+            }
+        );
     }
 
     void Start()
@@ -73,7 +80,8 @@ public class PlayerController : MonoBehaviour
     // get player control
     void SetPlayerCharacter(Character set_character)
     {
-        active_character?.ConnectPlayer(this);
+        //active_character?.ConnectPlayer(this);
+        active_character?.ConnectInputs(inputRelay);
 
         // set camera target
         main_cinema_cam.Target.TrackingTarget = active_character.transform;

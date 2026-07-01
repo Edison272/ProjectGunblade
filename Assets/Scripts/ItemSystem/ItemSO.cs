@@ -7,6 +7,12 @@ using UnityEditor;
 using ItemStatModules;
 using Unity.VisualScripting;
 
+/// <summary>
+/// This script has 3 goals
+/// - Contain Base Data for the item's various stats
+/// - Allow the user to customize items to have different properties
+/// - Create new item instances
+/// </summary>
 [CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Items", order = 1)]
 public class ItemSO : ScriptableObject
 {

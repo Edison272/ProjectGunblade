@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using CustomDataStructures;
-public enum InputEvent {MainStart, MainEnd, AltStart, AltEnd, Reset}
 public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 public class Character : MonoBehaviour, IMovement
 {
@@ -213,19 +212,32 @@ public class Character : MonoBehaviour, IMovement
     #endregion
 
     #region Player Input
+    public void ConnectInputs(InputEventRelay inputRelay)
+    {
+        inputRelay.ConnectEvent(InputEvent.MoveStart, (Action<Vector2>)StartMove);
+        inputRelay.ConnectEvent(InputEvent.MoveEnd, StopMove);
+
+        // inputRelay.ConnectEvent(InputEvent.MoveStart, MainActionStartEvent.Invoke);
+        // inputRelay.ConnectEvent(InputEvent.MoveEnd, MainActionEndEvent.Invoke);
+        // inputRelay.ConnectEvent(InputEvent.MoveStart, AltActionStartEvent.Invoke);
+        // inputRelay.ConnectEvent(InputEvent.MoveEnd, AltActionEndEvent.Invoke);
+
+        inputRelay.ConnectEvent(InputEvent.Reset, ResetEvent.Invoke);
+        //inputRelay.ConnectEvent(InputEvent.MoveStop, (Action)StopMove);
+    }
 
     public void ConnectPlayer(PlayerController player_controller)
     {
-        player_controller.OnMoveStart += StartMove;
-        player_controller.OnMoveEnd += StopMove;
+        // player_controller.OnMoveStart += StartMove;
+        // player_controller.OnMoveEnd += StopMove;
 
-        player_controller.OnMainActionStart += MainActionStartEvent.Invoke;
-        player_controller.OnMainActionEnd += MainActionEndEvent.Invoke;
-        player_controller.OnAltActionStart += AltActionStartEvent.Invoke;
-        player_controller.OnAltActionEnd += AltActionEndEvent.Invoke;
+        // player_controller.OnMainActionStart += MainActionStartEvent.Invoke;
+        // player_controller.OnMainActionEnd += MainActionEndEvent.Invoke;
+        // player_controller.OnAltActionStart += AltActionStartEvent.Invoke;
+        // player_controller.OnAltActionEnd += AltActionEndEvent.Invoke;
 
-        player_controller.OnReset += ResetEvent.Invoke;
-        player_controller.OnInteract += InteractEvent.Invoke;
+        // player_controller.OnReset += ResetEvent.Invoke;
+        // player_controller.OnInteract += InteractEvent.Invoke;
     }
 
     public void DisconnectPlayer(PlayerController player_controller)

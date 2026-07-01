@@ -11,22 +11,29 @@ using UnityEngine;
 public class AmmoCounter : StackCounter
 {
     [Header("Basic Stats")]
-    public int max_ammo;
+    public int maxAmmo;
     public int curr_ammo;
-    public float reload_speed;
+    public float reloadSpeed;
+    public InputEvent UseAmmoEvent = InputEvent.MainStart;
+    public InputEvent ReloadEvent = InputEvent.Reset;
 
     [Header("Regen Ammo")] // instead of manually reloading, slowly reloads ammo when not being used
-    public bool regen_ammo;
-    //[ShowIf("regen_ammo")] public RegenAmmoModule regen_ammo_modifier;
+    public bool regenAmmo;
+    //[ShowIf("regenAmmo")] public RegenAmmoModule regenAmmo_modifier;
 
-    [Header("Rounds Reload")] // instead of fully reloading all ammo at once, ammo is reloaded one by one
-    public bool rounds_reload;
-    [ShowIf("rounds_reload")] public int rounds_per_load = 1;
+    [Header("Rounds Reload")] // instead of fully reloading all ammo at once, ammo is reloaded in chunks
+    public bool roundsReload;
+    [ShowIf("roundsReload")] public int rounds_per_load = 1;
 
-    #region Initalizer
+    #region Initalizers
     public AmmoCounter()
     {
         stackCounterType = StackCountType.Ammo;
+    }
+    // creates a deepy copy of this class.
+    public override StackCounter GetCopy()
+    {
+        return new AmmoCounter();
     }
     #endregion
 
@@ -34,21 +41,34 @@ public class AmmoCounter : StackCounter
     public void UseCounter(int stack_usage = -1)
     {
         curr_ammo += stack_usage;
-        curr_ammo = Math.Clamp(curr_ammo, 0, max_ammo);
+        curr_ammo = Math.Clamp(curr_ammo, 0, maxAmmo);
+    }
+    public void ReloadAmmo(int amt = 0)
+    {
+        amt = amt == 0 ? maxAmmo : amt; 
     }
 
-
+    public override void GetEvents(bool[] inputEventsUsed)
+    {
+        inputEventsUsed[((int)UseAmmoEvent)] = true;
+        inputEventsUsed[((int)ReloadEvent)] = true;
+        // only do these if they are active
+        // if (regenAmmo)
+        // {
+        //     InputEventsUsed[((int)ReloadEvent)] = true;
+        // }
+    }
     #endregion
     
     #region Stack Status
     public override bool IsReady()
     {
-        return curr_ammo > max_ammo;
+        return curr_ammo > maxAmmo;
     }
 
     public override float GetStatus()
     {
-        return (float)curr_ammo/max_ammo;
+        return (float)curr_ammo/maxAmmo;
     }
     #endregion
 
