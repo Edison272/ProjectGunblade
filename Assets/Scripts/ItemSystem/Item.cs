@@ -8,17 +8,33 @@ using UnityEngine;
 public enum ItemType {Weapon, Support}
 public class Item : MonoBehaviour
 {   
-    [field: SerializeField] public ItemSO base_data {get; private set;} // SO contains important base data
+    [field: SerializeField] public ItemSO baseData {get; private set;} // SO contains important base data
     public Character user;
 
-    private ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
-    private StackCounter[] stackCounters; // determines the resources the attacks relies on / update
-    public InputEventRelay inputRelay; // reference to another input relay
+    [SerializeField] private ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
+    public StackCounter[] stackCounters {get; private set;}
+
+    // VFX STUFF
+    public Transform itemTip; // the "front" of an item which attack type vfx will align to
+    public float y_offset;
+
+    // AIMING STUFF
+    public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on rot_scale)
+    private InputEventRelay inputRelay; // reference to another input relay
 
     #region Initializers
 
     public void Awake()
     {
+        if (baseData)
+        {
+            Setup(baseData);
+        }
+        if (!itemTip)
+        {
+            itemTip = this.transform;
+            y_offset = itemTip.transform.position.y - transform.position.y;
+        }
     }
 
     public void Start()
@@ -27,17 +43,21 @@ public class Item : MonoBehaviour
     }
 
     // Setup immutable item data when this object is made
-    public void Setup(ItemSO base_data)
+    public void Setup(ItemSO baseData)
     {            
         // build functionality from SO
-        itemEffects = base_data.itemEffects;
 
-        // Deep copy of stack counters
-        int counter_amt= base_data.stackCounters.Length;
-        stackCounters = new AmmoCounter[counter_amt];
-        for (int i = 0; i < counter_amt; i++)
+        // deep copy of stack counters because these count for individual ites
+        stackCounters = new StackCounter[baseData.stackCounters.Length];
+        for (int i = 0; i < baseData.stackCounters.Length; i++)
         {
-            stackCounters[i] = base_data.stackCounters[i].GetCopy();
+            stackCounters[i] = baseData.stackCounters[i].GetCopy();
+        }
+        // deep copy of item effects afterward (important)
+        itemEffects = new ItemEffect[baseData.itemEffects.Length];
+        for (int i = 0; i < baseData.itemEffects.Length; i++)
+        {
+            itemEffects[i] = baseData.itemEffects[i].GetCopy(this);
         }
     }
 
@@ -48,18 +68,16 @@ public class Item : MonoBehaviour
 
         // subscribe to old user events
         inputRelay = newInputRelay;
-        inputRelay.ConnectEvent(InputEvent.MainStart, () => {Debug.Log($"main start");});
-        inputRelay.ConnectEvent(InputEvent.MainEnd, () => {Debug.Log($"main end");});
-        inputRelay.ConnectEvent(InputEvent.AltStart, () => {Debug.Log($"alt start");});
-        inputRelay.ConnectEvent(InputEvent.AltEnd, () => {Debug.Log($"alt end");});
-        inputRelay.ConnectEvent(InputEvent.Reset, () => {Debug.Log($"reset");});
-
-        // foreach (ItemEffect effect in itemEffects)
-        // {
-        //     effect.SetupEventListeners(new_user);
-        // }
+        foreach (StackCounter counter in stackCounters)
+        {
+            counter.SetInputRelay(inputRelay);
+        }
 
         // new_user.ResetEvent += ResetItem;
+    }
+    public void UseItem(int attackIndex)
+    {
+        baseData.attackObjects[attackIndex].Attack(GetAttackTarget());
     }
     public void DropItem()
     {
@@ -90,5 +108,12 @@ public class Item : MonoBehaviour
         // functionality_controller.ResetData();
     }
 
+    #endregion
+
+    #region 
+    public AttackTarget GetAttackTarget()
+    {
+        return new AttackTarget(user ? user.GetPosition() : this.transform.position, target_pos, itemTip.position, new Vector2(0, y_offset));
+    }
     #endregion
 }

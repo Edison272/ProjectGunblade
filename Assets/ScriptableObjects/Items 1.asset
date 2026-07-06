@@ -12,12 +12,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 401ed04a628f55e46808c6fa2347d8f7, type: 3}
   m_Name: Items 1
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  attackTypes: []
   itemEffects:
-  - effectOnStart: 0
-    effectOnEnd: 0
-    isAltEffect: 0
-    Charging: 0
+  - attackObjectRefs: 00000000
+    stackCounterRefs: 0000000001000000
+    ActivationEvent: 0
+  attackObjects:
+  - rid: 2198171203760816235
+  stackCounters:
+  - rid: 2198171256505761878
+  - rid: 2198171256505761870
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 2198171203760816235
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        atk_stats:
+          damage: 0
+          pierce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          projectile_speed: 10
+          homing_strength: 0
+          projectile_count: 1
+          projectile_spread: 0
+          even_spread: 0
+    - rid: 2198171256505761870
+      type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 3
+        cooldownTime: 1
+        StartCooldownEvent: 3
+    - rid: 2198171256505761878
+      type: {class: ConstantCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 2
+        StartConstant: 3
+        CallConstant: 0
+        EndConstant: 4

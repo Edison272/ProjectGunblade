@@ -49,8 +49,10 @@ public class ItemSO : ScriptableObject
             }
             if (stackCounter.stackCounterType != stackCounter.GetExpectedStackCountType())
             {
-                stackCounters[i] = stackCounter.SmartRecast();
+                stackCounter = stackCounter.SmartRecast();
             }
+
+            stackCounters[i] = stackCounter;
             
         }
     }

@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
         // Setup Input Relay
         inputRelay = new InputEventRelay(
             new Dictionary<InputEvent, Type>{
+                {InputEvent.Passive, typeof(Action)},
                 {InputEvent.MoveStart, typeof(Action<Vector2>)},
                 {InputEvent.MoveEnd, typeof(Action)},
                 {InputEvent.MainStart, typeof(Action)}, 

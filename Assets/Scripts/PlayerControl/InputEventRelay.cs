@@ -14,9 +14,11 @@ public enum InputEvent {
     AltStart, 
     AltEnd, 
     Reset, 
-
     // always keep this here to get this thing's size
-    Size
+    Size,
+    // when a custom activator is triggered, this will be called.
+    // this is not initialized into the event relay by default
+    CustomEvent, 
 }
 
 /// <summary>
@@ -26,9 +28,10 @@ public enum InputEvent {
 /// </summary>
 
 [Serializable]
-public class InputEventRelay : MonoBehaviour
+public class InputEventRelay
 {    
-    private EventSlot[] input_events {get; set;} = new EventSlot[(int)InputEvent.Size];
+    private EventSlot[] _inputEvents {get; set;} = new EventSlot[(int)InputEvent.Size];
+    private Dictionary<Type, EventSlot[]> _customInputEvents = new Dictionary<Type, EventSlot[]>();
     private Type[] expected_types = new Type[(int)InputEvent.Size];
 
     // simple container of type of subscribers
@@ -70,13 +73,13 @@ public class InputEventRelay : MonoBehaviour
     /// No input present = no reference (empty)
     public InputEventRelay(Type[] set_events)
     {
-        for (int i = 0; i < input_events.Length; i++)
+        for (int i = 0; i < _inputEvents.Length; i++)
         {
             Type set_event = set_events[i];
             if (typeof(Delegate).IsAssignableFrom(set_events[i]))
             {
                 expected_types[i] = set_event;
-                input_events[i] = new EventSlot(set_event);
+                _inputEvents[i] = new EventSlot(set_event);
             }
             else
             {
@@ -94,7 +97,7 @@ public class InputEventRelay : MonoBehaviour
             if (typeof(Delegate).IsAssignableFrom(set_event))
             {
                 expected_types[(int)input_type] = set_event;
-                input_events[(int)input_type] = new EventSlot(set_event);
+                _inputEvents[(int)input_type] = new EventSlot(set_event);
             }
             else
             {
@@ -133,7 +136,7 @@ public class InputEventRelay : MonoBehaviour
             return false;
         }
 
-        input_events[(int)inputType].Subscribers.Add(callback);
+        _inputEvents[(int)inputType].Subscribers.Add(callback);
         return true;
     }
     public bool ConnectEvent(InputEvent inputType, Action callback){return ConnectEvent(inputType, (Delegate)callback, typeof(Action));}
@@ -159,7 +162,7 @@ public class InputEventRelay : MonoBehaviour
             return false;
         }
 
-        bool removed = input_events[(int)inputType].Subscribers.Remove(callback);
+        bool removed = _inputEvents[(int)inputType].Subscribers.Remove(callback);
         if (!removed)
         {
             Debug.LogWarning($"callback could not be found for removal");
@@ -172,7 +175,7 @@ public class InputEventRelay : MonoBehaviour
     #region Invoke
     public void Invoke(InputEvent inputType)
     {
-        EventSlot slot = input_events[(int)inputType];
+        EventSlot slot = _inputEvents[(int)inputType];
         foreach (Delegate slot_sub in slot.Subscribers) {
             Type d_type = slot.DelegateType;
             ((Action)slot_sub)();
@@ -180,7 +183,7 @@ public class InputEventRelay : MonoBehaviour
     }
     public void Invoke<T>(InputEvent inputType, T arg)
     {
-        EventSlot slot = input_events[(int)inputType];
+        EventSlot slot = _inputEvents[(int)inputType];
         foreach (Delegate slot_sub in slot.Subscribers) {
             Type d_type = slot.DelegateType;
             ((Action<T>)slot_sub)(arg);
@@ -188,7 +191,7 @@ public class InputEventRelay : MonoBehaviour
     }
     public void Invoke<T1, T2>(InputEvent inputType, T1 arg1, T2 arg2)
     {
-        EventSlot slot = input_events[(int)inputType];
+        EventSlot slot = _inputEvents[(int)inputType];
         foreach (Delegate slot_sub in slot.Subscribers) {
             Type d_type = slot.DelegateType;
             ((Action<T1, T2>)slot_sub)(arg1, arg2);
@@ -206,7 +209,7 @@ public class InputEventRelay : MonoBehaviour
     // determines if any methods are connected to an input
     public bool IsConnected(InputEvent inputType)
     {
-        return input_events[(int)inputType] != null;
+        return _inputEvents[(int)inputType] != null;
     }
     #endregion
 }

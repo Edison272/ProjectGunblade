@@ -13,6 +13,7 @@ public class ItemTester : MonoBehaviour
     {
         inputRelay = new InputEventRelay(
             new Dictionary<InputEvent, Type>{
+                {InputEvent.Passive, typeof(Action)}, 
                 {InputEvent.MainStart, typeof(Action)}, 
                 {InputEvent.MainEnd, typeof(Action)}, 
                 {InputEvent.AltStart, typeof(Action)}, 
@@ -24,7 +25,7 @@ public class ItemTester : MonoBehaviour
         for(int i = 0; i < (int)InputEvent.Size; i++)
         {
             InputEvent input_event = (InputEvent)i;
-            if (inputRelay.IsConnected(input_event))
+            if (inputRelay.IsConnected(input_event) && input_event != InputEvent.Passive)
             {
                 Button input_button = Instantiate(buttonInstance, this.transform).GetComponent<Button>();
                 TextMeshProUGUI button_text =  input_button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -45,6 +46,6 @@ public class ItemTester : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        inputRelay.Invoke(InputEvent.Passive);
     }
 }

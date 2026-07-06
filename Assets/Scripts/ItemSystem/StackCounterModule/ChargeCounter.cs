@@ -12,10 +12,6 @@ public class ChargeCounter : StackCounter
     #endregion
 
     #region Stack Status
-    public override bool IsReady()
-    {
-        return true;
-    }
 
     public override float GetStatus()
     {
