@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using NUnit.Compatibility;
 using Unity.VisualScripting;
 using UnityEngine;
 
 
 public enum ItemType {Weapon, Support}
+public enum ItemInputEvents {Equip, Unequip, Used, Reset, StackActivation}
 public class Item : MonoBehaviour
 {   
     [field: SerializeField] public ItemSO baseData {get; private set;} // SO contains important base data
@@ -20,7 +23,8 @@ public class Item : MonoBehaviour
 
     // AIMING STUFF
     public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on rot_scale)
-    private InputEventRelay inputRelay; // reference to another input relay
+    private InputEventRelay externalInputRelay; // reference to another input relay which controls the item
+    private InputEventRelay itemInputRelay; // a locally defined input relay
 
     #region Initializers
 
@@ -59,21 +63,32 @@ public class Item : MonoBehaviour
         {
             itemEffects[i] = baseData.itemEffects[i].GetCopy(this);
         }
+
+        // new relay
+        itemInputRelay = new InputEventRelay();
+
+        // find which stack counters use what inputs, update relay
+        List<Enum> active_inputs = new List<Enum>();
+        foreach(StackCounter counter in stackCounters)
+        {
+            counter.GetEvents(active_inputs);
+            foreach(Enum input_enum in active_inputs)
+            {
+                itemInputRelay.AddEvent(input_enum, typeof(Action));
+            }
+            active_inputs.Clear();
+            counter.SetInputRelay(externalInputRelay);
+        }
     }
 
     // adjust item everytime theres a new user
     public void NewUser(InputEventRelay newInputRelay)
     {
         //unsubscribe from old user if they exist
-
+        itemInputRelay.UnlinkRelay(externalInputRelay);
         // subscribe to old user events
-        inputRelay = newInputRelay;
-        foreach (StackCounter counter in stackCounters)
-        {
-            counter.SetInputRelay(inputRelay);
-        }
-
-        // new_user.ResetEvent += ResetItem;
+        externalInputRelay = newInputRelay;
+        itemInputRelay.LinkRelay(externalInputRelay);
     }
     public void UseItem(int attackIndex)
     {

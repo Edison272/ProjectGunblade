@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -59,15 +60,10 @@ public class AmmoCounter : StackCounter
         amt = amt == 0 ? maxAmmo : amt; 
     }
 
-    public override void GetEvents(bool[] inputEventsUsed)
+    public override void GetEvents(List<Enum> inputEventsUsed)
     {
-        inputEventsUsed[((int)UseAmmoEvent)] = true;
-        inputEventsUsed[((int)ReloadEvent)] = true;
-        // only do these if they are active
-        // if (regenAmmo)
-        // {
-        //     InputEventsUsed[((int)ReloadEvent)] = true;
-        // }
+        inputEventsUsed.Add(UseAmmoEvent);
+        inputEventsUsed.Add(ReloadEvent);
     }
     #endregion
     

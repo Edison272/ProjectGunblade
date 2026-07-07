@@ -81,6 +81,10 @@ public class ItemEffect
         }
     }
 
+    #region Helpers
+
+    #endregion
+
     #region GUI Helper
     // this MUST be called by another function, otherwise there will be a problem
     public void OnValidate()

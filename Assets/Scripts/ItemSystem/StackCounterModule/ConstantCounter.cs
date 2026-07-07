@@ -1,5 +1,6 @@
  using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -67,6 +68,12 @@ public class ConstantCounter : StackCounter
         {
             UseActivator();
         }
+    }
+    public override void GetEvents(List<Enum> inputEventsUsed)
+    {
+        inputEventsUsed.Add(StartConstant);
+        inputEventsUsed.Add(EndConstant);
+        inputEventsUsed.Add(CallConstant);
     }
     #endregion
     

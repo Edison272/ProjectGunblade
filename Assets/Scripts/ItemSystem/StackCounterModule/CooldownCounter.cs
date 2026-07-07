@@ -1,5 +1,6 @@
  using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -52,9 +53,9 @@ public class CooldownCounter : StackCounter
             lastUse = Time.time + cooldownTime;
         }
     }
-    public override void GetEvents(bool[] inputEventsUsed)
+    public override void GetEvents(List<Enum> inputEventsUsed)
     {
-
+        inputEventsUsed.Add(StartCooldownEvent);
     }
     #endregion
     

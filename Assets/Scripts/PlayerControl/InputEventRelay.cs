@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -61,45 +62,98 @@ public class InputEventRelay
     }
 
     #region Initializers
-    // simple helper function to get a preinitialized array for the input event
-    public static Delegate[] NewRelayArray()
-    {
-        return new Delegate[(int)InputEvent.Size];
-    }
-    /// basic constructor
+    /// basic constructors
+    public InputEventRelay()
+    {}
+
     public InputEventRelay((Enum, Type)[] set_events)
     {
         foreach((Enum, Type) set_event in set_events)
         {
-            Type enum_type = set_event.Item1.GetType();
-            int index = Convert.ToInt32(set_event.Item1);
+            AddEvent(set_event.Item1, set_event.Item2);
+        }
+    }
+    public InputEventRelay(List<(Enum, Type)> set_events)
+    {
+        foreach((Enum, Type) set_event in set_events)
+        {
+            AddEvent(set_event.Item1, set_event.Item2);
+        }
+    }
 
-            if (!_customInputEvents.ContainsKey(enum_type))
+    // Add events during runtime or initialization. Only meant to be performed by the relay holder.
+    // Also used by the constructor
+    public InputEventRelay AddEvent<E>(E inputType, Type callbackType) where E : Enum
+    {
+        Type enum_type = inputType.GetType();
+        int index = Convert.ToInt32(inputType);
+
+        if (!_customInputEvents.ContainsKey(enum_type))
+        {
+            _customInputEvents[enum_type] = new EventSlot[Enum.GetNames(enum_type).Length];
+        }
+        if (_customInputEvents[enum_type][index] == null)
+        {         
+            if (typeof(Delegate).IsAssignableFrom(callbackType))
             {
-                _customInputEvents[enum_type] = new EventSlot[Enum.GetNames(enum_type).Length];
+                _customInputEvents[enum_type][index] = new EventSlot(callbackType);
             }
-            if (_customInputEvents[enum_type][index] == null)
+            else
             {
-                Type delg_type = set_event.Item2;            
-                if (typeof(Delegate).IsAssignableFrom(delg_type))
-                {
-                    _customInputEvents[enum_type][index] = new EventSlot(delg_type);
-                }
-                else
-                {
-                    Debug.LogError(
-                        $"'{enum_type.Name}' is not a delegate type.");
-                }
+                Debug.LogError(
+                    $"'{enum_type.Name}' is not a delegate type.");
+            }
+        }
+        return this;
+    }
+    #endregion
+
+    #region Copy Data
+
+    // copies the active events in an inputted relay, and creates new, empty events in this relay
+    public void CopyEvents(InputEventRelay copied)
+    {
+        foreach((Enum, Type) set_event in copied.GetEventData())
+        {
+            AddEvent(set_event.Item1, set_event.Item2);
+        }
+    }
+
+    #endregion
+
+    #region Linking Relays
+    // links this relay to a parent relay, connecting this relay's invoke methods to its parent's calls when applicable
+    public void LinkRelay(InputEventRelay parent)
+    {
+        foreach (Type inputType in _customInputEvents.Keys)
+        {
+            Enum enum_type = (Enum)Enum.ToObject(inputType, 0);
+            if (!parent.IsConnected(enum_type))
+            {
+                continue;
+            }
+            for (int i = 0; i < _customInputEvents[inputType].Length; i++)
+            {
+                // enum_type = (Enum)Enum.ToObject(inputType, i);
+                // Delegate invoke_method = SmartInvoke(enum_type, new );
+                // Type delegate_type = GetDelegateType(enum_type);
+                
+                // parent.ConnectEvent(enum_type, (Action)invoke_method);
             }
         }
     }
+    public void UnlinkRelay(InputEventRelay parent)
+    {
+        
+    }
+
     #endregion
 
     #region Connect Events
     /// Connects an event to the relay
     /// If the event does not exist, it will create a new event. actually
     /// Will return T/F depending on whether or not connection was successful
-    public bool ConnectEvent<E>(E inputType, Delegate callback, Type callback_type) where E : Enum 
+    public bool ConnectEvent<E>(E inputType, Delegate callback, Type callbackType) where E : Enum 
     {
         if (callback == null)
         {
@@ -119,7 +173,7 @@ public class InputEventRelay
         {
             // Prevent mixing delegate types.
             Type expected = _customInputEvents[enum_type][index].DelegateType;
-            if (expected != callback_type)
+            if (expected != callbackType)
             {
                 Debug.LogError(
                     $"Cannot connect '{callback.GetType().Name}' to '{inputType}'. " +
@@ -168,6 +222,21 @@ public class InputEventRelay
     #endregion
 
     #region Invoke
+    public void SmartInvoke<E, T>(E inputType, T[] args) where E : Enum
+    {
+        switch (args.Length)
+        {
+            case 0:
+                Invoke(inputType);
+                break;
+            case 1:
+                Invoke(inputType, args[0]);
+                break;
+            case 2:
+                Invoke(inputType, args[0], args[1]);
+                break;
+        }
+    }
     public void Invoke<E>(E inputType) where E : Enum
     {
         Type enum_type = typeof(E);
@@ -219,6 +288,25 @@ public class InputEventRelay
             return false;
         }
         return _customInputEvents[enum_type][index]  != null;
+    }
+
+    // creates a list of all active events in this input relay and their event type
+    public List<(Enum, Type)> GetEventData()
+    {
+        List<(Enum, Type)> set_events_list = new List<(Enum, Type)>();
+        foreach(Type key in _customInputEvents.Keys)
+        {
+            for(int i = 0; i < _customInputEvents[key].Length; i++)
+            {
+                Enum enum_type = (Enum)Enum.ToObject(key, i);
+                EventSlot event_slot = _customInputEvents[key][i];
+                if (event_slot != null)
+                {
+                    set_events_list.Add((enum_type, event_slot.DelegateType));
+                }
+            }
+        }
+        return set_events_list;
     }
     #endregion
 }
