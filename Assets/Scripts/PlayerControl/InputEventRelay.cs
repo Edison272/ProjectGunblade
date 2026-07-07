@@ -30,9 +30,7 @@ public enum InputEvent {
 [Serializable]
 public class InputEventRelay
 {    
-    private EventSlot[] _inputEvents {get; set;} = new EventSlot[(int)InputEvent.Size];
     private Dictionary<Type, EventSlot[]> _customInputEvents = new Dictionary<Type, EventSlot[]>();
-    private Type[] expected_types = new Type[(int)InputEvent.Size];
 
     // simple container of type of subscribers
     private sealed class EventSlot
@@ -69,83 +67,77 @@ public class InputEventRelay
         return new Delegate[(int)InputEvent.Size];
     }
     /// basic constructor
-    /// Delegate should have an array length same as InputEvent.Size
-    /// No input present = no reference (empty)
-    public InputEventRelay(Type[] set_events)
+    public InputEventRelay((Enum, Type)[] set_events)
     {
-        for (int i = 0; i < _inputEvents.Length; i++)
+        foreach((Enum, Type) set_event in set_events)
         {
-            Type set_event = set_events[i];
-            if (typeof(Delegate).IsAssignableFrom(set_events[i]))
-            {
-                expected_types[i] = set_event;
-                _inputEvents[i] = new EventSlot(set_event);
-            }
-            else
-            {
-                Debug.LogError(
-                    $"'{expected_types[i].Name}' is not a delegate type.");
-            }
-        }
-    }
-    // constructor that converts dictionary into an array
-    public InputEventRelay(Dictionary<InputEvent, Type> set_events)
-    {
-        foreach(InputEvent input_type in set_events.Keys)
-        {
-            Type set_event = set_events[input_type];
-            if (typeof(Delegate).IsAssignableFrom(set_event))
-            {
-                expected_types[(int)input_type] = set_event;
-                _inputEvents[(int)input_type] = new EventSlot(set_event);
-            }
-            else
-            {
-                Debug.LogError(
-                    $"'{set_event.Name}' is not a delegate type.");
-            }
-        }
-    }
+            Type enum_type = set_event.Item1.GetType();
+            int index = Convert.ToInt32(set_event.Item1);
 
-    // directly set one type
-    public void SetInputEvent(InputEvent input_type, Type callback_type)
-    {
-        expected_types[(int)input_type] = callback_type;
+            if (!_customInputEvents.ContainsKey(enum_type))
+            {
+                _customInputEvents[enum_type] = new EventSlot[Enum.GetNames(enum_type).Length];
+            }
+            if (_customInputEvents[enum_type][index] == null)
+            {
+                Type delg_type = set_event.Item2;            
+                if (typeof(Delegate).IsAssignableFrom(delg_type))
+                {
+                    _customInputEvents[enum_type][index] = new EventSlot(delg_type);
+                }
+                else
+                {
+                    Debug.LogError(
+                        $"'{enum_type.Name}' is not a delegate type.");
+                }
+            }
+        }
     }
     #endregion
 
     #region Connect Events
     /// Connects an event to the relay
+    /// If the event does not exist, it will create a new event. actually
     /// Will return T/F depending on whether or not connection was successful
-    public bool ConnectEvent(InputEvent inputType, Delegate callback, Type callback_type)
+    public bool ConnectEvent<E>(E inputType, Delegate callback, Type callback_type) where E : Enum 
     {
         if (callback == null)
         {
             Debug.LogError("Cannot connect a null delegate.");
             return false;
         }
-
-        Type expected = expected_types[(int)inputType];
-
-        // Prevent mixing delegate types.
-        if (expected != callback_type)
+        
+        Type enum_type = typeof(E);
+        int index = Convert.ToInt32(inputType);
+    
+        if (!_customInputEvents.ContainsKey(enum_type) || _customInputEvents[enum_type][index] == null)
         {
-            Debug.LogError(
-                $"Cannot connect '{callback.GetType().Name}' to '{inputType}'. " +
-                $"Expected '{expected.Name}'.");
+            Debug.LogError("No relay exists to connect to");
             return false;
         }
+        else
+        {
+            // Prevent mixing delegate types.
+            Type expected = _customInputEvents[enum_type][index].DelegateType;
+            if (expected != callback_type)
+            {
+                Debug.LogError(
+                    $"Cannot connect '{callback.GetType().Name}' to '{inputType}'. " +
+                    $"Expected '{expected.Name}'.");
+                return false;
+            }
+        }
 
-        _inputEvents[(int)inputType].Subscribers.Add(callback);
+        _customInputEvents[enum_type][index].Subscribers.Add(callback);
         return true;
     }
-    public bool ConnectEvent(InputEvent inputType, Action callback){return ConnectEvent(inputType, (Delegate)callback, typeof(Action));}
-    public bool ConnectEvent<T>(InputEvent inputType, Action<T> callback){return ConnectEvent(inputType, (Delegate)callback, typeof(Action<T>));}
-    public bool ConnectEvent<T1, T2>(InputEvent inputType, Action<T1, T2> callback){return ConnectEvent(inputType, (Delegate)callback, typeof(Action<T1, T2>));}
+    public bool ConnectEvent<E>(E inputType, Action callback) where E : Enum {return ConnectEvent(inputType, (Delegate)callback, typeof(Action));}
+    public bool ConnectEvent<E, T>(E inputType, Action<T> callback) where E : Enum {return ConnectEvent(inputType, (Delegate)callback, typeof(Action<T>));}
+    public bool ConnectEvent<E, T1, T2>(E inputType, Action<T1, T2> callback) where E : Enum {return ConnectEvent(inputType, (Delegate)callback, typeof(Action<T1, T2>));}
 
     /// Disconnects an event from the relay
     /// Will return T/F depending on whether or not disconnection was successful
-    public bool DisconnectEvent<TDelegate>(InputEvent inputType, Delegate callback)
+    public bool DisconnectEvent<E>(E inputType, Delegate callback) where E : Enum
     {
         if (callback == null)
         {
@@ -153,8 +145,11 @@ public class InputEventRelay
             return false;
         }
 
-        Type expected = expected_types[(int)inputType];
-        if (expected != typeof(TDelegate))
+        Type enum_type = typeof(E);
+        int index = Convert.ToInt32(inputType);
+
+        Type expected = _customInputEvents[enum_type][index].DelegateType;
+        if (expected != enum_type)
         {
             Debug.LogError(
                 $"Cannot disconnect '{callback.GetType().Name}' from '{inputType}'. " +
@@ -162,7 +157,7 @@ public class InputEventRelay
             return false;
         }
 
-        bool removed = _inputEvents[(int)inputType].Subscribers.Remove(callback);
+        bool removed = _customInputEvents[enum_type][index].Subscribers.Remove(callback);
         if (!removed)
         {
             Debug.LogWarning($"callback could not be found for removal");
@@ -173,25 +168,31 @@ public class InputEventRelay
     #endregion
 
     #region Invoke
-    public void Invoke(InputEvent inputType)
+    public void Invoke<E>(E inputType) where E : Enum
     {
-        EventSlot slot = _inputEvents[(int)inputType];
+        Type enum_type = typeof(E);
+        int index = Convert.ToInt32(inputType);
+        EventSlot slot = _customInputEvents[enum_type][index];
         foreach (Delegate slot_sub in slot.Subscribers) {
             Type d_type = slot.DelegateType;
             ((Action)slot_sub)();
         }
     }
-    public void Invoke<T>(InputEvent inputType, T arg)
+    public void Invoke<E, T>(E inputType, T arg) where E : Enum
     {
-        EventSlot slot = _inputEvents[(int)inputType];
+        Type enum_type = typeof(E);
+        int index = Convert.ToInt32(inputType);
+        EventSlot slot = _customInputEvents[enum_type][index];
         foreach (Delegate slot_sub in slot.Subscribers) {
             Type d_type = slot.DelegateType;
             ((Action<T>)slot_sub)(arg);
         }
     }
-    public void Invoke<T1, T2>(InputEvent inputType, T1 arg1, T2 arg2)
+    public void Invoke<E, T1, T2>(E inputType, T1 arg1, T2 arg2) where E : Enum
     {
-        EventSlot slot = _inputEvents[(int)inputType];
+        Type enum_type = typeof(E);
+        int index = Convert.ToInt32(inputType);
+        EventSlot slot = _customInputEvents[enum_type][index];
         foreach (Delegate slot_sub in slot.Subscribers) {
             Type d_type = slot.DelegateType;
             ((Action<T1, T2>)slot_sub)(arg1, arg2);
@@ -201,15 +202,23 @@ public class InputEventRelay
     #endregion
 
     #region Helpers
-    public Type GetDelegateType(InputEvent inputType)
+    public Type GetDelegateType<E>(E inputType) where E : Enum
     {
-        return expected_types[(int)inputType];
+        Type enum_type = typeof(E);
+        int index = Convert.ToInt32(inputType);
+        return _customInputEvents[enum_type][index].DelegateType;
     }
 
     // determines if any methods are connected to an input
-    public bool IsConnected(InputEvent inputType)
+    public bool IsConnected<E>(E inputType) where E : Enum
     {
-        return _inputEvents[(int)inputType] != null;
+        Type enum_type = typeof(E);
+        int index = Convert.ToInt32(inputType);
+        if (!_customInputEvents.ContainsKey(enum_type))
+        {
+            return false;
+        }
+        return _customInputEvents[enum_type][index]  != null;
     }
     #endregion
 }
