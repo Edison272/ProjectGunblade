@@ -18,7 +18,7 @@ public class ItemEffect
     [SerializeReference] public int[] stackCounterRefs = new int[] {}; // contains a custom collection of index references for stack counters
     // THE FIRST ITEM OF STACK COUNTER REFS IS THE MOST IMPORTANT. THAT IS THE ONE WHICH ACTIVATES THE ITEM EFFECT WHEN TRIGGERED
 
-    public InputEvent ActivationEvent = InputEvent.MainStart; // determines when the intem effect checks values
+    public InputEvent ActivationEvent = InputEvent.Character_MainStart; // determines when the intem effect checks values
 
     #region Initializer
     // return a deep copy of this item effect

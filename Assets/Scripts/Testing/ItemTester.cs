@@ -13,19 +13,19 @@ public class ItemTester : MonoBehaviour
     {
         inputRelay = new InputEventRelay(
             new (Enum, Type)[] {
-                (InputEvent.Passive, typeof(Action)), 
-                (InputEvent.MainStart, typeof(Action)), 
-                (InputEvent.MainEnd, typeof(Action)), 
-                (InputEvent.AltStart, typeof(Action)), 
-                (InputEvent.AltEnd, typeof(Action)), 
-                (InputEvent.Reset, typeof(Action)), 
+                (InputEvent.General_Passive, typeof(Action)), 
+                (InputEvent.Character_MainStart, typeof(Action)), 
+                (InputEvent.Character_MainEnd, typeof(Action)), 
+                (InputEvent.Character_AltStart, typeof(Action)), 
+                (InputEvent.Character_AltEnd, typeof(Action)), 
+                (InputEvent.Usable_Reset, typeof(Action)), 
             }
         );
 
         for(int i = 0; i < (int)InputEvent.Size; i++)
         {
             InputEvent input_event = (InputEvent)i;
-            if (inputRelay.IsConnected(input_event) && input_event != InputEvent.Passive)
+            if (inputRelay.IsConnected(input_event) && input_event != InputEvent.General_Passive)
             {
                 Button input_button = Instantiate(buttonInstance, this.transform).GetComponent<Button>();
                 TextMeshProUGUI button_text =  input_button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -35,17 +35,17 @@ public class ItemTester : MonoBehaviour
             }
         }
         buttonInstance.SetActive(false);
-        item.NewUser(inputRelay);
+        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        item.NewUser(inputRelay);
     }
 
     // Update is called once per frame
     void Update()
     {
-        inputRelay.Invoke(InputEvent.Passive);
+        inputRelay.Invoke(InputEvent.General_Passive);
     }
 }

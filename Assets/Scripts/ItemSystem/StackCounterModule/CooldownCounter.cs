@@ -13,7 +13,7 @@ public class CooldownCounter : StackCounter
     [Header("Basic Stats")]
     public float cooldownTime = 0.1f;
     private float lastUse = 0;
-    public InputEvent StartCooldownEvent = InputEvent.MainStart;
+    public InputEvent StartCooldownEvent = InputEvent.Character_MainStart;
 
     #region Initalizers
     public CooldownCounter()
@@ -35,9 +35,9 @@ public class CooldownCounter : StackCounter
         // unsubscribe from the previous relay
         if (inputRelay != null)
         {
-            
+
         }
-        
+
         // set new
         inputRelay = newRelay;
         inputRelay.ConnectEvent(StartCooldownEvent, StartCooldown);
@@ -47,6 +47,7 @@ public class CooldownCounter : StackCounter
     #region Functionality
     public void StartCooldown()
     {
+        Debug.Log("sukiyaki");
         if (GetIndexData() > 0)
         {
             UseActivator();

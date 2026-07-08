@@ -214,16 +214,16 @@ public class Character : MonoBehaviour, IMovement
     #region Player Input
     public void ConnectInputs(InputEventRelay inputRelay)
     {
-        inputRelay.ConnectEvent(InputEvent.MoveStart, (Action<Vector2>)StartMove);
-        inputRelay.ConnectEvent(InputEvent.MoveEnd, StopMove);
+        inputRelay.ConnectEvent(InputEvent.Character_MoveStart, (Action<Vector2>)StartMove);
+        inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, StopMove);
 
-        // inputRelay.ConnectEvent(InputEvent.MoveStart, MainActionStartEvent.Invoke);
-        // inputRelay.ConnectEvent(InputEvent.MoveEnd, MainActionEndEvent.Invoke);
-        // inputRelay.ConnectEvent(InputEvent.MoveStart, AltActionStartEvent.Invoke);
-        // inputRelay.ConnectEvent(InputEvent.MoveEnd, AltActionEndEvent.Invoke);
+        // inputRelay.ConnectEvent(InputEvent.Character_MoveStart, MainActionStartEvent.Invoke);
+        // inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, MainActionEndEvent.Invoke);
+        // inputRelay.ConnectEvent(InputEvent.Character_MoveStart, AltActionStartEvent.Invoke);
+        // inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, AltActionEndEvent.Invoke);
 
-        inputRelay.ConnectEvent(InputEvent.Reset, ResetEvent.Invoke);
-        //inputRelay.ConnectEvent(InputEvent.MoveStop, (Action)StopMove);
+        inputRelay.ConnectEvent(InputEvent.Usable_Reset, ResetEvent.Invoke);
+        //inputRelay.ConnectEvent(InputEvent.Character_MoveStop, (Action)StopMove);
     }
 
     public void ConnectPlayer(PlayerController player_controller)

@@ -8,7 +8,6 @@ using UnityEngine;
 
 
 public enum ItemType {Weapon, Support}
-public enum ItemInputEvents {Equip, Unequip, Used, Reset, StackActivation}
 public class Item : MonoBehaviour
 {   
     [field: SerializeField] public ItemSO baseData {get; private set;} // SO contains important base data
@@ -64,7 +63,7 @@ public class Item : MonoBehaviour
             itemEffects[i] = baseData.itemEffects[i].GetCopy(this);
         }
 
-        // new relay
+
         itemInputRelay = new InputEventRelay();
 
         // find which stack counters use what inputs, update relay
@@ -76,8 +75,9 @@ public class Item : MonoBehaviour
             {
                 itemInputRelay.AddEvent(input_enum, typeof(Action));
             }
+            Debug.Log(string.Join(", ", active_inputs));
             active_inputs.Clear();
-            counter.SetInputRelay(externalInputRelay);
+            counter.SetInputRelay(itemInputRelay);
         }
     }
 
@@ -93,6 +93,7 @@ public class Item : MonoBehaviour
     public void UseItem(int attackIndex)
     {
         baseData.attackObjects[attackIndex].Attack(GetAttackTarget());
+        //itemInputRelay.Invoke(InputEvent.Usable_Used);
     }
     public void DropItem()
     {

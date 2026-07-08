@@ -45,28 +45,28 @@ public class PlayerController : MonoBehaviour
 
 
         // connect public events to input actions
-        input_movement.performed += ctx => {inputRelay.Invoke(InputEvent.MoveStart, ctx.ReadValue<Vector2>());};
-        input_movement.canceled += ctx => {inputRelay.Invoke(InputEvent.MoveEnd);};
+        input_movement.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MoveStart, ctx.ReadValue<Vector2>());};
+        input_movement.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MoveEnd);};
 
-        input_use_main.performed += ctx => {inputRelay.Invoke(InputEvent.MainStart);};
-        input_use_main.canceled += ctx => {inputRelay.Invoke(InputEvent.MainEnd);};
-        input_use_alt.performed += ctx => {inputRelay.Invoke(InputEvent.AltStart);};
-        input_use_alt.canceled += ctx => {inputRelay.Invoke(InputEvent.AltEnd);};
+        input_use_main.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MainStart);};
+        input_use_main.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MainEnd);};
+        input_use_alt.performed += ctx => {inputRelay.Invoke(InputEvent.Character_AltStart);};
+        input_use_alt.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_AltEnd);};
 
-        input_reset.started += ctx => {inputRelay.Invoke(InputEvent.Reset);};
-        //input_interact.started += ctx => {inputRelay.Invoke(InputEvent.Reset);};
+        input_reset.started += ctx => {inputRelay.Invoke(InputEvent.Usable_Reset);};
+        //input_interact.started += ctx => {inputRelay.Invoke(InputEvent.Item_Reset);};
 
         // Setup Input Relay
         inputRelay = new InputEventRelay(
             new (Enum, Type)[] {
-                (InputEvent.Passive, typeof(Action)),
-                (InputEvent.MoveStart, typeof(Action<Vector2>)),
-                (InputEvent.MoveEnd, typeof(Action)),
-                (InputEvent.MainStart, typeof(Action)), 
-                (InputEvent.MainEnd, typeof(Action)), 
-                (InputEvent.AltStart, typeof(Action)), 
-                (InputEvent.AltEnd, typeof(Action)), 
-                (InputEvent.Reset, typeof(Action)), 
+                (InputEvent.General_Passive, typeof(Action)),
+                (InputEvent.Character_MoveStart, typeof(Action<Vector2>)),
+                (InputEvent.Character_MoveEnd, typeof(Action)),
+                (InputEvent.Character_MainStart, typeof(Action)), 
+                (InputEvent.Character_MainEnd, typeof(Action)), 
+                (InputEvent.Character_AltStart, typeof(Action)), 
+                (InputEvent.Character_AltEnd, typeof(Action)), 
+                (InputEvent.Usable_Reset, typeof(Action)), 
             }
         );
     }

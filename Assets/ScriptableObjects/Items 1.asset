@@ -47,11 +47,11 @@ MonoBehaviour:
       data:
         <stackCounterType>k__BackingField: 3
         cooldownTime: 1
-        StartCooldownEvent: 3
+        StartCooldownEvent: 2
     - rid: 2198171256505761878
       type: {class: ConstantCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 2
-        StartConstant: 3
-        CallConstant: 0
-        EndConstant: 4
+        StartConstant: 2
+        CallConstant: 6
+        EndConstant: 3

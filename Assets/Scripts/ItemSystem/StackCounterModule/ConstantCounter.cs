@@ -12,9 +12,9 @@ using UnityEngine;
 public class ConstantCounter : StackCounter
 {
     [Header("Basic Stats")]
-    public InputEvent StartConstant = InputEvent.MainStart;
-    public InputEvent CallConstant = InputEvent.Passive;
-    public InputEvent EndConstant = InputEvent.MainEnd;
+    public InputEvent StartConstant = InputEvent.Character_MainStart;
+    public InputEvent CallConstant = InputEvent.General_Passive;
+    public InputEvent EndConstant = InputEvent.Character_MainEnd;
     // for "forcing" parameters onto some of the input events
     private Action ToggleStart;
     private Action ToggleEnd;

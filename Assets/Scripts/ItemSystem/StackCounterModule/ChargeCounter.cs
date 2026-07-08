@@ -5,8 +5,8 @@ using UnityEngine;
 public class ChargeCounter : StackCounter
 {
     [Header("Input Events")]
-    [SerializeField] InputEvent useAmmoEvent = InputEvent.MainStart;
-    [SerializeField] InputEvent reloadAmmoEvent = InputEvent.Reset;
+    [SerializeField] InputEvent useAmmoEvent = InputEvent.Character_MainStart;
+    [SerializeField] InputEvent reloadAmmoEvent = InputEvent.Usable_Reset;
     #region Functionality
 
     #endregion

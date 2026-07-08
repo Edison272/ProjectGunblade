@@ -15,8 +15,8 @@ public class AmmoCounter : StackCounter
     public int maxAmmo;
     public int curr_ammo;
     public float reloadSpeed;
-    public InputEvent UseAmmoEvent = InputEvent.MainStart;
-    public InputEvent ReloadEvent = InputEvent.Reset;
+    public InputEvent UseAmmoEvent = InputEvent.Character_MainStart;
+    public InputEvent ReloadEvent = InputEvent.Usable_Reset;
 
     [Header("Regen Ammo")] // instead of manually reloading, slowly reloads ammo when not being used
     public bool regenAmmo;
