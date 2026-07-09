@@ -12,7 +12,7 @@ public class ItemTester : MonoBehaviour
     void Awake()
     {
         inputRelay = new InputEventRelay(
-            new (Enum, Type)[] {
+            new (InputEvent, Type)[] {
                 (InputEvent.General_Passive, typeof(Action)), 
                 (InputEvent.Character_MainStart, typeof(Action)), 
                 (InputEvent.Character_MainEnd, typeof(Action)), 
@@ -35,7 +35,6 @@ public class ItemTester : MonoBehaviour
             }
         }
         buttonInstance.SetActive(false);
-        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

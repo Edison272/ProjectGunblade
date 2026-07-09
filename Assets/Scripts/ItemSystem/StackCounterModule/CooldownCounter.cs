@@ -47,14 +47,13 @@ public class CooldownCounter : StackCounter
     #region Functionality
     public void StartCooldown()
     {
-        Debug.Log("sukiyaki");
         if (GetIndexData() > 0)
         {
             UseActivator();
             lastUse = Time.time + cooldownTime;
         }
     }
-    public override void GetEvents(List<Enum> inputEventsUsed)
+    public override void GetEvents(List<InputEvent> inputEventsUsed)
     {
         inputEventsUsed.Add(StartCooldownEvent);
     }

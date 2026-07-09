@@ -90,7 +90,7 @@ public class StackCounter
     #region Helpers
     /// Used to see which events this counter subscribes to.
     /// The array's length should be the amount of InputEvent(enums) there are, so its a true/false to see if it exists or not
-    public virtual void GetEvents(List<Enum> inputEventsUsed)
+    public virtual void GetEvents(List<InputEvent> inputEventsUsed)
     {
         return;
     }

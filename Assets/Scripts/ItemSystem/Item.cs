@@ -67,15 +67,14 @@ public class Item : MonoBehaviour
         itemInputRelay = new InputEventRelay();
 
         // find which stack counters use what inputs, update relay
-        List<Enum> active_inputs = new List<Enum>();
+        List<InputEvent> active_inputs = new List<InputEvent>();
         foreach(StackCounter counter in stackCounters)
         {
             counter.GetEvents(active_inputs);
-            foreach(Enum input_enum in active_inputs)
+            foreach(InputEvent input_enum in active_inputs)
             {
                 itemInputRelay.AddEvent(input_enum, typeof(Action));
             }
-            Debug.Log(string.Join(", ", active_inputs));
             active_inputs.Clear();
             counter.SetInputRelay(itemInputRelay);
         }
@@ -93,7 +92,7 @@ public class Item : MonoBehaviour
     public void UseItem(int attackIndex)
     {
         baseData.attackObjects[attackIndex].Attack(GetAttackTarget());
-        //itemInputRelay.Invoke(InputEvent.Usable_Used);
+        itemInputRelay.Invoke(InputEvent.Usable_Used);
     }
     public void DropItem()
     {

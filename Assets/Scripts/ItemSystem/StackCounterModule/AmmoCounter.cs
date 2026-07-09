@@ -60,7 +60,7 @@ public class AmmoCounter : StackCounter
         amt = amt == 0 ? maxAmmo : amt; 
     }
 
-    public override void GetEvents(List<Enum> inputEventsUsed)
+    public override void GetEvents(List<InputEvent> inputEventsUsed)
     {
         inputEventsUsed.Add(UseAmmoEvent);
         inputEventsUsed.Add(ReloadEvent);

@@ -69,7 +69,7 @@ public class ConstantCounter : StackCounter
             UseActivator();
         }
     }
-    public override void GetEvents(List<Enum> inputEventsUsed)
+    public override void GetEvents(List<InputEvent> inputEventsUsed)
     {
         inputEventsUsed.Add(StartConstant);
         inputEventsUsed.Add(EndConstant);
