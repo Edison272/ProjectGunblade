@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   itemEffects:
   - attackObjectRefs: 00000000
-    stackCounterRefs: 0000000001000000
+    stackCounterRefs: 000000000100000002000000
     ActivationEvent: 0
   attackObjects:
   - rid: 2198171203760816235
   stackCounters:
   - rid: 2198171256505761878
   - rid: 2198171256505761870
+  - rid: 2198171343949136020
   references:
     version: 2
     RefIds:
@@ -55,3 +56,15 @@ MonoBehaviour:
         StartConstant: 2
         CallConstant: 6
         EndConstant: 3
+    - rid: 2198171343949136020
+      type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 1
+        basicAmmoStats:
+          maxAmmo: 30
+          curr_ammo: 30
+          reloadSpeed: 0
+          UseAmmoEvent: 10
+          ReloadEvent: 11
+        regenAmmo: 0
+        roundsReload: 0

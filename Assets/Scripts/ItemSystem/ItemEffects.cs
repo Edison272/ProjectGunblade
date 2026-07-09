@@ -60,6 +60,10 @@ public class ItemEffect
         foreach(int stack_ref in stackCounterRefs)
         {
             stack_index *= baseItem.stackCounters[stack_ref].GetIndexData();
+            if (stack_index < 0)
+            {
+                return -1;
+            }
         }
         return stack_index;
     }
