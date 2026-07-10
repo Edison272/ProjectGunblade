@@ -47,4 +47,10 @@ public class ItemTester : MonoBehaviour
     {
         inputRelay.Invoke(InputEvent.General_Passive);
     }
+
+    public void TogglePickedup(bool is_pickedup)
+    {
+        InputEventRelay new_relay = is_pickedup? inputRelay : null;
+        item.NewUser(new_relay);
+    }
 }

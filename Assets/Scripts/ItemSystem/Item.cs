@@ -63,7 +63,7 @@ public class Item : MonoBehaviour
             itemEffects[i] = baseData.itemEffects[i].GetCopy(this);
         }
 
-
+        // setup input relay stuff here
         itemInputRelay = new InputEventRelay();
 
         // find which stack counters use what inputs, update relay
@@ -78,16 +78,23 @@ public class Item : MonoBehaviour
             active_inputs.Clear();
             counter.SetInputRelay(itemInputRelay);
         }
+
+        itemInputRelay.ConnectEvent(InputEvent.Usable_Reset, ResetItem);
+
+        itemInputRelay.ConnectEvent(InputEvent.Character_MainStart, () => Debug.Log("MAIN START ===================="));
     }
 
     // adjust item everytime theres a new user
     public void NewUser(InputEventRelay newInputRelay)
     {
         //unsubscribe from old user if they exist
-        itemInputRelay.UnlinkRelay(externalInputRelay);
+        if (externalInputRelay != null)
+            itemInputRelay.UnlinkRelay(externalInputRelay);
+        
         // subscribe to old user events
         externalInputRelay = newInputRelay;
-        itemInputRelay.LinkRelay(externalInputRelay);
+        if (externalInputRelay != null)
+            itemInputRelay.LinkRelay(externalInputRelay);
     }
     public void UseItem(int attackIndex)
     {

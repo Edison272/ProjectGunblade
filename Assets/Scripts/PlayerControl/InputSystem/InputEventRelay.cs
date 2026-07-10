@@ -108,7 +108,7 @@ public class InputEventRelay
             }
             
             EventSlot slot = _inputEvents[i];
-            Delegate invoke_method = slot.GetLambda();
+            Delegate invoke_method = slot.GetRelayCallback();
             bool connected = parent.ConnectEvent((InputEvent)i, invoke_method);
             if (connected)
             {
@@ -122,7 +122,27 @@ public class InputEventRelay
     }
     public void UnlinkRelay(InputEventRelay parent)
     {
-        
+        for (int i = 0; i < _inputEvents.Length; i++)
+        {
+            // Add a new event if the parent has the event and this one doesn't
+            if (parent._inputEvents[i] == null || _inputEvents[i] == null)
+            {
+                Debug.Log("nothing to unlink");
+                continue;
+            }
+            
+            EventSlot slot = _inputEvents[i];
+            Delegate invoke_method = slot.GetRelayCallback();
+            bool connected = parent.DisconnectEvent((InputEvent)i, invoke_method);
+            if (connected)
+            {
+                Debug.Log($"{slot.delegateType.Name} for {(InputEvent)i} has been disconnected");
+            }
+            else
+            {
+                Debug.LogWarning($"{slot.delegateType.Name} for {(InputEvent)i} could not disconnect");
+            }
+        }
     }
 
     #endregion

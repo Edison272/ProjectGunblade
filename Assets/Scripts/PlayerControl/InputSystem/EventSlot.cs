@@ -9,6 +9,8 @@ using UnityEngine.UIElements;
 public abstract class EventSlot
 {
     public abstract Type delegateType { get; }
+    public Delegate relayCallback; // other delegates can connect to this
+    protected readonly List<Delegate> _subscribers = new List<Delegate>();
 
     // creat the generic type using the delegate typeId li
     public static EventSlot CreateSlot(Type delegateType)
@@ -42,14 +44,16 @@ public abstract class EventSlot
     public abstract void Invoke<T1, T2>(T1 arg1, T2 arg2);
     
     //
-    public abstract Delegate GetLambda();
+    public abstract Delegate GetRelayCallback();
 }
 #region ActionSlot
 public class ActionSlot : EventSlot
 {
     public override Type delegateType => typeof(Action);
-    public Delegate relayCallback; // other delegates can connect to this
-    private readonly List<Delegate> _subscribers = new List<Delegate>();
+    public ActionSlot()
+    {
+        relayCallback = (Action)(() => Invoke());
+    }
     public override bool Add(Delegate callback, Type callbackType = null)
     {
         if (callbackType == null)
@@ -71,6 +75,7 @@ public class ActionSlot : EventSlot
             {
                 _subscribers[i] = _subscribers[_subscribers.Count-1];
                 _subscribers[_subscribers.Count-1] = (Action)callback;
+                _subscribers.RemoveAt(_subscribers.Count-1);
                 return true;
             }
         }
@@ -91,14 +96,12 @@ public class ActionSlot : EventSlot
     }
     public override void Invoke<I1, I2>(I1 arg1, I2 arg2)
     {
-        
         Invoke();
     }
 
-    public override Delegate GetLambda()
+    public override Delegate GetRelayCallback()
     {
-        Action lambda = (() => Invoke());
-        return lambda;
+        return relayCallback;
     }
 }
 #endregion
@@ -107,8 +110,10 @@ public class ActionSlot : EventSlot
 public class ActionSlot<T> : EventSlot
 {
     public override Type delegateType => typeof(Action<T>);
-    public Delegate relayCallback; // other delegates can connect to this
-    private readonly List<Delegate> _subscribers = new List<Delegate>();
+    public ActionSlot()
+    {
+        relayCallback = (Action<T>)((arg1) => Invoke(arg1));
+    }
     public override bool Add(Delegate callback, Type callbackType = null)
     {
         if (callbackType == null)
@@ -130,6 +135,7 @@ public class ActionSlot<T> : EventSlot
             {
                 _subscribers[i] = _subscribers[_subscribers.Count-1];
                 _subscribers[_subscribers.Count-1] = (Action<T>)callback;
+                _subscribers.RemoveAt(_subscribers.Count-1);
                 return true;
             }
         }
@@ -153,10 +159,9 @@ public class ActionSlot<T> : EventSlot
         Invoke(arg1);
     }
 
-    public override Delegate GetLambda()
+    public override Delegate GetRelayCallback()
     {
-        Action<T> lambda = ((arg1) => Invoke(arg1));
-        return lambda;
+        return relayCallback;
     }
 }
 #endregion
@@ -164,8 +169,10 @@ public class ActionSlot<T> : EventSlot
 public class ActionSlot<T1, T2> : EventSlot
 {
     public override Type delegateType => typeof(Action<T1, T2>);
-    public Delegate relayCallback; // other delegates can connect to this
-    private readonly List<Delegate> _subscribers = new List<Delegate>();
+    public ActionSlot()
+    {
+        relayCallback = (Action<T1, T2>)((arg1, arg2) => Invoke(arg1, arg2));
+    }
     public override bool Add(Delegate callback, Type callbackType = null)
     {
         if (callbackType == null)
@@ -187,6 +194,7 @@ public class ActionSlot<T1, T2> : EventSlot
             {
                 _subscribers[i] = _subscribers[_subscribers.Count-1];
                 _subscribers[_subscribers.Count-1] = (Action<T1, T2>)callback;
+                _subscribers.RemoveAt(_subscribers.Count-1);
                 return true;
             }
         }
@@ -210,10 +218,9 @@ public class ActionSlot<T1, T2> : EventSlot
         }
     }
 
-    public override Delegate GetLambda()
+    public override Delegate GetRelayCallback()
     {
-        Action<T1, T2> lambda = ((arg1, arg2) => Invoke(arg1, arg2));
-        return lambda;
+        return relayCallback;
     }
 }
 #endregion
