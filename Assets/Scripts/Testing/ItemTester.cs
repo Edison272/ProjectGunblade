@@ -18,7 +18,7 @@ public class ItemTester : MonoBehaviour
                 (InputEvent.Character_MainEnd, typeof(Action)), 
                 (InputEvent.Character_AltStart, typeof(Action)), 
                 (InputEvent.Character_AltEnd, typeof(Action)), 
-                (InputEvent.Usable_Reset, typeof(Action)), 
+                (InputEvent.Usable_ResetStart, typeof(Action)), 
             }
         );
 
@@ -46,6 +46,11 @@ public class ItemTester : MonoBehaviour
     void Update()
     {
         inputRelay.Invoke(InputEvent.General_Passive);
+    }
+    public void ToggleEquip(bool is_equipped)
+    {
+
+        item.SetEquipped(is_equipped);
     }
 
     public void TogglePickedup(bool is_pickedup)

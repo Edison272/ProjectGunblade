@@ -14,6 +14,7 @@ public class CooldownCounter : StackCounter
     public float cooldownTime = 0.1f;
     private float lastUse = 0;
     public InputEvent StartCooldownEvent = InputEvent.Character_MainStart;
+    public InputEvent ResetCooldownEvent = InputEvent.Usable_ResetStart;
 
     #region Initalizers
     public CooldownCounter()
@@ -41,6 +42,18 @@ public class CooldownCounter : StackCounter
         // set new
         inputRelay = newRelay;
         inputRelay.ConnectEvent(StartCooldownEvent, StartCooldown);
+        inputRelay.ConnectEvent(ResetCooldownEvent, ResetCounter);
+    }
+    #endregion
+    #region Base Functionality
+    public virtual void ResetCounter()
+    {
+        lastUse = Time.time;
+    }
+    public override void GetEvents(List<InputEvent> inputEventsUsed)
+    {
+        inputEventsUsed.Add(StartCooldownEvent);
+        inputEventsUsed.Add(ResetCooldownEvent);
     }
     #endregion
 
@@ -53,10 +66,7 @@ public class CooldownCounter : StackCounter
             lastUse = Time.time + cooldownTime;
         }
     }
-    public override void GetEvents(List<InputEvent> inputEventsUsed)
-    {
-        inputEventsUsed.Add(StartCooldownEvent);
-    }
+
     #endregion
     
     #region Stack Status

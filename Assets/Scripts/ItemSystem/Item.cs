@@ -16,14 +16,24 @@ public class Item : MonoBehaviour
     [SerializeField] private ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
     public StackCounter[] stackCounters {get; private set;}
 
-    // VFX STUFF
+    [field: Header("VFX Body")]
+    public GameObject itemobject;
+    public Transform rotatorobject; // rotate the object when aiming
     public Transform itemTip; // the "front" of an item which attack type vfx will align to
+    public Animator animator;
+    // VFX STUFF
+    
     public float y_offset;
 
     // AIMING STUFF
     public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on rot_scale)
     private InputEventRelay externalInputRelay; // reference to another input relay which controls the item
     private InputEventRelay itemInputRelay; // a locally defined input relay
+
+    [field: Header("Modifiers")]
+    public float use_spd_scale = 1f;
+    public float equip_spd_scale = 1f;
+    public float resetSpdScale = 1f;
 
     #region Initializers
 
@@ -79,11 +89,13 @@ public class Item : MonoBehaviour
             counter.SetInputRelay(itemInputRelay);
         }
 
-        itemInputRelay.ConnectEvent(InputEvent.Usable_Reset, ResetItem);
-
-        itemInputRelay.ConnectEvent(InputEvent.Character_MainStart, () => Debug.Log("MAIN START ===================="));
+        itemInputRelay.ConnectEvent(InputEvent.Usable_ResetStart, ResetItem);
     }
 
+    public void SetEquipped(bool is_equipped)
+    {
+        itemInputRelay.isActive = is_equipped;
+    }
     // adjust item everytime theres a new user
     public void NewUser(InputEventRelay newInputRelay)
     {
@@ -107,14 +119,25 @@ public class Item : MonoBehaviour
 
     }
 
+    // Calls item animator to reset the item
     public void ResetItem() // "reload" the item
     {
-        
-    }
-
-    public void ResetData() // reset data to original state
-    {
         Debug.Log("Resetting Item");
+        bool can_reset = true;
+        if (can_reset) {
+            float reset_time = baseData.resetTime / resetSpdScale;
+            animator.speed = 1/reset_time;
+            animator.SetTrigger("Resetting");
+            animator.ResetTrigger("Use");
+        }
+    }
+    /// <summary>
+    /// Called by the animator after the reset animator finishes
+    /// reset data to original state
+    /// </summary>
+    public void ResetData() 
+    {
+        itemInputRelay.Invoke(InputEvent.Usable_ResetEnd);
         // use_spd_scale = 1;
         // reset_spd_scale = 1;
         // equip_spd_scale = 1;

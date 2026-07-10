@@ -18,7 +18,8 @@ public enum InputEvent {
     Usable_Equip,
     Usable_Unequip,
     Usable_Used, 
-    Usable_Reset, 
+    Usable_ResetStart, 
+    Usable_ResetEnd, 
     Size
 }
 
@@ -32,6 +33,8 @@ public enum InputEvent {
 public class InputEventRelay
 {    
     private EventSlot[] _inputEvents = new EventSlot[(int)InputEvent.Size];
+    public bool isActive = true;
+
     #region Initializers
     /// basic constructors
     public InputEventRelay()
@@ -60,7 +63,7 @@ public class InputEventRelay
 
         if (_inputEvents[index] == null)
         {         
-            EventSlot new_event = EventSlot.CreateSlot(callbackType);
+            EventSlot new_event = EventSlot.CreateSlot(callbackType, this);
             if (new_event != null)
             {
                 Debug.Log($" created relay for {inputType}, {callbackType}");
@@ -186,7 +189,7 @@ public class InputEventRelay
     public bool ConnectEvent(InputEvent inputType, Delegate callback) {return ConnectEvent(inputType, callback, null);}
     public bool ConnectEvent(InputEvent inputType, Action callback) {return ConnectEvent(inputType, callback, typeof(Action));}
     public bool ConnectEvent<T>(InputEvent inputType, Action<T> callback) {return ConnectEvent(inputType, callback, typeof(Action<T>));}
-    public bool ConnectEvent<T1, T2>(InputEvent inputType, Action<T1, T2> callback) {return ConnectEvent(inputType, (Delegate)callback, typeof(Action<T1, T2>));}
+    public bool ConnectEvent<T1, T2>(InputEvent inputType, Action<T1, T2> callback) {return ConnectEvent(inputType, callback, typeof(Action<T1, T2>));}
 
     /// Disconnects an event from the relay
     /// Will return T/F depending on whether or not disconnection was successful

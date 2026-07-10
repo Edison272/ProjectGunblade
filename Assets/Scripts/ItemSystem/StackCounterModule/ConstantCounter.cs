@@ -57,7 +57,20 @@ public class ConstantCounter : StackCounter
     }
     #endregion
 
-    #region Functionality
+    #region Base Functionality
+    public override void GetEvents(List<InputEvent> inputEventsUsed)
+    {
+        inputEventsUsed.Add(StartConstant);
+        inputEventsUsed.Add(EndConstant);
+        inputEventsUsed.Add(CallConstant);
+    }
+    public virtual void ResetCounter()
+    {
+
+    }
+    #endregion
+
+    #region Custom Functionality
     public void ToggleConstant(bool isActive)
     {
         _constantActive = isActive;
@@ -69,14 +82,8 @@ public class ConstantCounter : StackCounter
             UseActivator();
         }
     }
-    public override void GetEvents(List<InputEvent> inputEventsUsed)
-    {
-        inputEventsUsed.Add(StartConstant);
-        inputEventsUsed.Add(EndConstant);
-        inputEventsUsed.Add(CallConstant);
-    }
     #endregion
-    
+
     #region Stack Status
     // returns a float, which can be used by an array to select a particular index
     public override float GetIndexData()
@@ -88,8 +95,4 @@ public class ConstantCounter : StackCounter
         return GetIndexData();
     }
     #endregion
-
-
-
-
 }

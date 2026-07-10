@@ -9,21 +9,22 @@ using UnityEngine;
 /// All this counter does is keep track of one counter value and one default value.
 /// </summary>
 
-public class ChargeCounter : StackCounter
+[Serializable]
+public class SimpleCounter : StackCounter
 {
     public int curr_stacks;
     public int default_stacks;
     
     #region Initalizers
-    public ChargeCounter() {}
-    public ChargeCounter(ChargeCounter copied)
+    public SimpleCounter() {}
+    public SimpleCounter(SimpleCounter copied)
     {
         default_stacks = copied.default_stacks;
         curr_stacks = default_stacks;
     }
     public override StackCounter GetCopy()
     {
-        return new ChargeCounter(this);
+        return new SimpleCounter(this);
     }
     public override void SetInputRelay(InputEventRelay newRelay)
     {
@@ -57,4 +58,6 @@ public class ChargeCounter : StackCounter
         throw new NotImplementedException();
     }
     #endregion
+
+
 }

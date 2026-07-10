@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
         input_use_alt.performed += ctx => {inputRelay.Invoke(InputEvent.Character_AltStart);};
         input_use_alt.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_AltEnd);};
 
-        input_reset.started += ctx => {inputRelay.Invoke(InputEvent.Usable_Reset);};
+        input_reset.started += ctx => {inputRelay.Invoke(InputEvent.Usable_ResetStart);};
         //input_interact.started += ctx => {inputRelay.Invoke(InputEvent.Item_Reset);};
 
         // Setup Input Relay
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
                 (InputEvent.Character_MainEnd, typeof(Action)), 
                 (InputEvent.Character_AltStart, typeof(Action)), 
                 (InputEvent.Character_AltEnd, typeof(Action)), 
-                (InputEvent.Usable_Reset, typeof(Action)), 
+                (InputEvent.Usable_ResetStart, typeof(Action)), 
             }
         );
     }

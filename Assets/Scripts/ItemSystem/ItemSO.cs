@@ -17,9 +17,12 @@ using Unity.VisualScripting;
 public class ItemSO : ScriptableObject
 {
     
+    [field: SerializeField] public float resetTime {get; private set;} = 1f;
     public ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
     [SerializeReference] public AttackObject[] attackObjects = new Projectile[] {}; // a collection of attack types
     [SerializeReference] public StackCounter[] stackCounters = new StackCounter[] {}; // control when different item effects trigger
+
+    
 
     public void OnValidate()
     {
@@ -45,7 +48,7 @@ public class ItemSO : ScriptableObject
             StackCounter stackCounter = stackCounters[i];
             if (stackCounter == null)
             {
-                stackCounter = new StackCounter();
+                stackCounter = new SimpleCounter();
             }
             if (stackCounter.stackCounterType != stackCounter.GetExpectedStackCountType())
             {

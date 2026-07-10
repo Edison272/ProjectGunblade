@@ -222,7 +222,7 @@ public class Character : MonoBehaviour, IMovement
         // inputRelay.ConnectEvent(InputEvent.Character_MoveStart, AltActionStartEvent.Invoke);
         // inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, AltActionEndEvent.Invoke);
 
-        inputRelay.ConnectEvent(InputEvent.Usable_Reset, ResetEvent.Invoke);
+        inputRelay.ConnectEvent(InputEvent.Usable_ResetStart, ResetEvent.Invoke);
         //inputRelay.ConnectEvent(InputEvent.Character_MoveStop, (Action)StopMove);
     }
 

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 401ed04a628f55e46808c6fa2347d8f7, type: 3}
   m_Name: Items 1
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  <resetTime>k__BackingField: 1
   itemEffects:
   - attackObjectRefs: 00000000
     stackCounterRefs: 000000000100000002000000
@@ -49,6 +50,7 @@ MonoBehaviour:
         <stackCounterType>k__BackingField: 3
         cooldownTime: 0.1
         StartCooldownEvent: 10
+        ResetCooldownEvent: 11
     - rid: 2198171256505761878
       type: {class: ConstantCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -62,9 +64,9 @@ MonoBehaviour:
         <stackCounterType>k__BackingField: 1
         basicAmmoStats:
           maxAmmo: 30
-          curr_ammo: 30
+          currAmmo: 30
           reloadSpeed: 0
           UseAmmoEvent: 10
-          ReloadEvent: 11
+          ReloadEvent: 12
         regenAmmo: 0
         roundsReload: 0

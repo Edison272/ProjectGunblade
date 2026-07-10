@@ -13,31 +13,25 @@ public enum StackCountType
     Stance
 }
 /// <summary>
-///  A Simple Stack Counter, minimal functionality
+///  abstract class for stack counting
 /// It's main purpose is to be recast into its more dedicated child classes
 /// </summary>
 
 [Serializable]
-public class StackCounter
+public abstract class StackCounter
 {
     [field: SerializeField] public StackCountType stackCounterType {get; protected set;} = StackCountType.Simple;
     protected InputEventRelay inputRelay; // reference to another input relay. used to control when stack interactions happen
     public delegate void ActivatorFunc();
-    public Action activatorEffect;
+    private Action activatorEffect;
 
     #region Initializers
-    public StackCounter()
-    {
-        
-    }
+    public StackCounter() {}
     // creates a deepy copy of this class.
-    public virtual StackCounter GetCopy()
-    {
-        return new StackCounter();
-    }
+    public abstract StackCounter GetCopy();
 
     // builder. A reference to a function which the counter calls when certain conditions are met
-    public StackCounter AddActivator(Action newActivator)
+    public virtual StackCounter AddActivator(Action newActivator)
     {
         activatorEffect += newActivator;
         return this;
@@ -45,55 +39,27 @@ public class StackCounter
     #endregion
 
     #region Functionality
-    // Set the input relay/user
-    public virtual void SetInputRelay(InputEventRelay newRelay)
-    {
-        // unsubscribe from the previous relay
-        if (inputRelay != null)
-        {
-            
-        }
-        
-        // set new
-        inputRelay = newRelay;
-    }
-    public virtual void ChangeCounter() // 
-    {
-        
-    }
+    // Set the input relay/user. unsubscribe from a previous relay if necessary
+    public abstract void SetInputRelay(InputEventRelay newRelay);
 
     public void UseActivator()
     {
-        if (activatorEffect != null)
-        {
-            activatorEffect();
-        }
+        activatorEffect?.Invoke();
     }
     #endregion
-
-
-
 
     #region Stack Status
     // returns a float, which can be used by an array to select a particular index
-    public virtual float GetIndexData()
-    {
-        return 0f;
-    }
+    public abstract float GetIndexData();
     // provides the precise status data
-    public virtual float GetStatus()
-    {
-        return 0.1f;
-    }
+    public abstract float GetStatus();
     #endregion
+
 
     #region Helpers
     /// Used to see which events this counter subscribes to.
     /// The array's length should be the amount of InputEvent(enums) there are, so its a true/false to see if it exists or not
-    public virtual void GetEvents(List<InputEvent> inputEventsUsed)
-    {
-        return;
-    }
+    public abstract void GetEvents(List<InputEvent> inputEventsUsed);
     #endregion
 
     #region Recast Support
@@ -116,7 +82,7 @@ public class StackCounter
         switch(stackCounterType)
         {
             case StackCountType.Simple:
-                new_type = new StackCounter();
+                new_type = new SimpleCounter();
                 break;
             case StackCountType.Ammo:
                 new_type = new AmmoCounter();
@@ -138,3 +104,19 @@ public class StackCounter
     }
     #endregion
 }
+
+// Basic Starter pack for regions. copy and paste
+
+/*
+    #region Initalizers
+    #endregion
+
+    #region Base Functionality
+    #endregion
+
+    #region Custom Functionality
+    #endregion
+
+    #region Stack Status
+    #endregion
+*/
