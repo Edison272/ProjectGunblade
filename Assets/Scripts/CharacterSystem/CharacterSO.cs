@@ -29,7 +29,7 @@ public class CharacterSO : ScriptableObject
     public LayerMask detection_mask;
 
     public int holding_capacity = 2;
-    // public ItemSO[] inventory;
+    public ItemSO[] inventory;
     public Vector2Int[] item_indexes;
 
     public Character GenerateChar(Vector3 pos)

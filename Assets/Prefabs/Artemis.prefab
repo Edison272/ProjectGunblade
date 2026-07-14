@@ -138,8 +138,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab585aa613342141996fcfe54b6090a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <base_data>k__BackingField: {fileID: 11400000, guid: 04eb9b8ee387ef247bc790af56a7497d, type: 2}
+  <baseData>k__BackingField: {fileID: 0}
   user: {fileID: 0}
+  itemEffects: []
+  itemobject: {fileID: 0}
+  rotatorobject: {fileID: 0}
+  itemTip: {fileID: 0}
+  animator: {fileID: 0}
+  y_offset: 0
+  use_spd_scale: 1
+  equip_spd_scale: 1
+  resetSpdScale: 1
 --- !u!95 &8606916593666797745
 Animator:
   serializedVersion: 7
@@ -150,7 +159,7 @@ Animator:
   m_GameObject: {fileID: 3117911291600889211}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 31f02b84e325f474d97701b2d547508e, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -16,13 +16,26 @@ using Unity.VisualScripting;
 [CreateAssetMenu(fileName = "Item", menuName = "ScriptableObjects/Items", order = 1)]
 public class ItemSO : ScriptableObject
 {
-    
+    [SerializeField] private GameObject item_prefab;
     [field: SerializeField] public float resetTime {get; private set;} = 1f;
     public ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
     [SerializeReference] public AttackObject[] attackObjects = new Projectile[] {}; // a collection of attack types
     [SerializeReference] public StackCounter[] stackCounters = new StackCounter[] {}; // control when different item effects trigger
 
-    
+    #region Creating the Item
+    public Item GenerateItem(Vector3 pos, Quaternion rotation) // summon an item on the ground
+    {
+        GameObject item_object = MonoBehaviour.Instantiate(item_prefab, pos, rotation);
+        Item new_item = item_object.GetComponent<Item>();
+        return new_item;
+    }
+    public Item GenerateItem(Transform holder) // summon an item on a holder
+    {
+        GameObject item_object = MonoBehaviour.Instantiate(item_prefab, holder);
+        Item new_item = item_object.GetComponent<Item>();
+        return new_item;
+    }
+    #endregion
 
     public void OnValidate()
     {

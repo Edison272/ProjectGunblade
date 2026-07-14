@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 401ed04a628f55e46808c6fa2347d8f7, type: 3}
   m_Name: Items 1
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  item_prefab: {fileID: 3117911291600889211, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
   <resetTime>k__BackingField: 1
   itemEffects:
   - attackObjectRefs: 00000000

@@ -64,6 +64,7 @@ public class Character : MonoBehaviour, IMovement
     public Vector2 force_dir => movement_component.force_dir;
     public Rigidbody2D entity_rb {get; private set;}
     public Vector2Int current_tile_pos = Vector2Int.zero;
+    public Vector2 Position => GetPosition(); // a more compact way of accessing player position
 
     [field: Header("Health Stuff")]
     [field: SerializeField] public HealthComponent health_component {get; private set;}
@@ -76,16 +77,16 @@ public class Character : MonoBehaviour, IMovement
     [field: Header("Health UI")]
     [SerializeField] HealthUI health_ui = new HealthUI();
 
-    // [field: Header("Inventory")]
-    // public List<Item> inventory;
-    // public List<Vector2Int> item_indexes;  // Access items from the items list with indexes. Vector X for Main Item, Vector Y for Alt Item
-    // protected int curr_item_index = 0;           // access items indexes list
-    // public Item main_item;
-    // public Item alt_item;
-    // public (int, int) current_indexes {get; protected set;}
-    // protected float switch_cd = 0.5f; // time the char must wait before they can switch to the next weapon
-    // protected float curr_switch_cd = 0;
-    // private int holding_capacity = 0;
+    [field: Header("Inventory")]
+    public List<Item> inventory;
+    public List<Vector2Int> item_indexes;  // Access items from the items list with indexes. Vector X for Main Item, Vector Y for Alt Item
+    protected int curr_item_index = 0;           // access items indexes list
+    public Item main_item;
+    public Item alt_item;
+    public (int, int) current_indexes {get; protected set;}
+    protected float switch_cd = 0.5f; // time the char must wait before they can switch to the next weapon
+    protected float curr_switch_cd = 0;
+    private int holding_capacity = 0;
 
     [field: Header("InteractEventables")]
     List<Collider2D> interactEventables_in_range = new List<Collider2D>();
@@ -145,22 +146,22 @@ public class Character : MonoBehaviour, IMovement
         movement_component = new MovementComponent(base_data, entity_rb);
         
         // // setup inventory
-        // Item[] init_inventory = new Item[base_data.inventory.Length];
-        // Vector2Int[] init_item_indexes = new Vector2Int[base_data.item_indexes.Length];
-        // for (int i = 0; i < base_data.item_indexes.Length; i++)
-        // {
-        //     int main_item = base_data.item_indexes[i].x;
-        //     int alt_item = base_data.item_indexes[i].y;
-        //     init_item_indexes[i] = base_data.item_indexes[i];
-        //     init_inventory[main_item] = GetItemSO(base_data.inventory[main_item]);
-        //     if (alt_item > -1)
-        //     {
-        //         init_inventory[alt_item] = GetItemSO(base_data.inventory[alt_item], true);
-        //     }
-        // }
-        // inventory = init_inventory.ToList<Item>();
-        // item_indexes = init_item_indexes.ToList<Vector2Int>();
-        // holding_capacity = Mathf.Max(item_indexes.Count, base_data.holding_capacity);
+        Item[] init_inventory = new Item[base_data.inventory.Length];
+        Vector2Int[] init_item_indexes = new Vector2Int[base_data.item_indexes.Length];
+        for (int i = 0; i < base_data.item_indexes.Length; i++)
+        {
+            int main_item = base_data.item_indexes[i].x;
+            int alt_item = base_data.item_indexes[i].y;
+            init_item_indexes[i] = base_data.item_indexes[i];
+            init_inventory[main_item] = GetItemSO(base_data.inventory[main_item]);
+            if (alt_item > -1)
+            {
+                init_inventory[alt_item] = GetItemSO(base_data.inventory[alt_item], true);
+            }
+        }
+        inventory = init_inventory.ToList<Item>();
+        item_indexes = init_item_indexes.ToList<Vector2Int>();
+        holding_capacity = Mathf.Max(item_indexes.Count, base_data.holding_capacity);
 
         // interactEvention_range = base_data.interactEvention_range;
 
@@ -207,6 +208,7 @@ public class Character : MonoBehaviour, IMovement
         {
             AssignBaseData(base_data);
         }
+        GetReady();
     }
 
     #endregion
@@ -338,7 +340,7 @@ public class Character : MonoBehaviour, IMovement
 
         // aim hands and body to correct direction
         aim_dir = look_pos - entity_rb.position;
-        AimStyle();
+        //AimStyle();
     }
     public void Aim()
     {        
@@ -507,11 +509,11 @@ public class Character : MonoBehaviour, IMovement
     //     alt_item?.UnequipItem();
     // }
 
-    // public Item GetItemSO(ItemSO new_item, bool on_alt_hand = false)
-    // {
-    //     Transform hand_hold = on_alt_hand ? alt_hand : main_hand;
-    //     return new_item.GenerateItem(hand_hold);
-    // }
+    public Item GetItemSO(ItemSO new_item, bool on_alt_hand = false)
+    {
+        Transform hand_hold = on_alt_hand ? alt_hand : main_hand;
+        return new_item.GenerateItem(hand_hold);
+    }
     // public Item PickupItem(Item new_item)
     // {
     //     Item switch_out_item = null;
@@ -607,19 +609,6 @@ public class Character : MonoBehaviour, IMovement
     //     }
     // }
 
-    #endregion
-    #region Item InteractEvention
-    // public void UseInteractEventable(IInteractEventable interactEventable)
-    // {
-    //     interactEventable.InteractEvent(this);
-    // }
-
-
-    // public void ResetEventItems()
-    // {
-    //     main_item.ResetEvent();
-    //     alt_item?.ResetEvent(); // resetEvent if there's an alt item
-    // }
     #endregion
     // public int GetRangeScalar()
     // {

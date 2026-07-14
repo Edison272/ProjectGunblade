@@ -10,51 +10,58 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {    
     // Input Map
-    private PlayerInput player_input;
+    private PlayerInput _playerInput;
 
     // Input Actions - direct input information from input map
-    private InputAction input_movement;
-    private InputAction input_use_main;
-    private InputAction input_use_alt;
-    private InputAction input_reset;
-    private InputAction input_interact;
+    private InputAction _inputMovement;
+    private InputAction _inputLookDelta;
+    private InputAction _inputUseMain;
+    private InputAction _inputUseAlt;
+    private InputAction _inputReset;
+    private InputAction _inputInteract;
 
     // Input Relay!
     public InputEventRelay inputRelay;
 
     // Camera Control
+    // [SerializeField] CameraController main_cam_controller;
     [SerializeField] CinemachineCamera main_cinema_cam;
     [SerializeField] Camera main_cam;
 
-
+    // Pointer/Mouse Control
+    [SerializeField] PointerController _pointerController;
+    private Vector2 pointer_world_pos = Vector2.zero; // access where the player's pointer is in the game world
+    private Vector2 pointer_viewport_pos = Vector2.zero; // access where the player's pointer is in the UI
 
     // temporary. testing for player input
     public Character active_character;
 
     void Awake()
     {
-        if (!player_input) {player_input = GetComponent<PlayerInput>();}
-
+        #region Awake - Inputs
+        if (!_playerInput) {_playerInput = GetComponent<PlayerInput>();}
 
         // map input actions to the controls
-        input_movement = player_input.actions["Move"];
-        input_use_main = player_input.actions["UseMain"];
-        input_use_alt = player_input.actions["UseAlt"];
-        input_reset = player_input.actions["Reset"];
-        input_interact = player_input.actions["Interact"];
+        _inputMovement = _playerInput.actions["Move"];
+        _inputLookDelta = _playerInput.actions["Look"];
+        _inputUseMain = _playerInput.actions["UseMain"];
+        _inputUseAlt = _playerInput.actions["UseAlt"];
+        _inputReset = _playerInput.actions["Reset"];
+        _inputInteract = _playerInput.actions["Interact"];
 
 
         // connect public events to input actions
-        input_movement.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MoveStart, ctx.ReadValue<Vector2>());};
-        input_movement.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MoveEnd);};
+        _inputMovement.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MoveStart, ctx.ReadValue<Vector2>());};
+        _inputMovement.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MoveEnd);};
+        _inputLookDelta.started += ctx => {SetLookPosition(ctx.ReadValue<Vector2>());};
 
-        input_use_main.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MainStart);};
-        input_use_main.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MainEnd);};
-        input_use_alt.performed += ctx => {inputRelay.Invoke(InputEvent.Character_AltStart);};
-        input_use_alt.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_AltEnd);};
+        _inputUseMain.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MainStart);};
+        _inputUseMain.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MainEnd);};
+        _inputUseAlt.performed += ctx => {inputRelay.Invoke(InputEvent.Character_AltStart);};
+        _inputUseAlt.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_AltEnd);};
 
-        input_reset.started += ctx => {inputRelay.Invoke(InputEvent.Usable_ResetStart);};
-        //input_interact.started += ctx => {inputRelay.Invoke(InputEvent.Item_Reset);};
+        _inputReset.started += ctx => {inputRelay.Invoke(InputEvent.Usable_ResetStart);};
+        //_inputInteract.started += ctx => {inputRelay.Invoke(InputEvent.Item_Reset);};
 
         // Setup Input Relay
         inputRelay = new InputEventRelay(
@@ -69,6 +76,12 @@ public class PlayerController : MonoBehaviour
                 (InputEvent.Usable_ResetStart, typeof(Action)), 
             }
         );
+        #endregion
+        #region Awake - Pointer
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        _pointerController = new PointerController(main_cam);
+        #endregion
     }
 
     void Start()
@@ -89,9 +102,14 @@ public class PlayerController : MonoBehaviour
     }
 
     void Update()
+    {        
+        pointer_world_pos = _pointerController.GetSourceTo_worldPos(active_character.Position);
+        active_character.Look(pointer_world_pos);   
+        Debug.DrawLine(active_character.Position, pointer_world_pos);
+    }
+    private void SetLookPosition(Vector2 lookDelta)
     {
-        Vector2 mouseScreenPos = main_cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        
-        active_character.Look(mouseScreenPos);
+        _pointerController.UpdateDelta(lookDelta, active_character.Position);
+
     }
 }
