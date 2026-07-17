@@ -6,23 +6,6 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum InputEvent {
-    Character_MoveStart,
-    Character_MoveEnd,
-    Character_MainStart, 
-    Character_MainEnd, 
-    Character_AltStart, 
-    Character_AltEnd,
-    General_Passive, 
-    General_StackActivation,
-    Usable_Equip,
-    Usable_Unequip,
-    Usable_Used, 
-    Usable_ResetStart, 
-    Usable_ResetEnd, 
-    Size
-}
-
 /// <summary>
 /// Contains an array of all existing input events
 /// Allows other scripts to easily & safely access input events, so they can subscribe to them
@@ -102,7 +85,7 @@ public class InputEventRelay
             // Add a new event if the parent has the event and this one doesn't
             if (parent._inputEvents[i] == null)
             {
-                Debug.Log("nothing to link");
+                Debug.Log($" {(InputEvent)i} does not exist in parent");
                 continue;
             }
             else if (_inputEvents[i] == null)
@@ -115,11 +98,11 @@ public class InputEventRelay
             bool connected = parent.ConnectEvent((InputEvent)i, invoke_method);
             if (connected)
             {
-                Debug.Log($"{slot.delegateType.Name} for {(InputEvent)i} has been connected");
+                Debug.Log($"{slot.delegateType.Name} for {(InputEvent)i} has been linked");
             }
             else
             {
-                Debug.LogWarning($"{slot.delegateType.Name} for {(InputEvent)i} could not connect");
+                Debug.LogWarning($"{slot.delegateType.Name} for {(InputEvent)i} could not link");
             }
         }
     }

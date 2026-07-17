@@ -117,7 +117,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3117911291600889211}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -138,13 +138,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab585aa613342141996fcfe54b6090a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <baseData>k__BackingField: {fileID: 0}
+  <baseData>k__BackingField: {fileID: 11400000, guid: 1848e84891918844684352c2f2d8d3bc, type: 2}
   user: {fileID: 0}
   itemEffects: []
+  _rotScale: 1
   itemobject: {fileID: 0}
-  rotatorobject: {fileID: 0}
-  itemTip: {fileID: 0}
-  animator: {fileID: 0}
+  rotatorObject: {fileID: 4656779501656366177}
+  itemTip: {fileID: 7037610556534379554}
+  animator: {fileID: 8606916593666797745}
   y_offset: 0
   use_spd_scale: 1
   equip_spd_scale: 1
@@ -157,9 +158,9 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3117911291600889211}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f165c61f7baaf124b82c06c7eaca3fb0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -73,6 +73,7 @@ public class PlayerController : MonoBehaviour
                 (InputEvent.Character_MainEnd, typeof(Action)), 
                 (InputEvent.Character_AltStart, typeof(Action)), 
                 (InputEvent.Character_AltEnd, typeof(Action)), 
+                (InputEvent.Character_LookPos, typeof(Action<Vector2>)), 
                 (InputEvent.Usable_ResetStart, typeof(Action)), 
             }
         );
@@ -104,8 +105,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {        
         pointer_world_pos = _pointerController.GetSourceTo_worldPos(active_character.Position);
-        active_character.Look(pointer_world_pos);   
+        inputRelay.Invoke(InputEvent.Character_LookPos, pointer_world_pos);   
         Debug.DrawLine(active_character.Position, pointer_world_pos);
+
+        inputRelay.Invoke(InputEvent.General_Passive, pointer_world_pos);   
     }
     private void SetLookPosition(Vector2 lookDelta)
     {

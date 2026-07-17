@@ -127,38 +127,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2067383732432657245, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: itemTip
-      value: 
-      objectReference: {fileID: 746374041}
-    - target: {fileID: 2067383732432657245, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: animator
-      value: 
-      objectReference: {fileID: 1781064880}
-    - target: {fileID: 2067383732432657245, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: 'managedReferences[-2]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2067383732432657245, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: stackCounters.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2067383732432657245, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: <baseData>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 1848e84891918844684352c2f2d8d3bc, type: 2}
-    - target: {fileID: 2067383732432657245, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: <base_data>k__BackingField
-      value: 
-      objectReference: {fileID: 11400000, guid: 1848e84891918844684352c2f2d8d3bc, type: 2}
-    - target: {fileID: 2067383732432657245, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: 'stackCounters.Array.data[0]'
-      value: -2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2067383732432657245, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: stackCounters.Array.data[0].<stackCounterType>k__BackingField
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3117911291600889211, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
       propertyPath: m_Name
       value: Artemis
@@ -203,14 +171,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8606916593666797745, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8606916593666797745, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: f165c61f7baaf124b82c06c7eaca3fb0, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -501,11 +461,6 @@ RectTransform:
   m_AnchoredPosition: {x: 1662.6562, y: 252.46875}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!4 &746374041 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7037610556534379554, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-  m_PrefabInstance: {fileID: 31111656}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &809458567
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,6 +1542,7 @@ GameObject:
   - component: {fileID: 1686465139}
   - component: {fileID: 1686465141}
   - component: {fileID: 1686465140}
+  - component: {fileID: 1686465142}
   m_Layer: 5
   m_Name: ItemInputs
   m_TagString: Untagged
@@ -1654,11 +1610,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   item: {fileID: 643829387}
   buttonInstance: {fileID: 45257915}
---- !u!95 &1781064880 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 8606916593666797745, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-  m_PrefabInstance: {fileID: 31111656}
+--- !u!114 &1686465142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1686465138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1795917242
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,8 @@ MonoBehaviour:
   - rid: 2198171256505761878
   - rid: 2198171256505761870
   - rid: 2198171343949136020
+  dynamic_aim: 1
+  rotation_scale: 1
   references:
     version: 2
     RefIds:
@@ -49,15 +51,15 @@ MonoBehaviour:
       type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 3
-        cooldownTime: 0.1
-        StartCooldownEvent: 10
-        ResetCooldownEvent: 11
+        cooldownTime: 0.5
+        StartCooldownEvent: 11
+        ResetCooldownEvent: 12
     - rid: 2198171256505761878
       type: {class: ConstantCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 2
         StartConstant: 2
-        CallConstant: 6
+        CallConstant: 7
         EndConstant: 3
     - rid: 2198171343949136020
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
@@ -67,7 +69,7 @@ MonoBehaviour:
           maxAmmo: 30
           currAmmo: 30
           reloadSpeed: 0
-          UseAmmoEvent: 10
+          UseAmmoEvent: 11
           ReloadEvent: 12
         regenAmmo: 0
         roundsReload: 0

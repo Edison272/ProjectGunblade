@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d8cf9f7c3d346d44b3d76739b11ebbe, type: 3}
-  m_Name: Basic
+  m_Name: BasicChar
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSO
   character_name: Entity
   character_image: {fileID: -6608213998346060681, guid: d406a8be393058a469592859204169d7, type: 3}

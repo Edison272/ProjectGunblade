@@ -12,47 +12,9 @@ public class Character : MonoBehaviour, IMovement
 {
     [SerializeField] private CharacterSO base_data;
     public string character_name => base_data.character_name;
-    [field: Header("Body Parts")]
-    public GameObject main_body;//basically the hitbox
-    public GameObject vfx_body; //the vfx body
-    public Transform front;
-    public Transform back;
-    public Transform body;
-    public Transform body_sprite;
-    public Transform body_outline;
-    public Transform main_hand; //always set to main hand object 
-    public Transform alt_hand; //always set to off hand object
-    public Transform head;
-    public Transform front_particles;
-    public Transform back_particles;
-    public Transform true_front;
-    public Transform true_back;
 
-    [field: Header("VFX")]
-    public float base_sprite_height;
-    public float base_head_height;
+    public AnatomyComponent BodyController;
     public Animator animator;
-    protected Vector2 sprite_center; // center of mass of this srpite
-    public float hitbox_radius {get; private set;}
-    // character has 4 VFX states based on aim direciton, stored as two booleans, X and Y
-    // T, F = Right Bottom | T, T = Right Top | F, T = Left Top | F, F = Left Bottom
-    protected (bool, bool) direction_state = (true, true);
-    protected (Vector2, Vector2) akimbo_hand_pos = (new Vector2 (-0.2f, 0.6f), new Vector2 (0.5f, 0.6f));  // (main pos (left), alt pos (right))
-    Vector2 single_hand_pos = new Vector2 (0, 0.6f);  // (main pos, alt pos)
-    // actions
-    public HashedEvent MainActionStartEvent = new();
-    public HashedEvent MainActionEndEvent = new();
-    public HashedEvent AltActionStartEvent = new();
-    public HashedEvent AltActionEndEvent = new();
-    public HashedEvent ResetEvent = new();
-    public HashedEvent InteractEvent = new();
-    //aim & handling
-    [field: Header("Aiming")]
-    public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
-    public Vector2 offset_look = Vector2.zero;
-    protected Action AimStyle; // single-item or akimbo aiming?
-    public  float aim_angle = 0; // angle (deg) the character is looking in
-    readonly Vector2 SingleWeaponRestPosition = new Vector2(1, -1);
     
     [field: Header("Movement")]
     [field: SerializeField] public MovementComponent movement_component {get; private set;}
@@ -106,12 +68,23 @@ public class Character : MonoBehaviour, IMovement
     //public BehaviorController behavior_controller;    
     
     [field: Header("Event Bus")]
+
+    private InputEventRelay controllerRelay;
     public Action<Character> OnDeath;
 
     #region initalizers
     void Awake()
     {
         if (base_data) {AssignBaseData(base_data);}
+    }
+    // Initialize op if it's a prefab that's placed on the scene, and has 
+    public void Start()
+    {
+        if (!entity_rb && base_data)
+        {
+            AssignBaseData(base_data);
+        }
+        GetReady();
     }
 
     // get base data from a scriptable object and assign them here. Called once at when this object is created
@@ -122,21 +95,8 @@ public class Character : MonoBehaviour, IMovement
         // setup movement
         entity_rb = this.GetComponent<Rigidbody2D>();
 
-        // setup VFX
-        hitbox_radius = GetComponent<CircleCollider2D>().radius;
-        akimbo_hand_pos = ((Vector2) main_hand.localPosition, (Vector2) alt_hand.localPosition);
-        single_hand_pos = new Vector2(0, main_hand.localPosition.y);
-
-        base_sprite_height = body_sprite.GetComponent<SpriteRenderer>().bounds.size.y;
-        base_head_height = head.localPosition.y;
-
-        // set basic sibling order of entity VFX (operator faces BOTTOM RIGHT by default)
-        animator.SetBool("FaceFront", true);
-        main_hand.SetSiblingIndex(4);
-        front.SetSiblingIndex(3);
-        vfx_body.transform.SetSiblingIndex(2);
-        back.SetSiblingIndex(1);
-        alt_hand.SetSiblingIndex(0);
+        // setup VFX & Body parts
+        BodyController.Setup(entity_rb, animator);
 
         // setup health & related ui
         health_component = new HealthComponent(max_health, base_data.spawn_shield);
@@ -165,12 +125,7 @@ public class Character : MonoBehaviour, IMovement
 
         // interactEvention_range = base_data.interactEvention_range;
 
-        // // set initial active items
-        // foreach(Item item in inventory)
-        // {
-        //     item.NewUser(this);
-        //     item.UnequipItem();
-        // }
+
 
         // // setup AI
         // CreateBehaviorController();
@@ -180,13 +135,10 @@ public class Character : MonoBehaviour, IMovement
     // make sure the operator LOOKS ready
     public void GetReady()
     {        
-        //EquipActive(0);
+        EquipActive(0);
         // equip items
-        // SetSwitchItem();
-        SetAimStyle(true);
-        // initialize default look position
-        aim_dir = SingleWeaponRestPosition;
-        Look(entity_rb.position + aim_dir);
+        SetSwitchItem();
+        BodyController.IdlePosition();
     }
 
     // public virtual void CreateBehaviorController() {behavior_controller = new BehaviorController(this);}
@@ -201,21 +153,14 @@ public class Character : MonoBehaviour, IMovement
         OnDeath += death;
     }
 
-    // Initialize op if it's a prefab that's placed on the scene, and has 
-    public void Start()
-    {
-        if (!entity_rb && base_data)
-        {
-            AssignBaseData(base_data);
-        }
-        GetReady();
-    }
+
 
     #endregion
 
     #region Player Input
     public void ConnectInputs(InputEventRelay inputRelay)
     {
+        controllerRelay = inputRelay;
         inputRelay.ConnectEvent(InputEvent.Character_MoveStart, (Action<Vector2>)StartMove);
         inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, StopMove);
 
@@ -223,28 +168,17 @@ public class Character : MonoBehaviour, IMovement
         // inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, MainActionEndEvent.Invoke);
         // inputRelay.ConnectEvent(InputEvent.Character_MoveStart, AltActionStartEvent.Invoke);
         // inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, AltActionEndEvent.Invoke);
+        inputRelay.ConnectEvent(InputEvent.Character_LookPos, (Action<Vector2>)BodyController.Look);
 
-        inputRelay.ConnectEvent(InputEvent.Usable_ResetStart, ResetEvent.Invoke);
+        // inputRelay.ConnectEvent(InputEvent.Usable_ResetStart, ResetEvent.Invoke);
         //inputRelay.ConnectEvent(InputEvent.Character_MoveStop, (Action)StopMove);
-    }
 
-    public void ConnectPlayer(PlayerController player_controller)
-    {
-        // player_controller.OnMoveStart += StartMove;
-        // player_controller.OnMoveEnd += StopMove;
-
-        // player_controller.OnMainActionStart += MainActionStartEvent.Invoke;
-        // player_controller.OnMainActionEnd += MainActionEndEvent.Invoke;
-        // player_controller.OnAltActionStart += AltActionStartEvent.Invoke;
-        // player_controller.OnAltActionEnd += AltActionEndEvent.Invoke;
-
-        // player_controller.OnReset += ResetEvent.Invoke;
-        // player_controller.OnInteract += InteractEvent.Invoke;
-    }
-
-    public void DisconnectPlayer(PlayerController player_controller)
-    {
-        
+        // set initial active items
+        foreach(Item item in inventory)
+        {
+            item.NewUser(controllerRelay, this);
+            item.SetEquipped(false);
+        }
     }
 
     #endregion
@@ -258,8 +192,6 @@ public class Character : MonoBehaviour, IMovement
         //     return;
         // }
         
-        // constantly adjust aim position, since aim doesn't snap
-        Aim();
 
         // Update health
         health_component.UpdateHealth();
@@ -293,7 +225,7 @@ public class Character : MonoBehaviour, IMovement
         //health_ui.UpdateHealthUI();
 
         // update vfx at the very end
-        UpdateBodyVFX();
+        BodyController.UpdateBodyVFX();
     }
 
     protected virtual void FixedUpdate()
@@ -320,102 +252,6 @@ public class Character : MonoBehaviour, IMovement
         //     Destroy(this.gameObject);
         // }
     }
-    #endregion
-
-    #region Looking & Aiming
-    public void Look(Vector2 look_pos) {
-        // look_dir is the direction the operator is set to look at
-        Vector2 look_dir = (look_pos - entity_rb.position).normalized;
-
-        if ((look_dir.x >= 0) != (aim_dir.x >= 0))
-        {
-            Vector3 look_scale = new Vector3 ((int)Mathf.Sign(look_dir.x), 1, 1);
-            front.localScale = look_scale;
-            body.localScale = look_scale;
-            back.localScale = look_scale;
-            akimbo_hand_pos.Item1.x *= -1;
-            akimbo_hand_pos.Item2.x *= -1;
-        }
-
-
-        // aim hands and body to correct direction
-        aim_dir = look_pos - entity_rb.position;
-        //AimStyle();
-    }
-    public void Aim()
-    {        
-        // aim the items
-        // main_item?.Aim(aim_dir);
-        // alt_item?.Aim(aim_dir);
-    }
-    void SetAimStyle(bool is_akimbo) // set the position of main & alt hands for akimbo or non-akimbo weaponry whenever weapon switch
-    {
-        if (is_akimbo)
-        {
-            // set hand index
-            main_hand.SetSiblingIndex(direction_state.Item1? 4 : 0);
-            alt_hand.SetSiblingIndex(direction_state.Item1? 0 : 4);
-            // adjust hand positions to either side of body
-            main_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
-            alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
-            AimStyle = AkimboAim;
-        } else {
-            // set hand index
-            main_hand.SetSiblingIndex(direction_state.Item2? 4 : 0);
-            alt_hand.SetSiblingIndex(direction_state.Item2? 0 : 4);
-            // adjust hand positions to center mass
-            main_hand.localPosition = single_hand_pos;
-            alt_hand.localPosition = single_hand_pos;
-            AimStyle = SingleAim;
-        }
-    }
-    void AkimboAim() // aim two weapons from two sides of body
-    {
-        // check if direction state has changed
-        if (direction_state.Item1 != aim_dir.x > 0) // direction_state.Item1 = true -> facing right
-        {
-            direction_state.Item1 = aim_dir.x > 0; // update direction state
-            
-            // switch hand indexes
-            main_hand.SetSiblingIndex(alt_hand.GetSiblingIndex());
-            alt_hand.SetSiblingIndex(main_hand.GetSiblingIndex() == 4 ? 0 : 4);
-
-            // switch hand positions
-            main_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
-            alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
-        }
-
-        if (direction_state.Item2 != aim_dir.y < 0) // direction_state.Item2 = true -> facing down (front)
-        {
-            direction_state.Item2 = aim_dir.y < 0; // update direction state
-            
-            // switch front & back index
-            front.SetSiblingIndex(back.GetSiblingIndex());
-            back.SetSiblingIndex(front.GetSiblingIndex() == 3 ? 1 : 3);
-
-            // switch hand positions
-            main_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
-            alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
-
-            animator.SetBool("FaceFront", direction_state.Item2); // face front
-        }
-    }
-    void SingleAim() // aim one weapon from center of mass
-    {   
-        if(direction_state.Item2 != aim_dir.y <= 0) {
-            direction_state.Item2 = aim_dir.y <= 0; // update direction state
-
-            // switch hand  indexes
-            main_hand.SetSiblingIndex(alt_hand.GetSiblingIndex());
-            alt_hand.SetSiblingIndex(main_hand.GetSiblingIndex() == 4 ? 0 : 4);   
-            // switch front/back indexes
-            front.SetSiblingIndex(back.GetSiblingIndex());
-            back.SetSiblingIndex(front.GetSiblingIndex() == 3 ? 1 : 3);
-
-            animator.SetBool("FaceFront", direction_state.Item2); // face front
-        }
-    }
-
     #endregion
 
     #region Movement
@@ -486,32 +322,32 @@ public class Character : MonoBehaviour, IMovement
     #endregion
     #region  Inventory Management
     
-    // public bool HasAltAction() // returns true if the operator is currently wielding two items or an multi-state items
-    // {
-    //     return item_indexes[curr_item_index].y != -1;  // return true for one action, and false for two actions
-    // }
-    // void EquipActive(int index)  // equip the currently selected weapons (the ones the operator is currently holding)
-    // {
-    //     main_item = inventory[item_indexes[index].x];
-    //     if (item_indexes[index].y == -1)
-    //     {
-    //         alt_item = null;
-    //     } 
-    //     else
-    //     {
-    //         alt_item = inventory[item_indexes[index].y];
-    //     }
-    //     curr_range = base_range + GetRangeScalar();
-    // }
-    // void UnequipActive() // unequip animation for the currently selected weapons
-    // {
-    //     main_item.UnequipItem();
-    //     alt_item?.UnequipItem();
-    // }
-
-    public Item GetItemSO(ItemSO new_item, bool on_alt_hand = false)
+    public bool HasAltAction() // returns true if the operator is currently wielding two items or an multi-state items
     {
-        Transform hand_hold = on_alt_hand ? alt_hand : main_hand;
+        return item_indexes[curr_item_index].y != -1;  // return true for one action, and false for two actions
+    }
+    void EquipActive(int index)  // equip the currently selected weapons (the ones the operator is currently holding)
+    {
+        main_item = inventory[item_indexes[index].x];
+        if (item_indexes[index].y == -1)
+        {
+            alt_item = null;
+        } 
+        else
+        {
+            alt_item = inventory[item_indexes[index].y];
+        }
+        //curr_range = base_range + GetRangeScalar();
+    }
+    void UnequipActive() // unequip animation for the currently selected weapons
+    {
+        main_item.SetEquipped(false);
+        alt_item?.SetEquipped(false);
+    }
+
+    public Item GetItemSO(ItemSO new_item, bool on_main_hand = true)
+    {
+        Transform hand_hold = BodyController.GetHand(on_main_hand);
         return new_item.GenerateItem(hand_hold);
     }
     // public Item PickupItem(Item new_item)
@@ -539,27 +375,27 @@ public class Character : MonoBehaviour, IMovement
     //     return switch_out_item;
     // }
     
-    // public void SwitchItem(int spec_index = -1) // cycle between item_indexes slots, or choose a select slot with spec_index
-    // {
-    //     if (spec_index == curr_item_index) {return;} // dont do anything if switching to active items
+    public void SwitchItem(int spec_index = -1) // cycle between item_indexes slots, or choose a select slot with spec_index
+    {
+        if (spec_index == curr_item_index) {return;} // dont do anything if switching to active items
         
-    //     if (spec_index == -1) // typical incrementation
-    //     {
-    //         curr_item_index += 1;
-    //         if (curr_item_index > item_indexes.Count - 1)
-    //         {
-    //             curr_item_index = 0;
-    //         }
-    //     }
-    //     else // specific index
-    //     {
-    //         curr_item_index = Mathf.Clamp(spec_index, 0, item_indexes.Count);
-    //     }
-    //     UnequipActive(); //unequipped item will call the "SetSwitchItem" in animator to set the new active item
-    //     current_indexes = (item_indexes[curr_item_index].x, item_indexes[curr_item_index].y);
-    //     EquipActive(curr_item_index); // set up the new shi
-    //     curr_switch_cd = switch_cd; // set timer before equipping new weapons
-    // }
+        if (spec_index == -1) // typical incrementation
+        {
+            curr_item_index += 1;
+            if (curr_item_index > item_indexes.Count - 1)
+            {
+                curr_item_index = 0;
+            }
+        }
+        else // specific index
+        {
+            curr_item_index = Mathf.Clamp(spec_index, 0, item_indexes.Count);
+        }
+        UnequipActive(); //unequipped item will call the "SetSwitchItem" in animator to set the new active item
+        current_indexes = (item_indexes[curr_item_index].x, item_indexes[curr_item_index].y);
+        EquipActive(curr_item_index); // set up the new shi
+        curr_switch_cd = switch_cd; // set timer before equipping new weapons
+    }
     // public IInteractEventable FindInteractEventables()
     // {
     //     ContactFilter2D interactEventable_filter = new ContactFilter2D();
@@ -584,12 +420,12 @@ public class Character : MonoBehaviour, IMovement
 
     //     return item_indexes.Count-1;
     // }
-    // public void SetSwitchItem() // only setup the new item VFX after the old one has been put away completely
-    // {
-    //     main_item.EquipItem();
-    //     alt_item?.EquipItem();
-    //     SetAimStyle(alt_item); // adjust how the item(s) look in the player's hands
-    // }
+    public void SetSwitchItem() // only setup the new item VFX after the old one has been put away completely
+    {
+        main_item.SetEquipped(true);
+        alt_item?.SetEquipped(true);
+        BodyController.SetAimStyle(alt_item); // adjust how the item(s) look in the player's hands
+    }
     // public void ResetEventItemData(int specific_index = -1)
     // {
     //     if (specific_index != -1)
@@ -614,68 +450,6 @@ public class Character : MonoBehaviour, IMovement
     // {
     //     return inventory[current_indexes.Item1].GetRange();
     // }
-
-    #region VFX Body
-    public virtual Transform GetBodyPart(CharacterBodyPart body_part_type) {
-        Transform body_part = main_body.transform;
-        switch(body_part_type)
-        {
-            case CharacterBodyPart.Hitbox:
-                body_part = main_body.transform;
-                break;
-            case CharacterBodyPart.TrueFront:
-                body_part = true_front;
-                break;
-            case CharacterBodyPart.TrueBack:
-                body_part = true_back;
-                break;
-            case CharacterBodyPart.Front:
-                body_part = front;
-                break;
-            case CharacterBodyPart.Back:
-                body_part = back;
-                break;
-            case CharacterBodyPart.SpriteBody:
-                body_part = body_sprite;
-                break;
-            case CharacterBodyPart.MainHand:
-                body_part = main_hand;
-                break;
-            case CharacterBodyPart.AltHand:
-                body_part = alt_hand;
-                break;
-            case CharacterBodyPart.Head:
-                body_part = head;
-                break;
-            case CharacterBodyPart.FrontParticles:
-                body_part = front_particles;
-                break;
-            case CharacterBodyPart.BackParticles:
-                body_part = back_particles;
-                break;
-        }
-        return body_part;
-    }
-
-    public void PlaceOnBody(CharacterBodyPart body_part_type, Transform place_object)
-    {
-        Transform body_part = GetBodyPart(body_part_type);
-        place_object.transform.SetParent(body_part, true);
-    }
-
-    public void UpdateBodyVFX()
-    {
-        //body_outline.GetComponent<SpriteRenderer>().sprite = body_sprite.GetComponent<SpriteRenderer>().sprite;
-        float curr_sprite_height = body_sprite.GetComponent<SpriteRenderer>().bounds.size.y;
-        head.transform.localPosition = new Vector3(0, base_head_height * curr_sprite_height/base_sprite_height, 0);
-    }
-
-    public void SetOutlineAlpha(float alpha)
-    {
-        Color o_c = body_outline.GetComponent<SpriteRenderer>().color;
-        body_outline.GetComponent<SpriteRenderer>().color = new Color(o_c.r, o_c.b, o_c.g, alpha);
-    }
-    #endregion
 
     #region Stats & Status Changes
 

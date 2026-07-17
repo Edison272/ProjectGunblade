@@ -16,9 +16,20 @@ public class Item : MonoBehaviour
     [SerializeField] private ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
     public StackCounter[] stackCounters {get; private set;}
 
+    [field: Header("Aiming")]
+    static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90f); // RotateTowards() is stupid so we need to offset it
+    public float _rotScale = 1f; // 0 for no rotation, 1 for instantaneous rotation
+    Quaternion curr_rot; // save the current quaternion rotation
+    public Vector2 aim_pos {get; private set;} // where the item is supposed to be aimed towards;
+    public Vector2 source_pos {get; private set;} // where bullets & attacks originate from
+    public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on _rotScale)
+    bool freeze_aiming = false;     // stop this thing from aiming and updating target position
+    public delegate void AimDelegate();
+    public AimDelegate AimVFX;
+
     [field: Header("VFX Body")]
     public GameObject itemobject;
-    public Transform rotatorobject; // rotate the object when aiming
+    public Transform rotatorObject; // rotate the object when aiming
     public Transform itemTip; // the "front" of an item which attack type vfx will align to
     public Animator animator;
     // VFX STUFF
@@ -26,7 +37,7 @@ public class Item : MonoBehaviour
     public float y_offset;
 
     // AIMING STUFF
-    public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on rot_scale)
+    //public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on _rotScale)
     private InputEventRelay externalInputRelay; // reference to another input relay which controls the item
     private InputEventRelay itemInputRelay; // a locally defined input relay
 
@@ -52,8 +63,41 @@ public class Item : MonoBehaviour
 
     public void Start()
     {
-        
     }
+    #region Aiming
+    public void Aim(Vector2 aim_pos)
+    {
+        this.aim_pos = aim_pos;
+        AimVFX();
+        Vector2 aim_dir = aim_pos - (Vector2)transform.position;
+        // the ACTUAL aiming aspect (get target position from aim_dir)
+        Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
+        curr_rot = Quaternion.Lerp(curr_rot, aim_rot, _rotScale);
+        source_pos = transform.position + (curr_rot * Vector2.right);
+        target_pos = transform.position + (curr_rot * Vector2.right * aim_dir.magnitude);
+    }
+    void StaticAim()
+    {
+        if((rotatorObject.transform.localScale.y >= 0) != (target_pos.x >= transform.position.x)) {
+            Vector3 new_vec = rotatorObject.transform.localScale;
+            new_vec.x *= -1;
+            rotatorObject.transform.localScale = new_vec;
+        }
+    }
+    void DynamicAim()
+    {
+        // set the item's rotation towards the target direction
+        rotatorObject.transform.rotation = curr_rot;
+        // make sure item scale is correct
+        if((rotatorObject.transform.localScale.y >= 0) != (target_pos.x >= transform.position.x)) {
+            Vector3 new_vec = rotatorObject.transform.localScale;
+            new_vec.y *= -1;
+            rotatorObject.transform.localScale = new_vec;
+        }
+
+    }
+
+    #endregion
 
     // Setup immutable item data when this object is made
     public void Setup(ItemSO baseData)
@@ -74,7 +118,13 @@ public class Item : MonoBehaviour
         }
 
         // setup input relay stuff here
-        itemInputRelay = new InputEventRelay();
+        itemInputRelay = new InputEventRelay(
+            new (InputEvent, Type)[] {
+                (InputEvent.Usable_Used, typeof(Action)),
+                (InputEvent.Usable_ResetStart, typeof(Action)), 
+                (InputEvent.Character_LookPos, typeof(Action<Vector2>)), 
+            }
+        );
 
         // find which stack counters use what inputs, update relay
         List<InputEvent> active_inputs = new List<InputEvent>();
@@ -90,6 +140,11 @@ public class Item : MonoBehaviour
         }
 
         itemInputRelay.ConnectEvent(InputEvent.Usable_ResetStart, ResetItem);
+        itemInputRelay.ConnectEvent(InputEvent.Character_LookPos, (Action<Vector2>)Aim);
+
+        // set aiming type
+        AimVFX = baseData.dynamic_aim ? DynamicAim : StaticAim;
+        _rotScale = baseData.rotation_scale;
     }
 
     public void SetEquipped(bool is_equipped)
@@ -97,8 +152,11 @@ public class Item : MonoBehaviour
         itemInputRelay.isActive = is_equipped;
     }
     // adjust item everytime theres a new user
-    public void NewUser(InputEventRelay newInputRelay)
+    public void NewUser(InputEventRelay newInputRelay, Character new_char_user = null)
     {
+        if (new_char_user)
+            user = new_char_user;
+        
         //unsubscribe from old user if they exist
         if (externalInputRelay != null)
             itemInputRelay.UnlinkRelay(externalInputRelay);
@@ -158,7 +216,7 @@ public class Item : MonoBehaviour
     #region 
     public AttackTarget GetAttackTarget()
     {
-        return new AttackTarget(user ? user.GetPosition() : this.transform.position, target_pos, itemTip.position, new Vector2(0, y_offset));
+        return new AttackTarget(user ? user.Position : this.transform.position, target_pos, itemTip.position, new Vector2(0, y_offset));
     }
     #endregion
 }
