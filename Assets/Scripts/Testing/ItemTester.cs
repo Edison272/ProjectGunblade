@@ -73,7 +73,8 @@ public class ItemTester : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        item.NewUser(inputRelay);
+        item.NewUser(inputRelay, GetAttackTarget);
+        item.SetEquipped(true);
     }
 
     // Update is called once per frame
@@ -84,6 +85,10 @@ public class ItemTester : MonoBehaviour
 
         inputRelay.Invoke(InputEvent.General_Passive);
     }
+    public AttackTarget GetAttackTarget()
+    {
+        return new AttackTarget(item.transform.position, Vector2.zero, Vector2.zero, Vector2.zero);
+    }
     public void ToggleEquip(bool is_equipped)
     {
 
@@ -93,6 +98,6 @@ public class ItemTester : MonoBehaviour
     public void TogglePickedup(bool is_pickedup)
     {
         InputEventRelay new_relay = is_pickedup? inputRelay : null;
-        item.NewUser(new_relay);
+        item.NewUser(new_relay, GetAttackTarget);
     }
 }

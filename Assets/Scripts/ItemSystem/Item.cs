@@ -21,7 +21,7 @@ public class Item : MonoBehaviour
     public float _rotScale = 1f; // 0 for no rotation, 1 for instantaneous rotation
     Quaternion curr_rot; // save the current quaternion rotation
     public Vector2 aim_pos {get; private set;} // where the item is supposed to be aimed towards;
-    public Vector2 source_pos {get; private set;} // where bullets & attacks originate from
+    [SerializeField] private Vector2 _outputPos; // where bullets & attacks originate from
     public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on _rotScale)
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
     public delegate void AimDelegate();
@@ -35,6 +35,7 @@ public class Item : MonoBehaviour
     // VFX STUFF
     
     public float y_offset;
+    public Func<AttackTarget> GetAttackTarget;
 
     // AIMING STUFF
     //public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on _rotScale)
@@ -45,6 +46,9 @@ public class Item : MonoBehaviour
     public float use_spd_scale = 1f;
     public float equip_spd_scale = 1f;
     public float resetSpdScale = 1f;
+
+    // animation speed stats
+    public float EquipTime = 0.5f;
 
     #region Initializers
 
@@ -57,12 +61,37 @@ public class Item : MonoBehaviour
         if (!itemTip)
         {
             itemTip = this.transform;
-            y_offset = itemTip.transform.position.y - transform.position.y;
         }
+        y_offset = itemTip.transform.position.y - transform.position.y;
     }
 
     public void Start()
     {
+    }
+
+    public void Update()
+    {
+        // if (reset_timer > 0)
+        // {
+        //     reset_timer -= Time.deltaTime;
+        //     if (reset_timer <= 0)
+        //     {
+        //         functionality_controller.ResetData();
+        //         is_equipped = true;
+        //         reset_timer = 0;
+        //         animator.speed = 1;
+        //     }
+        // }
+        // if (EquipTime > 0)
+        // {
+        //     EquipTime -= Time.deltaTime;
+        //     if (EquipTime <= 0)
+        //     {
+        //         SetUsability(true);
+        //         EquipTime = 0;
+        //         animator.speed = 1;
+        //     }
+        // }   
     }
     #region Aiming
     public void Aim(Vector2 aim_pos)
@@ -73,7 +102,7 @@ public class Item : MonoBehaviour
         // the ACTUAL aiming aspect (get target position from aim_dir)
         Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
         curr_rot = Quaternion.Lerp(curr_rot, aim_rot, _rotScale);
-        source_pos = transform.position + (curr_rot * Vector2.right);
+        _outputPos = transform.position + (curr_rot * Vector2.right);
         target_pos = transform.position + (curr_rot * Vector2.right * aim_dir.magnitude);
     }
     void StaticAim()
@@ -147,28 +176,58 @@ public class Item : MonoBehaviour
         _rotScale = baseData.rotation_scale;
     }
 
+    #region Equip/Unequip Control
+    // method called externally to start the process of unequipping the item
     public void SetEquipped(bool is_equipped)
     {
-        itemInputRelay.isActive = is_equipped;
+        animator.speed = 1/EquipTime;
+        animator.SetBool("IsEquipped", is_equipped); // call set equipped function through editor
+        if (!is_equipped)
+        {
+            animator.ResetTrigger("Resetting");
+            animator.ResetTrigger("Use");
+        }
     }
+    // Methods called by animator to actually unequip the item and make it unusuable
+    private void AnimEquip(){itemInputRelay.isActive = true;}
+    private void AnimUnequip(){itemInputRelay.isActive = false;}
+
+    #endregion
     // adjust item everytime theres a new user
-    public void NewUser(InputEventRelay newInputRelay, Character new_char_user = null)
+    public void NewUser(InputEventRelay NewInputRelay, Character new_char_user)
     {
         if (new_char_user)
             user = new_char_user;
-        
+            // GetAttackTarget = 
+        SetInputRelay(NewInputRelay);
+    }
+    public void NewUser(InputEventRelay NewInputRelay, Func<AttackTarget> GetTargetFunc)
+    {
+        GetAttackTarget = GetTargetFunc;
+        SetInputRelay(NewInputRelay);
+    }
+    private void SetInputRelay(InputEventRelay NewInputRelay)
+    {
         //unsubscribe from old user if they exist
         if (externalInputRelay != null)
             itemInputRelay.UnlinkRelay(externalInputRelay);
         
         // subscribe to old user events
-        externalInputRelay = newInputRelay;
+        externalInputRelay = NewInputRelay;
         if (externalInputRelay != null)
             itemInputRelay.LinkRelay(externalInputRelay);
     }
-    public void UseItem(int attackIndex)
+    public void UseItem(int attackIndex, string animKey)
     {
-        baseData.attackObjects[attackIndex].Attack(GetAttackTarget());
+        // fill in the empty values
+        AttackTarget get_atk_targ = GetAttackTarget();
+        get_atk_targ.target_pos = target_pos;
+        get_atk_targ.output_pos = _outputPos;
+        get_atk_targ.vfx_target_offset = new Vector2(0, y_offset);
+        
+        
+        baseData.attackObjects[attackIndex].Attack(get_atk_targ);
+        animator.SetTrigger("Use");
         itemInputRelay.Invoke(InputEvent.Usable_Used);
     }
     public void DropItem()
@@ -213,10 +272,5 @@ public class Item : MonoBehaviour
 
     #endregion
 
-    #region 
-    public AttackTarget GetAttackTarget()
-    {
-        return new AttackTarget(user ? user.Position : this.transform.position, target_pos, itemTip.position, new Vector2(0, y_offset));
-    }
-    #endregion
+
 }

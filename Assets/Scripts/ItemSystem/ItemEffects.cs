@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AttackSystem;
 using UnityEditor;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Connects functionality to modules
@@ -17,6 +18,8 @@ public class ItemEffect
     [SerializeReference] public int[] attackObjectRefs = new int[] {}; // contains a custom collection of index references for attack types
     [SerializeReference] public int[] stackCounterRefs = new int[] {}; // contains a custom collection of index references for stack counters
     // THE FIRST ITEM OF STACK COUNTER REFS IS THE MOST IMPORTANT. THAT IS THE ONE WHICH ACTIVATES THE ITEM EFFECT WHEN TRIGGERED
+
+    [SerializeField] private string _animationKey = "Use"; // when making items, each animation
 
     public InputEvent ActivationEvent = InputEvent.Character_MainStart; // determines when the intem effect checks values
 
@@ -81,7 +84,7 @@ public class ItemEffect
         Debug.Log(attack_ref_index);
         if (attack_ref_index > -1)
         {
-            baseItem.UseItem(attackObjectRefs[attack_ref_index]);
+            baseItem.UseItem(attackObjectRefs[attack_ref_index], _animationKey);
         }
     }
 

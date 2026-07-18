@@ -7,5 +7,6 @@ using UnityEngine;
 /// </summary>
 public class ActiveSlot
 {
-    public int SlotReference;
+    public int MainSlot = 0;
+    public int AltSlot = -1;
 }
