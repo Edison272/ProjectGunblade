@@ -19,9 +19,7 @@ public class ItemEffect
     [SerializeReference] public int[] stackCounterRefs = new int[] {}; // contains a custom collection of index references for stack counters
     // THE FIRST ITEM OF STACK COUNTER REFS IS THE MOST IMPORTANT. THAT IS THE ONE WHICH ACTIVATES THE ITEM EFFECT WHEN TRIGGERED
 
-    [SerializeField] private string _animationKey = "Use"; // when making items, each animation
-
-    public InputEvent ActivationEvent = InputEvent.Character_MainStart; // determines when the intem effect checks values
+    [SerializeField] private AnimationRequest _animationRequest; // when making items, each animation
 
     #region Initializer
     // return a deep copy of this item effect
@@ -32,6 +30,8 @@ public class ItemEffect
         attackObjectRefs = copiedItem.attackObjectRefs;
         stackCounterRefs = copiedItem.stackCounterRefs;
         baseItem.stackCounters[stackCounterRefs[0]].AddActivator(ActivateEffect);
+        // _animation requests don't change either. just keep a reference
+        this._animationRequest = copiedItem._animationRequest;
         
     }
     // clean copy function
@@ -81,10 +81,10 @@ public class ItemEffect
             return;
         }
         int attack_ref_index = (int)Mathf.Floor(stack_counter * (attackObjectRefs.Length-1));
-        Debug.Log(attack_ref_index);
+        // Debug.Log(attack_ref_index);
         if (attack_ref_index > -1)
         {
-            baseItem.UseItem(attackObjectRefs[attack_ref_index], _animationKey);
+            baseItem.UseItem(attackObjectRefs[attack_ref_index], _animationRequest);
         }
     }
 

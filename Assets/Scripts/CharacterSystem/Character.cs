@@ -15,15 +15,14 @@ public class Character : MonoBehaviour, IMovement
 
     public AnatomyComponent Anatomy;
     public Animator animator;
-    
     [field: Header("Movement")]
-    [field: SerializeField] public MovementComponent movement_component {get; private set;}
-    public float move_speed => movement_component.move_speed; //maximum speed an operator can move at
-    public Vector2 move_dir => movement_component.move_dir;
-    public Vector2 move_pos => movement_component.move_pos;
-    public bool destination_reached => movement_component.destination_reached;
-    public Vector2 last_move_dir => movement_component.last_move_dir;
-    public Vector2 force_dir => movement_component.force_dir;
+    [field: SerializeField] public MovementComponent Movement {get; private set;}
+    public float move_speed => Movement.move_speed; //maximum speed an operator can move at
+    public Vector2 move_dir => Movement.move_dir;
+    public Vector2 move_pos => Movement.move_pos;
+    public bool destination_reached => Movement.destination_reached;
+    public Vector2 last_move_dir => Movement.last_move_dir;
+    public Vector2 force_dir => Movement.force_dir;
     public Rigidbody2D entity_rb {get; private set;}
     public Vector2Int current_tile_pos = Vector2Int.zero;
     public Vector2 Position => GetPosition(); // a more compact way of accessing player position
@@ -60,18 +59,35 @@ public class Character : MonoBehaviour, IMovement
     //public BehaviorController behavior_controller;    
     
     [field: Header("Event Bus")]
-
-    private InputEventRelay controllerRelay;
+    public InputEventRelay characterRelay {get; private set;} // the internal relay used by the character
+    private InputEventRelay controllerRelay; // reference to the input thing controlling this guy
+    
     public Action<Character> OnDeath;
 
     #region initalizers
     // Initialize op if it's a prefab that's placed on the scene, and has 
     public void Awake()
     {
-        if (!entity_rb && base_data)
-        {
-            AssignBaseData(base_data);
-        }
+        // setup relay
+        characterRelay = new InputEventRelay(
+            new (InputEvent, Type)[] {
+                (InputEvent.General_Passive, typeof(Action)),
+
+                (InputEvent.Character_MoveStart, typeof(Action<Vector2>)),
+                (InputEvent.Character_MoveEnd, typeof(Action)),
+
+                (InputEvent.Character_MainStart, typeof(Action)), 
+                (InputEvent.Character_MainEnd, typeof(Action)), 
+                (InputEvent.Character_AltStart, typeof(Action)), 
+                (InputEvent.Character_AltEnd, typeof(Action)), 
+
+                (InputEvent.Character_LookPos, typeof(Action<Vector2>)), 
+                (InputEvent.Character_Interact, typeof(Action)), 
+                (InputEvent.Usable_ResetStart, typeof(Action)), 
+            }
+        );
+
+        AssignBaseData(base_data);
         GetReady();
     }
 
@@ -79,38 +95,33 @@ public class Character : MonoBehaviour, IMovement
     public void AssignBaseData(CharacterSO base_data)
     {
         this.base_data = base_data;
-
         // setup movement
         entity_rb = this.GetComponent<Rigidbody2D>();
-
         // setup VFX & Body parts
         Anatomy.Setup(entity_rb, animator);
-
         // setup health & related ui
         health_component = new HealthComponent(max_health, base_data.spawn_shield);
         health_ui.InitializeHealthUI(health_component);
-
         // setup movement
-        movement_component = new MovementComponent(base_data, entity_rb);
-        
+        Movement = new MovementComponent(base_data, entity_rb);
         // inventory
-        Inventory = new InventoryComponent(base_data.inventory, base_data.item_indexes, base_data.holding_capacity);
-
+        Inventory = new InventoryComponent(base_data, this);
         // interactEvention_range = base_data.interactEvention_range;
-
-
 
         // // setup AI
         // CreateBehaviorController();
 
-        GetReady();
+        // attach to internal function
+        characterRelay.ConnectEvent(InputEvent.Character_MoveStart, (Action<Vector2>)StartMove);
+        characterRelay.ConnectEvent(InputEvent.Character_MoveEnd, StopMove);
+
+        characterRelay.ConnectEvent(InputEvent.Character_LookPos, (Action<Vector2>)Anatomy.Look);
+        characterRelay.ConnectEvent(InputEvent.Character_Interact, (Action)Inventory.SwitchItemCycle);
     }
     // make sure the operator LOOKS ready
     public void GetReady()
     {        
-        // EquipActive(0);
-        // // equip items
-        // SetSwitchItem();
+        Inventory.SwitchItem(0);
         Anatomy.IdlePosition();
     }
 
@@ -131,27 +142,18 @@ public class Character : MonoBehaviour, IMovement
     #endregion
 
     #region Player Input
-    public void ConnectInputs(InputEventRelay inputRelay)
+
+    // link a player or ai controller to this character
+    public void LinkController(InputEventRelay inputRelay)
     {
+        //unsubscribe from old user if they exist
+        if (controllerRelay != null)
+            characterRelay.UnlinkRelay(controllerRelay);
+        
+        // subscribe to old user events
         controllerRelay = inputRelay;
-        inputRelay.ConnectEvent(InputEvent.Character_MoveStart, (Action<Vector2>)StartMove);
-        inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, StopMove);
-
-        // inputRelay.ConnectEvent(InputEvent.Character_MoveStart, MainActionStartEvent.Invoke);
-        // inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, MainActionEndEvent.Invoke);
-        // inputRelay.ConnectEvent(InputEvent.Character_MoveStart, AltActionStartEvent.Invoke);
-        // inputRelay.ConnectEvent(InputEvent.Character_MoveEnd, AltActionEndEvent.Invoke);
-        inputRelay.ConnectEvent(InputEvent.Character_LookPos, (Action<Vector2>)Anatomy.Look);
-
-        // inputRelay.ConnectEvent(InputEvent.Usable_ResetStart, ResetEvent.Invoke);
-        //inputRelay.ConnectEvent(InputEvent.Character_MoveStop, (Action)StopMove);
-
-        // set initial active items
-        // foreach(Item item in inventory)
-        // {
-        //     item.NewUser(controllerRelay, this);
-        //     item.SetEquipped(false);
-        // }
+        if (controllerRelay != null)
+            characterRelay.LinkRelay(controllerRelay);
     }
 
     #endregion
@@ -168,19 +170,12 @@ public class Character : MonoBehaviour, IMovement
 
         // Update health
         health_component.UpdateHealth();
-        movement_component.UpdateMovement();
+        Movement.UpdateMovement();
         animator.SetBool("Moving", entity_rb.linearVelocity.sqrMagnitude > 0.1f);
-        animator.speed = movement_component.speed_scale;
+        animator.speed = Movement.speed_scale;
 
-        // // set switch item time duration
-        // if (curr_switch_cd > 0)
-        // {
-        //     curr_switch_cd -= Time.deltaTime;
-        //     if (curr_switch_cd <= 0)
-        //     {
-        //         SetSwitchItem();
-        //     }
-        // }
+        // set switch item time duration
+        Inventory.Update();
 
         // if (is_AI_active && !target)
         // {
@@ -214,7 +209,7 @@ public class Character : MonoBehaviour, IMovement
         // {
         //     behavior_controller.UpdateAI();
         // }
-        movement_component.FixedUpdateMovement();
+        Movement.FixedUpdateMovement();
     }
 
     protected virtual void LateUpdate()
@@ -227,32 +222,36 @@ public class Character : MonoBehaviour, IMovement
     }
     #endregion
 
+    #region Inventory
+
+    #endregion
+
     #region Movement
     // completely change positions and forget where they wanted to go before
-    public void SetPosition(Vector2 new_position)  {movement_component.SetPosition(new_position);}
+    public void SetPosition(Vector2 new_position)  {Movement.SetPosition(new_position);}
     // get directional movement, useful for dynamic & sudden maneuvers
-    public void SetMove(Vector2 set_move_dir) {movement_component.SetMove(set_move_dir);}
+    public void SetMove(Vector2 set_move_dir) {Movement.SetMove(set_move_dir);}
     // get target_position, useful for AI with discrete positioning
-    public void SetMovePos(Vector2 set_move_pos) {movement_component.SetMovePos(set_move_pos);}
+    public void SetMovePos(Vector2 set_move_pos) {Movement.SetMovePos(set_move_pos);}
     public void Move() 
     {
         // bool move_state = animator.GetBool("Moving");
-        // move_state = movement_component.Move(move_state);
+        // move_state = Movement.Move(move_state);
         // animator.SetBool("Moving", move_state);
     }
-    public void StartMove(Vector2 move_dir) {movement_component.StartMove(move_dir);}
-    public void StopMove() {movement_component.StopMove();}
+    public void StartMove(Vector2 move_dir) {Movement.StartMove(move_dir);}
+    public void StopMove() {Movement.StopMove();}
 
     // return how long it is expected to take for the operator to reach their position
-    public float GetTravelTime() {return movement_component.GetTravelTime();}
+    public float GetTravelTime() {return Movement.GetTravelTime();}
     public void ForceMove(Vector2 direction, float scalar, bool movement_override = false)
     {
-        movement_component.ForceMove(direction, scalar, movement_override);
+        Movement.ForceMove(direction, scalar, movement_override);
     }
     public Vector2 GetPosition() {return entity_rb.position;}
     // public void ChangeSpeed(float scale_base, float duration, bool is_decaying, AbilityEffectComponent effect_controller = null)
     // {
-    //     movement_component.ChangeSpeed(scale_base, duration, is_decaying, effect_controller);
+    //     Movement.ChangeSpeed(scale_base, duration, is_decaying, effect_controller);
     // }
     #endregion
 
@@ -294,10 +293,12 @@ public class Character : MonoBehaviour, IMovement
 
     #endregion
 
-    // public int GetRangeScalar()
-    // {
-    //     return inventory[current_indexes.Item1].GetRange();
-    // }
+    #region AI
+    public AttackTarget GetAttackTarget()
+    {
+        return new AttackTarget(Position, Vector2.zero, Vector2.zero, Vector2.zero);
+    }
+    #endregion
 
     #region Stats & Status Changes
 

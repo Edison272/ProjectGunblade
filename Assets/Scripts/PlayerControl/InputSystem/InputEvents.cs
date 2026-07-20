@@ -15,5 +15,7 @@ public enum InputEvent {
     Usable_Used, 
     Usable_ResetStart, 
     Usable_ResetEnd, 
+    Character_Interact,
+    Character_InventorySelect,
     Size
 }

@@ -6,7 +6,7 @@ public interface IMovement
 {
     Rigidbody2D entity_rb {get;}
 
-    MovementComponent movement_component {get;}
+    MovementComponent Movement {get;}
     
     void Move(); // update rb position based on move_dir
     // void SetMove(Vector2 set_move_dir); // set the move_dir

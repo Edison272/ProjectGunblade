@@ -80,7 +80,7 @@ public class AnatomyComponent
         back.SetSiblingIndex(1);
         alt_hand.SetSiblingIndex(0);
 
-
+        SetAimStyle(true);
     }
 
     public void IdlePosition()

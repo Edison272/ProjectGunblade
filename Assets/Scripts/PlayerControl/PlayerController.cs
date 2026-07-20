@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
         _inputUseAlt.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_AltEnd);};
 
         _inputReset.started += ctx => {inputRelay.Invoke(InputEvent.Usable_ResetStart);};
+        _inputInteract.started += ctx => {inputRelay.Invoke(InputEvent.Character_Interact);};
         //_inputInteract.started += ctx => {inputRelay.Invoke(InputEvent.Item_Reset);};
 
         // Setup Input Relay
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour
                 (InputEvent.Character_AltStart, typeof(Action)), 
                 (InputEvent.Character_AltEnd, typeof(Action)), 
                 (InputEvent.Character_LookPos, typeof(Action<Vector2>)), 
+                (InputEvent.Character_Interact, typeof(Action)), 
                 (InputEvent.Usable_ResetStart, typeof(Action)), 
             }
         );
@@ -96,7 +98,7 @@ public class PlayerController : MonoBehaviour
     void SetPlayerCharacter(Character set_character)
     {
         //active_character?.ConnectPlayer(this);
-        active_character?.ConnectInputs(inputRelay);
+        active_character?.LinkController(inputRelay);
 
         // set camera target
         main_cinema_cam.Target.TrackingTarget = active_character.transform;
@@ -108,7 +110,7 @@ public class PlayerController : MonoBehaviour
         inputRelay.Invoke(InputEvent.Character_LookPos, pointer_world_pos);   
         Debug.DrawLine(active_character.Position, pointer_world_pos);
 
-        inputRelay.Invoke(InputEvent.General_Passive, pointer_world_pos);   
+        inputRelay.Invoke(InputEvent.General_Passive);   
     }
     private void SetLookPosition(Vector2 lookDelta)
     {

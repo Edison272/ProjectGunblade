@@ -127,10 +127,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 969364562}
     m_Modifications:
-    - target: {fileID: 2067383732432657245, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: rotatorObject
-      value: 
-      objectReference: {fileID: 1624464037}
     - target: {fileID: 3117911291600889211, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
       propertyPath: m_Name
       value: Artemis
@@ -174,14 +170,6 @@ PrefabInstance:
     - target: {fileID: 3945769674920731087, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7099249886205309938, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7099249886205309938, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 789699345
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

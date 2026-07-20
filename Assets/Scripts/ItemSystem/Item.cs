@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using NUnit.Compatibility;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 
 public enum ItemType {Weapon, Support}
@@ -50,10 +48,14 @@ public class Item : MonoBehaviour
     // animation speed stats
     public float EquipTime = 0.5f;
 
-    #region Initializers
+    private SortingGroup vfx_sorting; // TURN OFF SORTING when picked up by a player or other parent object with sorting. only turn on sorting when in item form
 
-    public void Awake()
+    #region Intializer
+
+    void Awake()
     {
+        vfx_sorting = transform.GetComponent<SortingGroup>();
+        vfx_sorting.enabled = true;
         if (baseData)
         {
             Setup(baseData);
@@ -151,6 +153,7 @@ public class Item : MonoBehaviour
             new (InputEvent, Type)[] {
                 (InputEvent.Usable_Used, typeof(Action)),
                 (InputEvent.Usable_ResetStart, typeof(Action)), 
+                (InputEvent.Usable_ResetEnd, typeof(Action)), 
                 (InputEvent.Character_LookPos, typeof(Action<Vector2>)), 
             }
         );
@@ -196,15 +199,19 @@ public class Item : MonoBehaviour
     // adjust item everytime theres a new user
     public void NewUser(InputEventRelay NewInputRelay, Character new_char_user)
     {
+        vfx_sorting.enabled = false;
         if (new_char_user)
             user = new_char_user;
-            // GetAttackTarget = 
+            GetAttackTarget = user.GetAttackTarget;
         SetInputRelay(NewInputRelay);
+        itemInputRelay.isActive = false;
     }
     public void NewUser(InputEventRelay NewInputRelay, Func<AttackTarget> GetTargetFunc)
     {
+        vfx_sorting.enabled = false;
         GetAttackTarget = GetTargetFunc;
         SetInputRelay(NewInputRelay);
+        itemInputRelay.isActive = false;
     }
     private void SetInputRelay(InputEventRelay NewInputRelay)
     {
@@ -217,7 +224,7 @@ public class Item : MonoBehaviour
         if (externalInputRelay != null)
             itemInputRelay.LinkRelay(externalInputRelay);
     }
-    public void UseItem(int attackIndex, string animKey)
+    public void UseItem(int attackIndex, AnimationRequest animRequest)
     {
         // fill in the empty values
         AttackTarget get_atk_targ = GetAttackTarget();
@@ -227,7 +234,7 @@ public class Item : MonoBehaviour
         
         
         baseData.attackObjects[attackIndex].Attack(get_atk_targ);
-        animator.SetTrigger("Use");
+        animRequest.Animate(animator);
         itemInputRelay.Invoke(InputEvent.Usable_Used);
     }
     public void DropItem()

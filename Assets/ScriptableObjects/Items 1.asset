@@ -17,6 +17,11 @@ MonoBehaviour:
   itemEffects:
   - attackObjectRefs: 00000000
     stackCounterRefs: 000000000100000002000000
+    _animationRequest:
+      AnimParameterName: Use
+      AnimParameterType: 9
+      <_animParamValue>k__BackingField: 0
+      AnimSpeed: 1
     ActivationEvent: 0
   attackObjects:
   - rid: 2198171203760816235
@@ -51,7 +56,7 @@ MonoBehaviour:
       type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 3
-        cooldownTime: 0.5
+        cooldownTime: 0.25
         StartCooldownEvent: 11
         ResetCooldownEvent: 12
     - rid: 2198171256505761878

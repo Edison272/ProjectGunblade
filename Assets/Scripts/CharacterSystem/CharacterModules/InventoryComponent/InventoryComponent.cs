@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// An inventory system. Can be used for items, or for abilities. But items for now.
@@ -11,75 +12,129 @@ using UnityEngine;
 public class InventoryComponent
 {
     public List<Item> inventory;
-    public List<ActiveSlot> item_indexes;  // Access items from the items list with indexes. Vector X for Main Item, Vector Y for Alt Item
-    protected int curr_item_index = 0;  // access items indexes list
-    public ActiveSlot current_indexes {get; protected set;}
-    protected float switch_cd = 0.5f; // time the char must wait before they can switch to the next weapon
+    public List<ActiveSlot> inventorySlots;  // Access items from the items list with indexes. Vector X for Main Item, Vector Y for Alt Item
+    protected int _currSlotIndex = 0;  // access items indexes list
+    public ActiveSlot CurrentSlot {get; protected set;}
+    protected float switch_cd = 1.5f; // time the char must wait before they can switch to the next weapon
     protected float curr_switch_cd = 0;
     private int holding_capacity = 0;
-    public InventoryComponent(ItemSO[] initialized_inventory, ActiveSlot[] initialized_active_slots, int holding_capacity)
+    private Character _character;
+    public Delegate SwitchItemCycle {get; private set;}
+
+    #region Intializer
+    // internal setup class
+    public InventoryComponent(CharacterSO baseData, Character character)
     {
+        ItemSO[] initialized_inventory = baseData.inventory;
+        ActiveSlot[] initialized_active_slots = baseData.inventory_slots;
+        _character = character;
+        
         // // setup inventory
         Item[] init_inventory = new Item[initialized_inventory.Length];
-        ActiveSlot[] init_item_indexes = new ActiveSlot[initialized_active_slots.Length];
-        for (int i = 0; i < initialized_active_slots.Length; i++)
+        inventorySlots = new List<ActiveSlot>();
+        foreach(ActiveSlot slot in initialized_active_slots)
         {
-            int main_item = initialized_active_slots[i].MainSlot;
-            int alt_item = initialized_active_slots[i].AltSlot;
-            init_item_indexes[i] = initialized_active_slots[i];
-            // init_inventory[main_item] = GetItemSO(initialized_inventory[main_item]);
-            // if (alt_item > -1)
-            // {
-            //     init_inventory[alt_item] = GetItemSO(initialized_inventory[alt_item], true);
-            // }
+            ActiveSlot new_slot = new ActiveSlot(slot);
+            inventorySlots.Add(new_slot);
+
+            // initializes items based on the slots list. does not initialize the item if something already exists at the designated area
+            if (!init_inventory[new_slot.MainSlot]) 
+            {
+                init_inventory[new_slot.MainSlot] = GetNewItem(initialized_inventory[new_slot.MainSlot], true);
+            }
+            else {Debug.LogWarning($"Item already occupying the main spot at index slot {new_slot.MainSlot} ! new item will not be initialzied");}
+
+            if (new_slot.AltSlot > -1)
+            {
+                if (!init_inventory[new_slot.AltSlot])
+                {
+                    init_inventory[new_slot.AltSlot] = GetNewItem(initialized_inventory[new_slot.AltSlot], false);
+                }
+                else
+                {
+                    Debug.LogWarning($"Item already occupying the alt spot at index slot {new_slot.AltSlot} ! new item will not be initialzied");
+                }
+            }
         }
         inventory = init_inventory.ToList<Item>();
-        item_indexes = init_item_indexes.ToList<ActiveSlot>();
-        this.holding_capacity = Mathf.Max(item_indexes.Count, holding_capacity);
+        holding_capacity = Mathf.Max(inventorySlots.Count, baseData.holding_capacity);
+
+        // default to first weapon in inventory
+        _currSlotIndex = 0;
+        CurrentSlot = inventorySlots[0];
+        curr_switch_cd = switch_cd; // set timer before equipping new weapons
+
+        SwitchItemCycle = (Action)(() => SwitchItem(-1));
     }
-    #region  Inventory Management
-    public bool HasAltAction() // returns true if the operator is currently wielding two items or an multi-state items
+    #endregion
+
+    #region Updates
+    public void Update()
     {
-        return item_indexes[curr_item_index].AltSlot != -1;  // return true for one action, and false for two actions
+        // keep track of timer to equip weapons based on switch time
+        if (curr_switch_cd > 0)
+        {
+            curr_switch_cd -= Time.deltaTime;
+            if (curr_switch_cd <= 0)
+            {
+                SetActiveSlot(true);
+            }
+        }
     }
     #endregion
 
     #region Equip/Unequip
-    void EquipActive(int index)  // equip the currently selected weapons (the ones the operator is currently holding)
+    // cycle between inventorySlots slots, or choose a select slot with spec_index
+    // parameer -1 to do a basic cycle of through the inventory
+    public void SwitchItem(int spec_index) 
     {
-        // main_item = inventory[item_indexes[index].MainSlot];
-        // if (item_indexes[index].y == -1)
-        // {
-        //     alt_item = null;
-        // } 
-        // else
-        // {
-        //     alt_item = inventory[item_indexes[index].y];
-        // }
-        //curr_range = base_range + GetRangeScalar();
+        if (spec_index == _currSlotIndex) {return;} // dont do anything if switching to active items
+        
+        if (spec_index == -1) // typical incrementation
+        {
+            _currSlotIndex += 1;
+            if (_currSlotIndex > inventorySlots.Count - 1)
+            {
+                _currSlotIndex = 0;
+            }
+        }
+        else // specific index
+        {
+            _currSlotIndex = Mathf.Clamp(spec_index, 0, inventorySlots.Count);
+        }
+        // the actual "switching" part which sets the current active slot
+        SetActiveSlot(false); //unequipped item will call the "SetSwitchItem" in animator to set the new active item
+        CurrentSlot = inventorySlots[_currSlotIndex];
+        curr_switch_cd = switch_cd; // set timer before equipping new weapons
     }
-    void UnequipActive() // unequip animation for the currently selected weapons
+
+    void SetActiveSlot(bool is_active) // unequip or equip the active slot
     {
-        // main_item.SetEquipped(false);
-        // alt_item?.SetEquipped(false);
-    }
-    public void SetSwitchItem() // only setup the new item VFX after the old one has been put away completely
-    {
-        // main_item.SetEquipped(true);
-        // alt_item?.SetEquipped(true);
-        // CharacterAnatomy.SetAimStyle(alt_item); // adjust how the item(s) look in the player's hands
+        if (is_active)
+        {
+            _character.Anatomy.SetAimStyle(CurrentSlot.IsAkimbo); // adjust how the item(s) look in the player's hands
+            CurrentSlot.SetSlotAcive(inventory, true);
+        }
+        else
+        {
+            CurrentSlot.SetSlotAcive(inventory, false);
+        }
+        
     }
 
     #endregion
-    // public Item GetItemSO(ItemSO new_item, bool on_main_hand = true)
-    // {
-        // Transform hand_hold = CharacterAnatomy.GetHand(on_main_hand);
-        // return new_item.GenerateItem(hand_hold);
-    //}
+    public Item GetNewItem(ItemSO itemBase, bool onAltHand = false)
+    {
+        Item new_item = itemBase.GenerateItem(_character.Anatomy.GetHand(onAltHand));
+        new_item.NewUser(_character.characterRelay, _character);
+        return new_item;
+    }
+
+
     // public Item PickupItem(Item new_item)
     // {
     //     Item switch_out_item = null;
-    //     if (item_indexes.Count >= holding_capacity)
+    //     if (inventorySlots.Count >= holding_capacity)
     //     {            
     //         // switch out current item with the new pickup
     //         switch_out_item = inventory[current_indexes.Item1];
@@ -91,7 +146,7 @@ public class InventoryComponent
     //         new_item.transform.localScale = new Vector3(Mathf.Abs(scale), Mathf.Abs(scale), Mathf.Abs(scale));
     //         new_item.NewUser(this);
             
-    //         EquipActive(curr_item_index); // set up the new shi
+    //         EquipActive(_currSlotIndex); // set up the new shi
     //         curr_switch_cd = switch_cd;
     //     } 
     //     else
@@ -101,27 +156,7 @@ public class InventoryComponent
     //     return switch_out_item;
     // }
     
-    public void SwitchItem(int spec_index = -1) // cycle between item_indexes slots, or choose a select slot with spec_index
-    {
-        if (spec_index == curr_item_index) {return;} // dont do anything if switching to active items
-        
-        if (spec_index == -1) // typical incrementation
-        {
-            curr_item_index += 1;
-            if (curr_item_index > item_indexes.Count - 1)
-            {
-                curr_item_index = 0;
-            }
-        }
-        else // specific index
-        {
-            curr_item_index = Mathf.Clamp(spec_index, 0, item_indexes.Count);
-        }
-        UnequipActive(); //unequipped item will call the "SetSwitchItem" in animator to set the new active item
-        // current_indexes = (item_indexes[curr_item_index].x, item_indexes[curr_item_index].y);
-        // EquipActive(curr_item_index); // set up the new shi
-        // curr_switch_cd = switch_cd; // set timer before equipping new weapons
-    }
+
     // public IInteractEventable FindInteractEventables()
     // {
     //     ContactFilter2D interactEventable_filter = new ContactFilter2D();
@@ -139,12 +174,12 @@ public class InventoryComponent
     // public int AddItem(Item new_item)
     // {
     //     inventory.Add(new_item);
-    //     item_indexes.Add(new Vector2Int(inventory.Count-1, -1));
+    //     inventorySlots.Add(new Vector2Int(inventory.Count-1, -1));
 
     //     new_item.NewUser(this);
     //     new_item.UnequipItem();
 
-    //     return item_indexes.Count-1;
+    //     return inventorySlots.Count-1;
     // }
 
 
