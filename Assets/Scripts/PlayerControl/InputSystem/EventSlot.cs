@@ -13,6 +13,10 @@ public abstract class EventSlot
     public Delegate relayCallback; // other delegates can connect to this
     protected readonly List<Delegate> _subscribers = new List<Delegate>();
 
+    // slot control
+    public bool IsActive = true; // used to individually toggle an event slot. used by the inputEventRelay
+
+
     public EventSlot(InputEventRelay newInputRelay)
     {
         inputRelay = newInputRelay;
@@ -89,7 +93,7 @@ public class ActionSlot : EventSlot
     // Invoke overloads
     public override void Invoke()
     {
-        if (!inputRelay.isActive)
+        if (!inputRelay.IsActive || !IsActive)
             return;
         foreach (Delegate slot_sub in _subscribers) {
             Type d_type = delegateType;
@@ -112,7 +116,7 @@ public class ActionSlot<T> : EventSlot
     // Invoke overloads
     public override void Invoke<I1>(I1 arg1)
     {
-        if (!inputRelay.isActive)
+        if (!inputRelay.IsActive || !IsActive)
             return;
         foreach (Delegate slot_sub in _subscribers) {
             Type d_type = delegateType;
@@ -133,7 +137,7 @@ public class ActionSlot<T1, T2> : EventSlot
     // Invoke overloads
     public override void Invoke<I1, I2>(I1 arg1, I2 arg2)
     {
-        if (!inputRelay.isActive)
+        if (!inputRelay.IsActive || !IsActive)
             return;
         foreach (Delegate slot_sub in _subscribers) {
             Type d_type = delegateType;

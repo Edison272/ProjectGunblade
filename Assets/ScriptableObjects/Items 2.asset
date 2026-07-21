@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 401ed04a628f55e46808c6fa2347d8f7, type: 3}
-  m_Name: Items 1
+  m_Name: Items 2
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
-  item_prefab: {fileID: 3117911291600889211, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
+  item_prefab: {fileID: 3117911291600889211, guid: f702719fb9f724e488337331542e64cc, type: 3}
   <resetTime>k__BackingField: 1
   itemEffects:
   - attackObjectRefs: 00000000
@@ -23,7 +23,7 @@ MonoBehaviour:
       <_animParamValue>k__BackingField: 0
       AnimSpeed: 1
   attackObjects:
-  - rid: 2198171203760816235
+  - rid: 2198171613395419285
   stackCounters:
   - rid: 2198171256505761878
   - rid: 2198171256505761870
@@ -31,28 +31,10 @@ MonoBehaviour:
   dynamic_aim: 1
   rotation_scale: 1
   <EquipTime>k__BackingField: 1
-  <UnequipTime>k__BackingField: 2
+  <UnequipTime>k__BackingField: 0.5
   references:
     version: 2
     RefIds:
-    - rid: 2198171203760816235
-      type: {class: Projectile, ns: , asm: Assembly-CSharp}
-      data:
-        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
-        atk_stats:
-          damage: 0
-          pierce: 0
-          knockback_amt: 0
-          effect_time: 0
-          slow_amt: 0
-          total_dot_damage: 0
-          total_dot_ticks: 0
-        typeData:
-          projectile_speed: 10
-          homing_strength: 0
-          projectile_count: 1
-          projectile_spread: 0
-          even_spread: 0
     - rid: 2198171256505761870
       type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -79,3 +61,21 @@ MonoBehaviour:
           ReloadEvent: 12
         regenAmmo: 0
         roundsReload: 0
+    - rid: 2198171613395419285
+      type: {class: Linecast, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        atk_stats:
+          damage: 0
+          pierce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          projectile_speed: 0.1
+          homing_strength: 0
+          projectile_count: 3
+          projectile_spread: 15
+          even_spread: 0

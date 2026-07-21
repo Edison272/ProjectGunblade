@@ -16,7 +16,7 @@ using UnityEngine;
 public class InputEventRelay
 {    
     private EventSlot[] _inputEvents = new EventSlot[(int)InputEvent.Size];
-    public bool isActive = true;
+    public bool IsActive = true; // control whether the ENTIRE relay is active/inactive
 
     #region Initializers
     /// basic constructors
@@ -209,18 +209,32 @@ public class InputEventRelay
     #region Invoke
     public void Invoke(InputEvent inputType)
     {
+        if (!IsActive || !IsConnected(inputType)) {return;}
         EventSlot slot = _inputEvents[(int)inputType];
         slot.Invoke();
     }
     public void Invoke<T>(InputEvent inputType, T arg)
     {
+        if (!IsActive || !IsConnected(inputType)) {return;}
         EventSlot slot = _inputEvents[(int)inputType];
         slot.Invoke(arg);
     }
     public void Invoke<T1, T2>(InputEvent inputType, T1 arg1, T2 arg2)
     {
+        if (!IsActive || !IsConnected(inputType)) {return;}
         EventSlot slot = _inputEvents[(int)inputType];
         slot.Invoke(arg1, arg2);
+    }
+
+    #endregion
+
+    #region Event Slot Control
+
+    // control whether or not an individual event is active/inactive
+    public void SetEventActive(InputEvent inputType, bool is_active)
+    {
+        EventSlot slot = _inputEvents[(int)inputType];
+        slot.IsActive = is_active;
     }
 
     #endregion

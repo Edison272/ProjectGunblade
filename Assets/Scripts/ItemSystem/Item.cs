@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
 
@@ -46,12 +47,12 @@ public class Item : MonoBehaviour
     public float resetSpdScale = 1f;
 
     // animation speed stats
-    public float EquipTime = 0.5f;
+    public float EquipTime => baseData.EquipTime * equip_spd_scale;
+    public float UnequipTime => baseData.UnequipTime * equip_spd_scale;
 
     private SortingGroup vfx_sorting; // TURN OFF SORTING when picked up by a player or other parent object with sorting. only turn on sorting when in item form
 
     #region Intializer
-
     void Awake()
     {
         vfx_sorting = transform.GetComponent<SortingGroup>();
@@ -173,6 +174,7 @@ public class Item : MonoBehaviour
 
         itemInputRelay.ConnectEvent(InputEvent.Usable_ResetStart, ResetItem);
         itemInputRelay.ConnectEvent(InputEvent.Character_LookPos, (Action<Vector2>)Aim);
+        itemInputRelay.IsActive = false;
 
         // set aiming type
         AimVFX = baseData.dynamic_aim ? DynamicAim : StaticAim;
@@ -184,34 +186,46 @@ public class Item : MonoBehaviour
     public void SetEquipped(bool is_equipped)
     {
         animator.speed = 1/EquipTime;
-        animator.SetBool("IsEquipped", is_equipped); // call set equipped function through editor
         if (!is_equipped)
         {
+            animator.speed = 1/UnequipTime;
             animator.ResetTrigger("Resetting");
             animator.ResetTrigger("Use");
         }
+        animator.SetBool("IsEquipped", is_equipped); // call set equipped function through editor
+    }
+
+    private void SetItemInputRelay(bool isActive)
+    {
+        itemInputRelay.SetEventActive(InputEvent.Usable_Used,isActive);
+        itemInputRelay.SetEventActive(InputEvent.Usable_ResetStart,isActive);
+        itemInputRelay.SetEventActive(InputEvent.Usable_ResetEnd,isActive);
+
+        itemInputRelay.SetEventActive(InputEvent.Character_MainStart,isActive);
+        itemInputRelay.SetEventActive(InputEvent.Character_MainEnd,isActive);
+        itemInputRelay.SetEventActive(InputEvent.Character_AltStart,isActive);
+        itemInputRelay.SetEventActive(InputEvent.Character_AltEnd,isActive);
     }
     // Methods called by animator to actually unequip the item and make it unusuable
-    private void AnimEquip(){itemInputRelay.isActive = true;}
-    private void AnimUnequip(){itemInputRelay.isActive = false;}
+    private void AnimEquip(){SetItemInputRelay(true);}
+    private void AnimUnequip(){SetItemInputRelay(false);}
 
     #endregion
+
+    #region Set/Unset Item User
     // adjust item everytime theres a new user
     public void NewUser(InputEventRelay NewInputRelay, Character new_char_user)
     {
-        vfx_sorting.enabled = false;
-        if (new_char_user)
-            user = new_char_user;
-            GetAttackTarget = user.GetAttackTarget;
-        SetInputRelay(NewInputRelay);
-        itemInputRelay.isActive = false;
+        NewUser(NewInputRelay, new_char_user.GetAttackTarget);
     }
     public void NewUser(InputEventRelay NewInputRelay, Func<AttackTarget> GetTargetFunc)
     {
         vfx_sorting.enabled = false;
         GetAttackTarget = GetTargetFunc;
+    
         SetInputRelay(NewInputRelay);
-        itemInputRelay.isActive = false;
+        itemInputRelay.IsActive = true;
+        SetItemInputRelay(false);
     }
     private void SetInputRelay(InputEventRelay NewInputRelay)
     {
@@ -224,6 +238,7 @@ public class Item : MonoBehaviour
         if (externalInputRelay != null)
             itemInputRelay.LinkRelay(externalInputRelay);
     }
+    #endregion
     public void UseItem(int attackIndex, AnimationRequest animRequest)
     {
         // fill in the empty values

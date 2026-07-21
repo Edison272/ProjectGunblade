@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 8606916593666797745}
   - component: {fileID: 8427458156013595215}
   m_Layer: 0
-  m_Name: Artemis
+  m_Name: Railgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab585aa613342141996fcfe54b6090a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <baseData>k__BackingField: {fileID: 11400000, guid: 1848e84891918844684352c2f2d8d3bc, type: 2}
+  <baseData>k__BackingField: {fileID: 11400000, guid: b0cc0780a51e00d4eaf5265cb42d2479, type: 2}
   user: {fileID: 0}
   itemEffects: []
   _rotScale: 1
@@ -151,7 +151,6 @@ MonoBehaviour:
   use_spd_scale: 1
   equip_spd_scale: 1
   resetSpdScale: 1
-  EquipTime: 0.5
 --- !u!95 &8606916593666797745
 Animator:
   serializedVersion: 7
@@ -393,7 +392,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 2550606314407754957, guid: 9db3aee8d2f6bcf458c5edfdf87fdb22, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f85965d5552b2ca428d8e3f6ff93a77d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

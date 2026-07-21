@@ -26,6 +26,10 @@ public class ItemSO : ScriptableObject
     public bool dynamic_aim = true; // allow dynamic aim for the object to be able to turn to face the target
     [Range(0.0f, 1.0f)] public float rotation_scale = 1f;    // 0 to 1
 
+    [field: Header("Equipping")]
+    [field: SerializeField] public float EquipTime {get; private set;} = 0.5f;
+    [field: SerializeField] public float UnequipTime {get; private set;} = 0.5f;
+
     #region Creating the Item
     public Item GenerateItem(Vector3 pos, Quaternion rotation) // summon an item on the ground
     {
@@ -39,6 +43,11 @@ public class ItemSO : ScriptableObject
         Item new_item = item_object.GetComponent<Item>();
         return new_item;
     }
+
+    // public Item SetupNewItem(Item newItem)
+    // {
+    //     return
+    // }
     #endregion
 
     public void OnValidate()

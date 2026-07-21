@@ -11,18 +11,42 @@ public class ActiveSlot
 {
     public int MainSlot = 0;
     public int AltSlot = -1;
+    private List<Item> _inventoryRef;
     public bool IsAkimbo => AltSlot > 0 ? true : false;
+    public float EquipSpeed => GetEquipSpeed(false);
+    public float UnequipSpeed => GetEquipSpeed(true);
     public ActiveSlot(ActiveSlot copied)
     {
         MainSlot = copied.MainSlot;
         AltSlot = copied.AltSlot;
+        _inventoryRef = copied._inventoryRef;
     }
-    public void SetSlotAcive(List<Item> inventory, bool is_active)
+
+    public ActiveSlot SetInventoryReference(List<Item> setInentory)
     {
-        inventory[MainSlot].SetEquipped(is_active);
+        _inventoryRef = setInentory;
+        return this;
+    }
+    public void SetSlotAcive(bool is_active)
+    {
+        _inventoryRef[MainSlot].SetEquipped(is_active);
         if (AltSlot > -1)
         {
-            inventory[AltSlot].SetEquipped(is_active);
+            _inventoryRef[AltSlot].SetEquipped(is_active);
         }
     }
+
+    #region Helpers
+    // true for getting unequip speed, false for getting equip speed
+    private float GetEquipSpeed(bool is_unequip)
+    {
+        float speed = 0;
+        speed += is_unequip ? _inventoryRef[MainSlot].UnequipTime : _inventoryRef[MainSlot].EquipTime;
+        if (AltSlot > -1)
+        {
+            speed += is_unequip ? _inventoryRef[AltSlot].UnequipTime : _inventoryRef[AltSlot].EquipTime;
+        }
+        return speed;
+    }
+    #endregion
 }

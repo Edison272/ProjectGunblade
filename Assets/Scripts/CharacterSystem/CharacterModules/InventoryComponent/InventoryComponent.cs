@@ -31,10 +31,11 @@ public class InventoryComponent
         
         // // setup inventory
         Item[] init_inventory = new Item[initialized_inventory.Length];
+        inventory = new List<Item>();
         inventorySlots = new List<ActiveSlot>();
         foreach(ActiveSlot slot in initialized_active_slots)
         {
-            ActiveSlot new_slot = new ActiveSlot(slot);
+            ActiveSlot new_slot = new ActiveSlot(slot).SetInventoryReference(inventory);
             inventorySlots.Add(new_slot);
 
             // initializes items based on the slots list. does not initialize the item if something already exists at the designated area
@@ -56,13 +57,18 @@ public class InventoryComponent
                 }
             }
         }
-        inventory = init_inventory.ToList<Item>();
+
+        foreach(Item newItem in init_inventory)
+        {
+            inventory.Add(newItem);
+        }
+        
         holding_capacity = Mathf.Max(inventorySlots.Count, baseData.holding_capacity);
 
         // default to first weapon in inventory
         _currSlotIndex = 0;
         CurrentSlot = inventorySlots[0];
-        curr_switch_cd = switch_cd; // set timer before equipping new weapons
+        curr_switch_cd = CurrentSlot.EquipSpeed; // set timer before equipping new weapons
 
         SwitchItemCycle = (Action)(() => SwitchItem(-1));
     }
@@ -103,9 +109,10 @@ public class InventoryComponent
             _currSlotIndex = Mathf.Clamp(spec_index, 0, inventorySlots.Count);
         }
         // the actual "switching" part which sets the current active slot
+        curr_switch_cd = CurrentSlot.UnequipSpeed; // set timer before equipping new weapons
         SetActiveSlot(false); //unequipped item will call the "SetSwitchItem" in animator to set the new active item
         CurrentSlot = inventorySlots[_currSlotIndex];
-        curr_switch_cd = switch_cd; // set timer before equipping new weapons
+        
     }
 
     void SetActiveSlot(bool is_active) // unequip or equip the active slot
@@ -113,11 +120,11 @@ public class InventoryComponent
         if (is_active)
         {
             _character.Anatomy.SetAimStyle(CurrentSlot.IsAkimbo); // adjust how the item(s) look in the player's hands
-            CurrentSlot.SetSlotAcive(inventory, true);
+            CurrentSlot.SetSlotAcive(true);
         }
         else
         {
-            CurrentSlot.SetSlotAcive(inventory, false);
+            CurrentSlot.SetSlotAcive(false);
         }
         
     }

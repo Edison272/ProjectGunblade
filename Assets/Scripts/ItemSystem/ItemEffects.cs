@@ -29,7 +29,7 @@ public class ItemEffect
         // attack types and refs will never change
         attackObjectRefs = copiedItem.attackObjectRefs;
         stackCounterRefs = copiedItem.stackCounterRefs;
-        baseItem.stackCounters[stackCounterRefs[0]].AddActivator(ActivateEffect);
+        baseItem.stackCounters?[stackCounterRefs[0]].AddActivator(ActivateEffect);
         // _animation requests don't change either. just keep a reference
         this._animationRequest = copiedItem._animationRequest;
         
