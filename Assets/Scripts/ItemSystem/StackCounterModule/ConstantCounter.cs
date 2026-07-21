@@ -13,11 +13,12 @@ public class ConstantCounter : StackCounter
 {
     [Header("Basic Stats")]
     public InputEvent StartConstant = InputEvent.Character_MainStart;
-    public InputEvent CallConstant = InputEvent.General_Passive;
+    public InputEvent CallConstant = InputEvent.General_Passive; // this is to be unchanged. the whole point of this counter is to passive
     public InputEvent EndConstant = InputEvent.Character_MainEnd;
+    public InputEvent ResetConstant = InputEvent.Usable_ResetStart;
     // for "forcing" parameters onto some of the input events
-    private Action ToggleStart;
-    private Action ToggleEnd;
+    private Delegate ToggleStart;
+    private Delegate ToggleEnd;
     private bool _constantActive = false;
 
     #region Initalizers
@@ -31,10 +32,11 @@ public class ConstantCounter : StackCounter
     {
         StartConstant = copied.StartConstant;
         EndConstant = copied.EndConstant;
+        ResetConstant = InputEvent.Usable_ResetStart;
 
         // set force parameter functions
-        ToggleStart = () => ToggleConstant(true);
-        ToggleEnd = () => ToggleConstant(false);
+        ToggleStart = (Action)(() => ToggleConstant(true));
+        ToggleEnd = (Action)(() => ToggleConstant(false));
     }
     // creates a deepy copy of this class.
     public override StackCounter GetCopy()
@@ -54,6 +56,7 @@ public class ConstantCounter : StackCounter
         inputRelay.ConnectEvent(StartConstant, ToggleStart);
         inputRelay.ConnectEvent(EndConstant, ToggleEnd);
         inputRelay.ConnectEvent(CallConstant, UpdateConstant);
+        inputRelay.ConnectEvent(ResetConstant, ResetCounter);
     }
     #endregion
 
@@ -66,7 +69,7 @@ public class ConstantCounter : StackCounter
     }
     public virtual void ResetCounter()
     {
-
+        ToggleConstant(false);
     }
     #endregion
 

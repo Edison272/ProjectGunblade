@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Items 2
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   item_prefab: {fileID: 3117911291600889211, guid: f702719fb9f724e488337331542e64cc, type: 3}
-  <resetTime>k__BackingField: 1
+  <EquipTime>k__BackingField: 1
+  <UnequipTime>k__BackingField: 0.2
+  <ResetTime>k__BackingField: 3
   itemEffects:
   - attackObjectRefs: 00000000
     stackCounterRefs: 000000000100000002000000
@@ -30,8 +32,6 @@ MonoBehaviour:
   - rid: 2198171343949136020
   dynamic_aim: 1
   rotation_scale: 1
-  <EquipTime>k__BackingField: 1
-  <UnequipTime>k__BackingField: 0.5
   references:
     version: 2
     RefIds:
@@ -49,6 +49,7 @@ MonoBehaviour:
         StartConstant: 2
         CallConstant: 7
         EndConstant: 3
+        ResetConstant: 12
     - rid: 2198171343949136020
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:

@@ -11,9 +11,12 @@ public class Item : MonoBehaviour
 {   
     [field: SerializeField] public ItemSO baseData {get; private set;} // SO contains important base data
     public Character user;
+    public Func<AttackTarget> GetAttackTarget;
 
     [SerializeField] private ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
     public StackCounter[] stackCounters {get; private set;}
+
+
 
     [field: Header("Aiming")]
     static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90f); // RotateTowards() is stupid so we need to offset it
@@ -32,12 +35,10 @@ public class Item : MonoBehaviour
     public Transform itemTip; // the "front" of an item which attack type vfx will align to
     public Animator animator;
     // VFX STUFF
-    
     public float y_offset;
-    public Func<AttackTarget> GetAttackTarget;
+    
 
-    // AIMING STUFF
-    //public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on _rotScale)
+
     private InputEventRelay externalInputRelay; // reference to another input relay which controls the item
     private InputEventRelay itemInputRelay; // a locally defined input relay
 
@@ -49,6 +50,10 @@ public class Item : MonoBehaviour
     // animation speed stats
     public float EquipTime => baseData.EquipTime * equip_spd_scale;
     public float UnequipTime => baseData.UnequipTime * equip_spd_scale;
+    public float ResetTime => baseData.ResetTime * resetSpdScale;
+
+    // internal state data
+    private bool _isInputsActive = false; // toggled off/on when equipped/unequipped, and the item toggles select events
 
     private SortingGroup vfx_sorting; // TURN OFF SORTING when picked up by a player or other parent object with sorting. only turn on sorting when in item form
 
@@ -71,30 +76,10 @@ public class Item : MonoBehaviour
     public void Start()
     {
     }
-
+    #endregion
     public void Update()
     {
-        // if (reset_timer > 0)
-        // {
-        //     reset_timer -= Time.deltaTime;
-        //     if (reset_timer <= 0)
-        //     {
-        //         functionality_controller.ResetData();
-        //         is_equipped = true;
-        //         reset_timer = 0;
-        //         animator.speed = 1;
-        //     }
-        // }
-        // if (EquipTime > 0)
-        // {
-        //     EquipTime -= Time.deltaTime;
-        //     if (EquipTime <= 0)
-        //     {
-        //         SetUsability(true);
-        //         EquipTime = 0;
-        //         animator.speed = 1;
-        //     }
-        // }   
+        
     }
     #region Aiming
     public void Aim(Vector2 aim_pos)
@@ -197,7 +182,7 @@ public class Item : MonoBehaviour
 
     private void SetItemInputRelay(bool isActive)
     {
-        itemInputRelay.SetEventActive(InputEvent.Usable_Used,isActive);
+        _isInputsActive = isActive;
         itemInputRelay.SetEventActive(InputEvent.Usable_ResetStart,isActive);
         itemInputRelay.SetEventActive(InputEvent.Usable_ResetEnd,isActive);
 
@@ -258,25 +243,26 @@ public class Item : MonoBehaviour
 
     }
 
+
+    #region Reset Item / Data
     // Calls item animator to reset the item
     public void ResetItem() // "reload" the item
     {
-        Debug.Log("Resetting Item");
-        bool can_reset = true;
-        if (can_reset) {
-            float reset_time = baseData.resetTime / resetSpdScale;
-            animator.speed = 1/reset_time;
-            animator.SetTrigger("Resetting");
-            animator.ResetTrigger("Use");
-        }
+
+        if (!_isInputsActive) {return;}
+        SetItemInputRelay(false);
+        itemInputRelay.Invoke(InputEvent.Usable_ResetStart);
+        animator.speed = 1/ResetTime;
+        animator.SetTrigger("Resetting");
+        animator.ResetTrigger("Use");
     }
     /// <summary>
     /// Called by the animator after the reset animator finishes
-    /// reset data to original state
     /// </summary>
-    public void ResetData() 
+    public void AnimResetItem() 
     {
         itemInputRelay.Invoke(InputEvent.Usable_ResetEnd);
+        SetItemInputRelay(true);
         // use_spd_scale = 1;
         // reset_spd_scale = 1;
         // equip_spd_scale = 1;
@@ -292,6 +278,11 @@ public class Item : MonoBehaviour
         // functionality_controller.ResetData();
     }
 
+    // cancels all ongoing invokes
+    public void InterruptItem()
+    {
+        
+    }
     #endregion
 
 

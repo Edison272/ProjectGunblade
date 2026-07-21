@@ -17,7 +17,13 @@ using Unity.VisualScripting;
 public class ItemSO : ScriptableObject
 {
     [SerializeField] private GameObject item_prefab;
-    [field: SerializeField] public float resetTime {get; private set;} = 1f;
+    [field: Header("Equipping")]
+    [field: SerializeField] public float EquipTime {get; private set;} = 0.5f;
+    [field: SerializeField] public float UnequipTime {get; private set;} = 0.5f;
+
+    [field: Header("Resetting")]
+    [field: SerializeField] public float ResetTime {get; private set;} = 1f;
+
     public ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
     [SerializeReference] public AttackObject[] attackObjects = new Projectile[] {}; // a collection of attack types
     [SerializeReference] public StackCounter[] stackCounters = new StackCounter[] {}; // control when different item effects trigger
@@ -26,9 +32,7 @@ public class ItemSO : ScriptableObject
     public bool dynamic_aim = true; // allow dynamic aim for the object to be able to turn to face the target
     [Range(0.0f, 1.0f)] public float rotation_scale = 1f;    // 0 to 1
 
-    [field: Header("Equipping")]
-    [field: SerializeField] public float EquipTime {get; private set;} = 0.5f;
-    [field: SerializeField] public float UnequipTime {get; private set;} = 0.5f;
+
 
     #region Creating the Item
     public Item GenerateItem(Vector3 pos, Quaternion rotation) // summon an item on the ground
