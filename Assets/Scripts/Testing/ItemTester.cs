@@ -33,33 +33,33 @@ public class ItemTester : MonoBehaviour
         //_inputInteract = _playerInput.actions["Interact"];
 
         // connect public events to input actions
-        // _inputMovement.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MoveStart, ctx.ReadValue<Vector2>());};
+        // _inputMovement.performed += ctx => {inputRelay.Invoke(InputEvent.MoveStart, ctx.ReadValue<Vector2>());};
         // _inputMovement.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MoveEnd);};
         // _inputLookDelta.started += ctx => {SetLookPosition(ctx.ReadValue<Vector2>());};
 
-        _inputUseMain.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MainStart);};
-        _inputUseMain.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MainEnd);};
-        _inputUseAlt.performed += ctx => {inputRelay.Invoke(InputEvent.Character_AltStart);};
-        _inputUseAlt.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_AltEnd);};
+        _inputUseMain.performed += ctx => {inputRelay.Invoke(CharacterEvent.MainStart);};
+        _inputUseMain.canceled += ctx => {inputRelay.Invoke(CharacterEvent.MainEnd);};
+        _inputUseAlt.performed += ctx => {inputRelay.Invoke(CharacterEvent.AltStart);};
+        _inputUseAlt.canceled += ctx => {inputRelay.Invoke(CharacterEvent.AltEnd);};
 
-        _inputReset.started += ctx => {inputRelay.Invoke(InputEvent.Usable_ResetStart);};
+        _inputReset.started += ctx => {inputRelay.Invoke(UsableEvent.ResetStart);};
         //_inputInteract.started += ctx => {inputRelay.Invoke(InputEvent.Item_Reset);};    
     
         inputRelay = new InputEventRelay(
-            new (InputEvent, Type)[] {
-                (InputEvent.General_Passive, typeof(Action)), 
-                (InputEvent.Character_MainStart, typeof(Action)), 
-                (InputEvent.Character_MainEnd, typeof(Action)), 
-                (InputEvent.Character_AltStart, typeof(Action)), 
-                (InputEvent.Character_AltEnd, typeof(Action)), 
-                (InputEvent.Character_LookPos, typeof(Action<Vector2>)), 
-                (InputEvent.Usable_ResetStart, typeof(Action)), 
+            new (Enum, Type)[] {
+                (GlobalEvent.Update, typeof(Action)), 
+                (CharacterEvent.MainStart, typeof(Action)), 
+                (CharacterEvent.MainEnd, typeof(Action)), 
+                (CharacterEvent.AltStart, typeof(Action)), 
+                (CharacterEvent.AltEnd, typeof(Action)), 
+                (CharacterEvent.LookPos, typeof(Action<Vector2>)), 
+                (UsableEvent.ResetStart, typeof(Action)), 
             }
         );
         // for(int i = 0; i < (int)InputEvent.Size; i++)
         // {
         //     InputEvent input_event = (InputEvent)i;
-        //     if (inputRelay.IsConnected(input_event) && input_event != InputEvent.General_Passive && input_event != InputEvent.Character_LookPos)
+        //     if (inputRelay.IsConnected(input_event) && input_event != GlobalEvent.Update && input_event != InputEvent.LookPos)
         //     {
         //         Button input_button = Instantiate(buttonInstance, this.transform).GetComponent<Button>();
         //         TextMeshProUGUI button_text =  input_button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -81,9 +81,9 @@ public class ItemTester : MonoBehaviour
     void Update()
     {
         Vector2 mouseScreenPos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        inputRelay.Invoke(InputEvent.Character_LookPos, mouseScreenPos);
+        inputRelay.Invoke(CharacterEvent.LookPos, mouseScreenPos);
 
-        inputRelay.Invoke(InputEvent.General_Passive);
+        inputRelay.Invoke(GlobalEvent.Update);
     }
     public AttackTarget GetAttackTarget()
     {

@@ -33,7 +33,7 @@ public class SimpleCounter : StackCounter
     #endregion
 
     #region Base Functionality
-    public override void GetEvents(List<InputEvent> inputEventsUsed)
+    public override void GetEvents(List<Enum> inputEventsUsed)
     {
         throw new NotImplementedException();
     }

@@ -59,7 +59,7 @@ public abstract class StackCounter
     #region Helpers
     /// Used to see which events this counter subscribes to.
     /// The array's length should be the amount of InputEvent(enums) there are, so its a true/false to see if it exists or not
-    public abstract void GetEvents(List<InputEvent> inputEventsUsed);
+    public abstract void GetEvents(List<Enum> inputEventsUsed);
     #endregion
 
     #region Recast Support

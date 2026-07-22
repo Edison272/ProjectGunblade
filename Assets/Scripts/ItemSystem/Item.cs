@@ -136,20 +136,20 @@ public class Item : MonoBehaviour
 
         // setup input relay stuff here
         itemInputRelay = new InputEventRelay(
-            new (InputEvent, Type)[] {
-                (InputEvent.Usable_Used, typeof(Action)),
-                (InputEvent.Usable_ResetStart, typeof(Action)), 
-                (InputEvent.Usable_ResetEnd, typeof(Action)), 
-                (InputEvent.Character_LookPos, typeof(Action<Vector2>)), 
+            new (Enum, Type)[] {
+                (UsableEvent.Used, typeof(Action)),
+                (UsableEvent.ResetStart, typeof(Action)), 
+                (UsableEvent.ResetEnd, typeof(Action)), 
+                (CharacterEvent.LookPos , typeof(Action<Vector2>)), 
             }
         );
 
         // find which stack counters use what inputs, update relay
-        List<InputEvent> active_inputs = new List<InputEvent>();
+        List<Enum> active_inputs = new List<Enum>();
         foreach(StackCounter counter in stackCounters)
         {
             counter.GetEvents(active_inputs);
-            foreach(InputEvent input_enum in active_inputs)
+            foreach(Enum input_enum in active_inputs)
             {
                 itemInputRelay.AddEvent(input_enum, typeof(Action));
             }
@@ -157,8 +157,8 @@ public class Item : MonoBehaviour
             counter.SetInputRelay(itemInputRelay);
         }
 
-        itemInputRelay.ConnectEvent(InputEvent.Usable_ResetStart, ResetItem);
-        itemInputRelay.ConnectEvent(InputEvent.Character_LookPos, (Action<Vector2>)Aim);
+        itemInputRelay.ConnectEvent(UsableEvent.ResetStart, ResetItem);
+        itemInputRelay.ConnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Aim);
         itemInputRelay.IsActive = false;
 
         // set aiming type
@@ -184,13 +184,13 @@ public class Item : MonoBehaviour
     private void SetItemInputRelay(bool isActive)
     {
         _isInputsActive = isActive;
-        itemInputRelay.SetEventActive(InputEvent.Usable_ResetStart,isActive);
-        itemInputRelay.SetEventActive(InputEvent.Usable_ResetEnd,isActive);
+        itemInputRelay.SetEventActive(UsableEvent.ResetStart,isActive);
+        itemInputRelay.SetEventActive(UsableEvent.ResetEnd,isActive);
 
-        itemInputRelay.SetEventActive(InputEvent.Character_MainStart,isActive);
-        itemInputRelay.SetEventActive(InputEvent.Character_MainEnd,isActive);
-        itemInputRelay.SetEventActive(InputEvent.Character_AltStart,isActive);
-        itemInputRelay.SetEventActive(InputEvent.Character_AltEnd,isActive);
+        itemInputRelay.SetEventActive(CharacterEvent.MainStart,isActive);
+        itemInputRelay.SetEventActive(CharacterEvent.MainEnd,isActive);
+        itemInputRelay.SetEventActive(CharacterEvent.AltStart,isActive);
+        itemInputRelay.SetEventActive(CharacterEvent.AltEnd,isActive);
     }
     // Methods called by animator to actually unequip the item and make it unusuable
     private void AnimEquip(){SetItemInputRelay(true);}
@@ -236,7 +236,7 @@ public class Item : MonoBehaviour
         
         baseData.attackObjects[attackIndex].Attack(get_atk_targ);
         animRequest.Animate(animator);
-        itemInputRelay.Invoke(InputEvent.Usable_Used);
+        itemInputRelay.Invoke(UsableEvent.Used);
     }
     public void DropItem()
     {
@@ -252,7 +252,7 @@ public class Item : MonoBehaviour
 
         if (!_isInputsActive) {return;}
         SetItemInputRelay(false);
-        itemInputRelay.Invoke(InputEvent.Usable_ResetStart);
+        itemInputRelay.Invoke(UsableEvent.ResetStart);
         animator.speed = 1/ResetTime;
         animator.ResetTrigger("Use");
         animator.SetTrigger("Cancel");
@@ -263,7 +263,7 @@ public class Item : MonoBehaviour
     /// </summary>
     public void AnimResetItem() 
     {
-        itemInputRelay.Invoke(InputEvent.Usable_ResetEnd);
+        itemInputRelay.Invoke(UsableEvent.ResetEnd);
         SetItemInputRelay(true);
         // use_spd_scale = 1;
         // reset_spd_scale = 1;

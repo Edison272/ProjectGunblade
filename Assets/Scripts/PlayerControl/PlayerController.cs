@@ -51,32 +51,32 @@ public class PlayerController : MonoBehaviour
 
 
         // connect public events to input actions
-        _inputMovement.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MoveStart, ctx.ReadValue<Vector2>());};
-        _inputMovement.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MoveEnd);};
+        _inputMovement.performed += ctx => {inputRelay.Invoke(CharacterEvent.MoveStart, ctx.ReadValue<Vector2>());};
+        _inputMovement.canceled += ctx => {inputRelay.Invoke(CharacterEvent.MoveEnd);};
         _inputLookDelta.started += ctx => {SetLookPosition(ctx.ReadValue<Vector2>());};
 
-        _inputUseMain.performed += ctx => {inputRelay.Invoke(InputEvent.Character_MainStart);};
-        _inputUseMain.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_MainEnd);};
-        _inputUseAlt.performed += ctx => {inputRelay.Invoke(InputEvent.Character_AltStart);};
-        _inputUseAlt.canceled += ctx => {inputRelay.Invoke(InputEvent.Character_AltEnd);};
+        _inputUseMain.performed += ctx => {inputRelay.Invoke(CharacterEvent.MainStart);};
+        _inputUseMain.canceled += ctx => {inputRelay.Invoke(CharacterEvent.MainEnd);};
+        _inputUseAlt.performed += ctx => {inputRelay.Invoke(CharacterEvent.AltStart);};
+        _inputUseAlt.canceled += ctx => {inputRelay.Invoke(CharacterEvent.AltEnd);};
 
-        _inputReset.started += ctx => {inputRelay.Invoke(InputEvent.Usable_ResetStart);};
-        _inputInteract.started += ctx => {inputRelay.Invoke(InputEvent.Character_Interact);};
+        _inputReset.started += ctx => {inputRelay.Invoke(UsableEvent.ResetStart);};
+        _inputInteract.started += ctx => {inputRelay.Invoke(CharacterEvent.Interact);};
         //_inputInteract.started += ctx => {inputRelay.Invoke(InputEvent.Item_Reset);};
 
         // Setup Input Relay
         inputRelay = new InputEventRelay(
-            new (InputEvent, Type)[] {
-                (InputEvent.General_Passive, typeof(Action)),
-                (InputEvent.Character_MoveStart, typeof(Action<Vector2>)),
-                (InputEvent.Character_MoveEnd, typeof(Action)),
-                (InputEvent.Character_MainStart, typeof(Action)), 
-                (InputEvent.Character_MainEnd, typeof(Action)), 
-                (InputEvent.Character_AltStart, typeof(Action)), 
-                (InputEvent.Character_AltEnd, typeof(Action)), 
-                (InputEvent.Character_LookPos, typeof(Action<Vector2>)), 
-                (InputEvent.Character_Interact, typeof(Action)), 
-                (InputEvent.Usable_ResetStart, typeof(Action)), 
+            new (Enum, Type)[] {
+                (GlobalEvent.Update, typeof(Action)),
+                (CharacterEvent.MoveStart, typeof(Action<Vector2>)),
+                (CharacterEvent.MoveEnd, typeof(Action)),
+                (CharacterEvent.MainStart, typeof(Action)), 
+                (CharacterEvent.MainEnd, typeof(Action)), 
+                (CharacterEvent.AltStart, typeof(Action)), 
+                (CharacterEvent.AltEnd, typeof(Action)), 
+                (CharacterEvent.LookPos, typeof(Action<Vector2>)), 
+                (CharacterEvent.Interact, typeof(Action)), 
+                (UsableEvent.ResetStart, typeof(Action)), 
             }
         );
         #endregion
@@ -107,10 +107,10 @@ public class PlayerController : MonoBehaviour
     void Update()
     {        
         pointer_world_pos = _pointerController.GetSourceTo_worldPos(active_character.Position);
-        inputRelay.Invoke(InputEvent.Character_LookPos, pointer_world_pos);   
+        inputRelay.Invoke(CharacterEvent.LookPos, pointer_world_pos);   
         Debug.DrawLine(active_character.Position, pointer_world_pos);
 
-        inputRelay.Invoke(InputEvent.General_Passive);   
+        inputRelay.Invoke(GlobalEvent.Update);   
     }
     private void SetLookPosition(Vector2 lookDelta)
     {

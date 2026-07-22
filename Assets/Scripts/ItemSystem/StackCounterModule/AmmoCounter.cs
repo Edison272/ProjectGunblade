@@ -10,16 +10,16 @@ public struct BasicAmmoStats
     public int maxAmmo;
     public int currAmmo;
     public float reloadSpeed;
-    public InputEvent UseAmmoEvent;
-    public InputEvent ReloadEvent;
+    public InputEventSelector UseAmmoEvent;
+    public InputEventSelector ReloadEvent;
 
     public void SetDefaults()
     {
         maxAmmo = 30;
         currAmmo = maxAmmo;
         reloadSpeed = 1f;
-        UseAmmoEvent = InputEvent.Character_MainStart;
-        ReloadEvent = InputEvent.Usable_ResetEnd;
+        UseAmmoEvent = new InputEventSelector(UsableEvent.Used);
+        ReloadEvent = new InputEventSelector(UsableEvent.ResetEnd);
     }
 
     public void UseAmmo(int ammoUsed = -1)
@@ -56,8 +56,8 @@ public class AmmoCounter : StackCounter
     public int maxAmmo => basicAmmoStats.maxAmmo;
     public int currAmmo => basicAmmoStats.currAmmo;
     public float reloadSpeed => basicAmmoStats.reloadSpeed;
-    public InputEvent UseAmmoEvent => basicAmmoStats.UseAmmoEvent;
-    public InputEvent ReloadEvent => basicAmmoStats.ReloadEvent;
+    public InputEventSelector UseAmmoEvent => basicAmmoStats.UseAmmoEvent;
+    public InputEventSelector ReloadEvent => basicAmmoStats.ReloadEvent;
 
     [Header("Regen Ammo")] // instead of manually reloading, slowly reloads ammo when not being used
     public bool regenAmmo;
@@ -88,21 +88,21 @@ public class AmmoCounter : StackCounter
         // unsubscribe from the previous relay
         if (inputRelay != null)
         {
-            inputRelay.DisconnectEvent(UseAmmoEvent, (Action)UseAmmo);
+            inputRelay.DisconnectEvent(UseAmmoEvent.InputEvent, (Action)UseAmmo);
         }
 
         // set new
         inputRelay = newRelay;
-        inputRelay.ConnectEvent(UseAmmoEvent, UseAmmo);
-        inputRelay.ConnectEvent(ReloadEvent, ReloadAmmo);
+        inputRelay.ConnectEvent(UseAmmoEvent.InputEvent, UseAmmo);
+        inputRelay.ConnectEvent(ReloadEvent.InputEvent, ReloadAmmo);
     }
     #endregion
 
     #region Base Functionality
-    public override void GetEvents(List<InputEvent> inputEventsUsed)
+    public override void GetEvents(List<Enum> InputEventsUsed)
     {
-        inputEventsUsed.Add(UseAmmoEvent);
-        inputEventsUsed.Add(ReloadEvent);
+        InputEventsUsed.Add(UseAmmoEvent.InputEvent);
+        InputEventsUsed.Add(ReloadEvent.InputEvent);
     }
     #endregion
 

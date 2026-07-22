@@ -40,23 +40,6 @@ public class ItemEffect
         return new ItemEffect(this, baseItem);
     }
     #endregion
-
-    // determine what input events need to be listened to based on stackCounterRefs
-    public void SetupEventListeners(InputEventRelay inputRelay)
-    {
-        // get an array of which input events are going to be needed
-        bool[] input_events_used = new bool[(int)InputEvent.Size];
-        // foreach(StackCounter counter in stackCounters)
-        // {
-        //     counter.SetInputRelay(inputRelay);
-
-            
-        //     //counter.GetEvents(input_events_used);
-        // }
-
-        // use findings to connect them to array
-    }
-
     public float CheckStackCounters()
     {
         float stack_index = 1;

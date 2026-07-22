@@ -27,9 +27,9 @@ MonoBehaviour:
   attackObjects:
   - rid: 2198171203760816235
   stackCounters:
-  - rid: 2198171256505761878
-  - rid: 2198171256505761870
-  - rid: 2198171343949136020
+  - rid: 2198171632553427097
+  - rid: 2198171632553427099
+  - rid: 2198171632553427104
   dynamic_aim: 1
   rotation_scale: 1
   references:
@@ -53,30 +53,62 @@ MonoBehaviour:
           projectile_count: 1
           projectile_spread: 0
           even_spread: 0
-    - rid: 2198171256505761870
-      type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
-      data:
-        <stackCounterType>k__BackingField: 3
-        cooldownTime: 0.25
-        StartCooldownEvent: 11
-        ResetCooldownEvent: 12
-    - rid: 2198171256505761878
+    - rid: 2198171632553427097
       type: {class: ConstantCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 2
-        StartConstant: 2
-        CallConstant: 7
-        EndConstant: 3
-        ResetConstant: 12
-    - rid: 2198171343949136020
+        StartConstant:
+          InputEventType: 1
+          _globalInput: 0
+          _characterInput: 2
+          _usableInput: 0
+        CallConstant:
+          InputEventType: 0
+          _globalInput: 0
+          _characterInput: 0
+          _usableInput: 0
+        EndConstant:
+          InputEventType: 1
+          _globalInput: 0
+          _characterInput: 3
+          _usableInput: 0
+        ResetConstant:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 0
+          _usableInput: 3
+    - rid: 2198171632553427099
+      type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 3
+        cooldownTime: 0.5
+        StartCooldownEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 2
+          _usableInput: 3
+        ResetCooldownEvent:
+          InputEventType: 1
+          _globalInput: 0
+          _characterInput: 3
+          _usableInput: 0
+    - rid: 2198171632553427104
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 1
         basicAmmoStats:
           maxAmmo: 30
           currAmmo: 30
-          reloadSpeed: 0
-          UseAmmoEvent: 11
-          ReloadEvent: 12
+          reloadSpeed: 1
+          UseAmmoEvent:
+            InputEventType: 2
+            _globalInput: 0
+            _characterInput: 2
+            _usableInput: 2
+          ReloadEvent:
+            InputEventType: 2
+            _globalInput: 0
+            _characterInput: 4
+            _usableInput: 4
         regenAmmo: 0
         roundsReload: 0

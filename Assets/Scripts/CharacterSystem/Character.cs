@@ -70,20 +70,20 @@ public class Character : MonoBehaviour, IMovement
     {
         // setup relay
         characterRelay = new InputEventRelay(
-            new (InputEvent, Type)[] {
-                (InputEvent.General_Passive, typeof(Action)),
+            new (Enum, Type)[] {
+                (GlobalEvent.Update, typeof(Action)),
 
-                (InputEvent.Character_MoveStart, typeof(Action<Vector2>)),
-                (InputEvent.Character_MoveEnd, typeof(Action)),
+                (CharacterEvent.MoveStart, typeof(Action<Vector2>)),
+                (CharacterEvent.MoveEnd, typeof(Action)),
 
-                (InputEvent.Character_MainStart, typeof(Action)), 
-                (InputEvent.Character_MainEnd, typeof(Action)), 
-                (InputEvent.Character_AltStart, typeof(Action)), 
-                (InputEvent.Character_AltEnd, typeof(Action)), 
+                (CharacterEvent.MainStart, typeof(Action)), 
+                (CharacterEvent.MainEnd, typeof(Action)), 
+                (CharacterEvent.AltStart, typeof(Action)), 
+                (CharacterEvent.AltEnd, typeof(Action)), 
 
-                (InputEvent.Character_LookPos, typeof(Action<Vector2>)), 
-                (InputEvent.Character_Interact, typeof(Action)), 
-                (InputEvent.Usable_ResetStart, typeof(Action)), 
+                (CharacterEvent.LookPos, typeof(Action<Vector2>)), 
+                (CharacterEvent.Interact, typeof(Action)), 
+                (UsableEvent.ResetStart, typeof(Action)), 
             }
         );
 
@@ -112,11 +112,11 @@ public class Character : MonoBehaviour, IMovement
         // CreateBehaviorController();
 
         // attach to internal function
-        characterRelay.ConnectEvent(InputEvent.Character_MoveStart, (Action<Vector2>)StartMove);
-        characterRelay.ConnectEvent(InputEvent.Character_MoveEnd, StopMove);
+        characterRelay.ConnectEvent(CharacterEvent.MoveStart, (Action<Vector2>)StartMove);
+        characterRelay.ConnectEvent(CharacterEvent.MoveEnd, StopMove);
 
-        characterRelay.ConnectEvent(InputEvent.Character_LookPos, (Action<Vector2>)Anatomy.Look);
-        characterRelay.ConnectEvent(InputEvent.Character_Interact, (Action)Inventory.SwitchItemCycle);
+        characterRelay.ConnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Anatomy.Look);
+        characterRelay.ConnectEvent(CharacterEvent.Interact, (Action)Inventory.SwitchItemCycle);
     }
     // make sure the operator LOOKS ready
     public void GetReady()

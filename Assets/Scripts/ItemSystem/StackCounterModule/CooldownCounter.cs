@@ -13,13 +13,15 @@ public class CooldownCounter : StackCounter
     [Header("Basic Stats")]
     public float cooldownTime = 0.1f;
     private float lastUse = 0;
-    public InputEvent StartCooldownEvent = InputEvent.Character_MainStart;
-    public InputEvent ResetCooldownEvent = InputEvent.Usable_ResetStart;
+    public InputEventSelector StartCooldownEvent = new InputEventSelector(CharacterEvent.MainStart);
+    public InputEventSelector ResetCooldownEvent = new InputEventSelector(UsableEvent.ResetStart);
 
     #region Initalizers
     public CooldownCounter()
     {
         stackCounterType = StackCountType.Cooldown;
+        StartCooldownEvent.SetInputEvent(CharacterEvent.MainStart);
+        StartCooldownEvent.SetInputEvent(UsableEvent.ResetStart);
     }
     public CooldownCounter(CooldownCounter copied)
     {
@@ -41,8 +43,8 @@ public class CooldownCounter : StackCounter
 
         // set new
         inputRelay = newRelay;
-        inputRelay.ConnectEvent(StartCooldownEvent, StartCooldown);
-        inputRelay.ConnectEvent(ResetCooldownEvent, ResetCounter);
+        inputRelay.ConnectEvent(StartCooldownEvent.InputEvent, StartCooldown);
+        inputRelay.ConnectEvent(ResetCooldownEvent.InputEvent, ResetCounter);
     }
     #endregion
     #region Base Functionality
@@ -50,10 +52,10 @@ public class CooldownCounter : StackCounter
     {
         lastUse = Time.time;
     }
-    public override void GetEvents(List<InputEvent> inputEventsUsed)
+    public override void GetEvents(List<Enum> inputEventsUsed)
     {
-        inputEventsUsed.Add(StartCooldownEvent);
-        inputEventsUsed.Add(ResetCooldownEvent);
+        inputEventsUsed.Add(StartCooldownEvent.InputEvent);
+        inputEventsUsed.Add(ResetCooldownEvent.InputEvent);
     }
     #endregion
 

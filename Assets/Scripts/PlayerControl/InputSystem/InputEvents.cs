@@ -1,21 +1,36 @@
 using System;
 using UnityEngine;
-public enum InputEvent {
-    Character_MoveStart,
-    Character_MoveEnd,
-    Character_MainStart, 
-    Character_MainEnd, 
-    Character_AltStart, 
-    Character_AltEnd,
-    Character_LookPos,
-    General_Passive, 
-    General_StackActivation,
-    Usable_Equip,
-    Usable_Unequip,
-    Usable_Used, 
-    Usable_ResetStart, 
-    Usable_ResetEnd, 
-    Character_Interact,
-    Character_InventorySelect,
-    Size
+
+/*
+WHEN ADDING NEW EVENTS, MAKE SURE TO UPDATE:
+- InputEventSelector.cs
+- EventTypeContainer.cs
+
+WITH THE NEW EVENTS! THIS IS CRUCIAL FOR MAKING TS WORK!!!
+*/
+
+public enum GlobalEvent
+{
+    Update, 
+}
+public enum CharacterEvent
+{
+    MoveStart,
+    MoveEnd,
+    MainStart, 
+    MainEnd, 
+    AltStart, 
+    AltEnd,
+    LookPos,
+    Interact,
+    InventorySelect,
+}
+
+public enum UsableEvent
+{
+    Equip,
+    Unequip,
+    Used, 
+    ResetStart, 
+    ResetEnd, 
 }

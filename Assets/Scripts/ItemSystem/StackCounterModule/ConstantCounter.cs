@@ -12,10 +12,10 @@ using UnityEngine;
 public class ConstantCounter : StackCounter
 {
     [Header("Basic Stats")]
-    public InputEvent StartConstant = InputEvent.Character_MainStart;
-    public InputEvent CallConstant = InputEvent.General_Passive; // this is to be unchanged. the whole point of this counter is to passive
-    public InputEvent EndConstant = InputEvent.Character_MainEnd;
-    public InputEvent ResetConstant = InputEvent.Usable_ResetStart;
+    public InputEventSelector StartConstant = new InputEventSelector();
+    public InputEventSelector CallConstant = new InputEventSelector(); // this is to be unchanged. the whole point of this counter is to passive
+    public InputEventSelector EndConstant = new InputEventSelector();
+    public InputEventSelector ResetConstant = new InputEventSelector();
     // for "forcing" parameters onto some of the input events
     private Delegate ToggleStart;
     private Delegate ToggleEnd;
@@ -25,14 +25,16 @@ public class ConstantCounter : StackCounter
     public ConstantCounter()
     {
         stackCounterType = GetExpectedStackCountType();
-
-
+        StartConstant.SetInputEvent(CharacterEvent.MainStart);
+        CallConstant.SetInputEvent(GlobalEvent.Update);
+        EndConstant.SetInputEvent(CharacterEvent.MainEnd);
+        ResetConstant.SetInputEvent(UsableEvent.ResetStart);
     }
     public ConstantCounter(ConstantCounter copied)
     {
         StartConstant = copied.StartConstant;
         EndConstant = copied.EndConstant;
-        ResetConstant = InputEvent.Usable_ResetStart;
+        ResetConstant.SetInputEvent(UsableEvent.ResetStart);
 
         // set force parameter functions
         ToggleStart = (Action)(() => ToggleConstant(true));
@@ -53,19 +55,19 @@ public class ConstantCounter : StackCounter
         
         // set new
         inputRelay = newRelay;
-        inputRelay.ConnectEvent(StartConstant, ToggleStart);
-        inputRelay.ConnectEvent(EndConstant, ToggleEnd);
-        inputRelay.ConnectEvent(CallConstant, UpdateConstant);
-        inputRelay.ConnectEvent(ResetConstant, ResetCounter);
+        inputRelay.ConnectEvent(StartConstant.InputEvent, ToggleStart);
+        inputRelay.ConnectEvent(EndConstant.InputEvent, ToggleEnd);
+        inputRelay.ConnectEvent(CallConstant.InputEvent, UpdateConstant);
+        inputRelay.ConnectEvent(ResetConstant.InputEvent, ResetCounter);
     }
     #endregion
 
     #region Base Functionality
-    public override void GetEvents(List<InputEvent> inputEventsUsed)
+    public override void GetEvents(List<Enum> inputEventsUsed)
     {
-        inputEventsUsed.Add(StartConstant);
-        inputEventsUsed.Add(EndConstant);
-        inputEventsUsed.Add(CallConstant);
+        inputEventsUsed.Add(StartConstant.InputEvent);
+        inputEventsUsed.Add(EndConstant.InputEvent);
+        inputEventsUsed.Add(CallConstant.InputEvent);
     }
     public virtual void ResetCounter()
     {
@@ -80,6 +82,7 @@ public class ConstantCounter : StackCounter
     }
     public void UpdateConstant()
     {
+        Debug.Log("Aka");
         if (_constantActive)
         {
             UseActivator();
