@@ -28,7 +28,7 @@ MonoBehaviour:
   - rid: 2198171203760816235
   stackCounters:
   - rid: 2198171632553427097
-  - rid: 2198171632553427099
+  - rid: 2198171632553427168
   - rid: 2198171632553427104
   dynamic_aim: 1
   rotation_scale: 1
@@ -44,7 +44,7 @@ MonoBehaviour:
           pierce: 0
           knockback_amt: 0
           effect_time: 0
-          slow_amt: 0
+          slow_amt: 3.84
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
@@ -77,21 +77,6 @@ MonoBehaviour:
           _globalInput: 0
           _characterInput: 0
           _usableInput: 3
-    - rid: 2198171632553427099
-      type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
-      data:
-        <stackCounterType>k__BackingField: 3
-        cooldownTime: 0.5
-        StartCooldownEvent:
-          InputEventType: 2
-          _globalInput: 0
-          _characterInput: 2
-          _usableInput: 3
-        ResetCooldownEvent:
-          InputEventType: 1
-          _globalInput: 0
-          _characterInput: 3
-          _usableInput: 0
     - rid: 2198171632553427104
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -112,3 +97,18 @@ MonoBehaviour:
             _usableInput: 4
         regenAmmo: 0
         roundsReload: 0
+    - rid: 2198171632553427168
+      type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 3
+        cooldownTime: 0.1
+        StartCooldownEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 2
+          _usableInput: 2
+        ResetCooldownEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 3
+          _usableInput: 0

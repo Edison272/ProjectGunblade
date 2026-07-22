@@ -96,7 +96,6 @@ public class InputEventRelay
     {
         for (int i = 0; i < _inputEvents.Length; i++)
         {
-            Debug.Log($"{(InputEventType)i}, {i}");
             if (parent._inputEvents[i] == null)
             {
                 Debug.Log($" {(InputEventType)i} does not exist in parent");
@@ -105,7 +104,6 @@ public class InputEventRelay
                     
             for (int j = 0; j < parent._inputEvents[i].Length; j++)
             {
-                Debug.Log($"{(InputEventType)i}, {j}");
                 // Add a new event if the parent has the event and this one doesn't
                 Enum newEnum = InputEventSelector.GetEnumFromTypeInt((InputEventType)i,j);
                 if (parent._inputEvents[i][j] == null)

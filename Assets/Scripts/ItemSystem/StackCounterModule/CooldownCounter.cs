@@ -13,20 +13,19 @@ public class CooldownCounter : StackCounter
     [Header("Basic Stats")]
     public float cooldownTime = 0.1f;
     private float lastUse = 0;
-    public InputEventSelector StartCooldownEvent = new InputEventSelector(CharacterEvent.MainStart);
+    public InputEventSelector StartCooldownEvent = new InputEventSelector(UsableEvent.Used);
     public InputEventSelector ResetCooldownEvent = new InputEventSelector(UsableEvent.ResetStart);
 
     #region Initalizers
     public CooldownCounter()
     {
         stackCounterType = StackCountType.Cooldown;
-        StartCooldownEvent.SetInputEvent(CharacterEvent.MainStart);
-        StartCooldownEvent.SetInputEvent(UsableEvent.ResetStart);
     }
     public CooldownCounter(CooldownCounter copied)
     {
         cooldownTime = copied.cooldownTime;
-        StartCooldownEvent = copied.StartCooldownEvent;
+        StartCooldownEvent = new InputEventSelector(copied.StartCooldownEvent.InputEvent);
+        ResetCooldownEvent = new InputEventSelector(copied.ResetCooldownEvent.InputEvent);
     }
     // creates a deepy copy of this class.
     public override StackCounter GetCopy()
@@ -42,6 +41,7 @@ public class CooldownCounter : StackCounter
         }
 
         // set new
+        Debug.Log(StartCooldownEvent.InputEvent);
         inputRelay = newRelay;
         inputRelay.ConnectEvent(StartCooldownEvent.InputEvent, StartCooldown);
         inputRelay.ConnectEvent(ResetCooldownEvent.InputEvent, ResetCounter);

@@ -41,7 +41,7 @@ public class InputEventSelector
                 SetInputEvent((CharacterEvent)inputEvent);
                 break;
             case UsableEvent usable:
-                SetInputEvent((CharacterEvent)inputEvent);
+                SetInputEvent((UsableEvent)inputEvent);
                 break;
             default:
                 Debug.LogWarning($"Unsupported enum type: {inputEvent.GetType()}");

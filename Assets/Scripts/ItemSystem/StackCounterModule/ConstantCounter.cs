@@ -32,9 +32,10 @@ public class ConstantCounter : StackCounter
     }
     public ConstantCounter(ConstantCounter copied)
     {
-        StartConstant = copied.StartConstant;
-        EndConstant = copied.EndConstant;
-        ResetConstant.SetInputEvent(UsableEvent.ResetStart);
+        StartConstant = new InputEventSelector(copied.StartConstant.InputEvent);
+        CallConstant = new InputEventSelector(copied.CallConstant.InputEvent);
+        EndConstant = new InputEventSelector(copied.EndConstant.InputEvent);
+        ResetConstant = new InputEventSelector(copied.EndConstant.InputEvent);
 
         // set force parameter functions
         ToggleStart = (Action)(() => ToggleConstant(true));
@@ -82,7 +83,6 @@ public class ConstantCounter : StackCounter
     }
     public void UpdateConstant()
     {
-        Debug.Log("Aka");
         if (_constantActive)
         {
             UseActivator();
