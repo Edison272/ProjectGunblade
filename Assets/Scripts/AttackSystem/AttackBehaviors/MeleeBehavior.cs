@@ -60,7 +60,7 @@ public class MeleeBehavior : MonoBehaviour
         }
     }
 
-    public void StartMelee(MeleeAttack mele_data, AttackTarget atk_targ) // straight shot variant
+    public void StartMelee(MeleeAttack mele_data, TargetData atk_targ) // straight shot variant
     {
         // set data
         atk_stats = mele_data.atk_stats;

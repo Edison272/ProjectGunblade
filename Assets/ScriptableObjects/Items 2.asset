@@ -40,16 +40,40 @@ MonoBehaviour:
       data:
         <stackCounterType>k__BackingField: 3
         cooldownTime: 0.25
-        StartCooldownEvent: 11
-        ResetCooldownEvent: 12
+        StartCooldownEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 0
+          _usableInput: 2
+        ResetCooldownEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 0
+          _usableInput: 3
     - rid: 2198171256505761878
       type: {class: ConstantCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 2
-        StartConstant: 2
-        CallConstant: 7
-        EndConstant: 3
-        ResetConstant: 12
+        StartConstant:
+          InputEventType: 1
+          _globalInput: 0
+          _characterInput: 2
+          _usableInput: 0
+        CallConstant:
+          InputEventType: 0
+          _globalInput: 0
+          _characterInput: 0
+          _usableInput: 0
+        EndConstant:
+          InputEventType: 1
+          _globalInput: 0
+          _characterInput: 3
+          _usableInput: 0
+        ResetConstant:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 0
+          _usableInput: 3
     - rid: 2198171343949136020
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -58,8 +82,16 @@ MonoBehaviour:
           maxAmmo: 30
           currAmmo: 30
           reloadSpeed: 0
-          UseAmmoEvent: 11
-          ReloadEvent: 12
+          UseAmmoEvent:
+            InputEventType: 2
+            _globalInput: 0
+            _characterInput: 0
+            _usableInput: 2
+          ReloadEvent:
+            InputEventType: 2
+            _globalInput: 0
+            _characterInput: 0
+            _usableInput: 4
         regenAmmo: 0
         roundsReload: 0
     - rid: 2198171613395419285
@@ -69,7 +101,7 @@ MonoBehaviour:
         atk_stats:
           damage: 0
           pierce: 0
-          knockback_amt: 0
+          knockback_amt: 100
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0

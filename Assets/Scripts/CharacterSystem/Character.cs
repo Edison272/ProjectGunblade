@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using CustomDataStructures;
 public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
-public class Character : MonoBehaviour, IMovement
+public class Character : MonoBehaviour, IMovement, IHealth
 {
     [SerializeField] private CharacterSO base_data;
     public string character_name => base_data.character_name;
@@ -214,11 +214,11 @@ public class Character : MonoBehaviour, IMovement
 
     protected virtual void LateUpdate()
     {
-        // if (!is_alive)
-        // {
-        //     OnDeath(this);
-        //     Destroy(this.gameObject);
-        // }
+        if (!is_alive)
+        {
+            //OnDeath(this);
+            Destroy(this.gameObject);
+        }
     }
     #endregion
 
@@ -256,16 +256,16 @@ public class Character : MonoBehaviour, IMovement
     #endregion
 
     #region Damage/Health System
-    // public virtual void ChangeHealth(int change_amt) {health_component.ChangeHealth(change_amt);}
+    public virtual void ChangeHealth(int change_amt) {health_component.ChangeHealth(change_amt);}
     // public virtual void ChangeHealthTick(int change_amt, float duration, float tick_rate, AbilityEffectComponent effect_controller = null) 
     // {
     //     health_component.ChangeHealthTick(change_amt, duration, tick_rate, effect_controller);
     // }
     // public virtual void MaxHealthBoost(int boost_amt, float duration, AbilityEffectComponent effect_controller = null) {health_component.MaxHealthBoost(boost_amt, duration, effect_controller);}
     // public virtual void ShieldBoost(int boost_amt) {health_component.ShieldBoost(boost_amt);}
-    // #endregion
+    #endregion
 
-    // #region  AI Stuff
+    #region  AI Stuff
 
     // // public ContactPoint2D[] GetAllInRange()
     // // {
@@ -294,9 +294,9 @@ public class Character : MonoBehaviour, IMovement
     #endregion
 
     #region AI
-    public AttackTarget GetAttackTarget()
+    public TargetData GetTargetData()
     {
-        return new AttackTarget(Position, Vector2.zero, Vector2.zero, Vector2.zero);
+        return new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero, this);
     }
     #endregion
 

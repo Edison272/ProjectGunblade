@@ -20,7 +20,7 @@ public abstract class AttackObject
         this.instance = instance;
     }
     #endregion
-    public abstract void Attack(AttackTarget atk_targ);
+    public abstract void Attack(TargetData atk_targ);
     public abstract float GetAtkSpread();
 
     #region Recasting
@@ -99,7 +99,7 @@ public class Projectile : AttackObject
     }
     #endregion
 
-    public override void Attack(AttackTarget atk_targ)
+    public override void Attack(TargetData atk_targ)
     {
         Vector2 target_pos_og = atk_targ.target_pos;
         Vector2 source_pos_og = atk_targ.source_pos;
@@ -111,7 +111,7 @@ public class Projectile : AttackObject
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < typeData.projectile_count; i++)
         {
-            AttackTarget atk_targ_copy = atk_targ;
+            TargetData atk_targ_copy = atk_targ;
             Vector2 source_pos = atk_targ_copy.source_pos;
             
             GameObject projectile = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
@@ -157,7 +157,7 @@ public class Linecast : Projectile
      : base(instance, atk_stats, typeData){}
     #endregion
 
-    public override void Attack(AttackTarget atk_targ)
+    public override void Attack(TargetData atk_targ)
     {
         Vector2 target_pos_og = atk_targ.target_pos;
         Vector2 source_pos_og = atk_targ.source_pos;
@@ -168,7 +168,7 @@ public class Linecast : Projectile
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < typeData.projectile_count; i++)
         {
-            AttackTarget atk_targ_copy = atk_targ;
+            TargetData atk_targ_copy = atk_targ;
             Vector2 source_pos = atk_targ_copy.source_pos;
             
             GameObject linecast = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
@@ -214,7 +214,7 @@ public class MeleeAttack : AttackObject
     }
     #endregion
 
-    public override void Attack(AttackTarget atk_targ)
+    public override void Attack(TargetData atk_targ)
     {
         Vector2 target_pos_og = atk_targ.target_pos;
         Vector2 source_pos_og = atk_targ.source_pos;   
@@ -225,7 +225,7 @@ public class MeleeAttack : AttackObject
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < typeData.melee_count; i++)
         {
-            AttackTarget atk_targ_copy = atk_targ;
+            TargetData atk_targ_copy = atk_targ;
             Vector2 source_pos = atk_targ_copy.source_pos;
             
             GameObject melee_ins = GameObject.Instantiate(instance, source_pos, Quaternion.identity);

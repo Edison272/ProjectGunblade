@@ -11,7 +11,7 @@ public class Item : MonoBehaviour
 {   
     [field: SerializeField] public ItemSO baseData {get; private set;} // SO contains important base data
     public Character user;
-    public Func<AttackTarget> GetAttackTarget;
+    public Func<TargetData> GetTargetData;
 
     [SerializeField] private ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
     public StackCounter[] stackCounters {get; private set;}
@@ -35,7 +35,8 @@ public class Item : MonoBehaviour
     public Transform itemTip; // the "front" of an item which attack type vfx will align to
     public Animator animator;
     // VFX STUFF
-    public float y_offset;
+    private float item_y_offset = 0f; // the y distance from item tip and item's main body position
+    private float user_y_offset = 0f; // the y distance from the item's main body position to the user's position
     
 
 
@@ -70,7 +71,7 @@ public class Item : MonoBehaviour
         {
             itemTip = this.transform;
         }
-        y_offset = itemTip.transform.position.y - transform.position.y;
+        item_y_offset = itemTip.transform.position.y - transform.position.y;
     }
 
     public void Start()
@@ -202,12 +203,13 @@ public class Item : MonoBehaviour
     // adjust item everytime theres a new user
     public void NewUser(InputEventRelay NewInputRelay, Character new_char_user)
     {
-        NewUser(NewInputRelay, new_char_user.GetAttackTarget);
+        NewUser(NewInputRelay, new_char_user.GetTargetData);
+        user_y_offset = transform.position.y - new_char_user.Position.y;
     }
-    public void NewUser(InputEventRelay NewInputRelay, Func<AttackTarget> GetTargetFunc)
+    public void NewUser(InputEventRelay NewInputRelay, Func<TargetData> GetTargetFunc)
     {
         vfx_sorting.enabled = false;
-        GetAttackTarget = GetTargetFunc;
+        GetTargetData = GetTargetFunc;
     
         SetInputRelay(NewInputRelay);
         itemInputRelay.IsActive = true;
@@ -228,10 +230,10 @@ public class Item : MonoBehaviour
     public void UseItem(int attackIndex, AnimationRequest animRequest)
     {
         // fill in the empty values
-        AttackTarget get_atk_targ = GetAttackTarget();
+        TargetData get_atk_targ = GetTargetData();
         get_atk_targ.target_pos = target_pos;
         get_atk_targ.output_pos = _outputPos;
-        get_atk_targ.vfx_target_offset = new Vector2(0, y_offset);
+        get_atk_targ.vfx_target_offset = new Vector2(0, item_y_offset + user_y_offset);
         
         
         baseData.attackObjects[attackIndex].Attack(get_atk_targ);

@@ -18,6 +18,8 @@ public class HealthComponent
     public bool is_alive => curr_health > 0;
     //public float  {get; private set;}
 
+    private InputEventRelay _inputRelay;
+
     [Header("Stat Modifiers")]
     [SerializeField] List<ChangeHealthTick> health_ticks = new List<ChangeHealthTick>();
 
@@ -108,9 +110,9 @@ public class HealthComponent
     //     max_health += boost_amt;
     //     curr_health = (int)(max_health * curr_ratio);
     // }
-    public void ShieldBoost(int boost_amt)
-    {
-        shield += boost_amt;
-    }
+    // public void ShieldBoost(int boost_amt)
+    // {
+    //     shield += boost_amt;
+    // }
     #endregion
 }

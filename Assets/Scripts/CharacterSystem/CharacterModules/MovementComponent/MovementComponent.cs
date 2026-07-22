@@ -20,7 +20,6 @@ public class MovementComponent
     public Vector2 last_move_dir {get; private set;} = Vector2.zero;
     public Vector2 force_dir {get; private set;} = Vector2.zero;
     [SerializeField] private Rigidbody2D entity_rb;
-    public float force_move_time {get; private set;}
     public Vector2Int current_tile_pos = Vector2Int.zero;
 
     [field: Header("Stat Changes")]
@@ -28,7 +27,7 @@ public class MovementComponent
 
     // speed data scalar
     [field: SerializeField] public float speed_scale {get; private set;} = 1; // maximum speed an operator can move at
-    [field: SerializeField] public float weight_scale {get; private set;} = 1; // maximum speed an operator can move at
+    [field: SerializeField] public float weight_scale {get; private set;} = 1; // how much the operator can resist external forces
 
     #region Constructor
     public MovementComponent(CharacterSO character_data, Rigidbody2D entity_rb)
@@ -50,7 +49,6 @@ public class MovementComponent
         move_pos = Vector2.zero;
         destination_reached = true;
         force_dir = Vector2.zero;
-        force_move_time = 0;
 
         move_speed_modifiers.Clear();
     }
@@ -146,8 +144,8 @@ public class MovementComponent
     #region Change Stats
     public void ForceMove(Vector2 direction, float scalar, bool movement_override = false)
     {
-        // if movement override, the impulse force will be ignore while the player is moving 
-        force_move_time = movement_override ? 0 : 1;
+        // // if movement override ()
+        // float force_mult = movement_override ? weight_scale : 0;
         entity_rb.AddForce(direction * scalar, ForceMode2D.Impulse);
     }
     // public void ChangeSpeed(float speed_modifier, float duration, bool is_decaying, AbilityEffectComponent effect_controller)

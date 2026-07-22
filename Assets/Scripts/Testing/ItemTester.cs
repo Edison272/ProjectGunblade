@@ -73,7 +73,7 @@ public class ItemTester : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        item.NewUser(inputRelay, GetAttackTarget);
+        item.NewUser(inputRelay, GetTargetData);
         item.SetEquipped(true);
     }
 
@@ -85,9 +85,9 @@ public class ItemTester : MonoBehaviour
 
         inputRelay.Invoke(GlobalEvent.Update);
     }
-    public AttackTarget GetAttackTarget()
+    public TargetData GetTargetData()
     {
-        return new AttackTarget(item.transform.position, Vector2.zero, Vector2.zero, Vector2.zero);
+        return new TargetData(item.transform.position, Vector2.zero, Vector2.zero, Vector2.zero);
     }
     public void ToggleEquip(bool is_equipped)
     {
@@ -98,6 +98,6 @@ public class ItemTester : MonoBehaviour
     public void TogglePickedup(bool is_pickedup)
     {
         InputEventRelay new_relay = is_pickedup? inputRelay : null;
-        item.NewUser(new_relay, GetAttackTarget);
+        item.NewUser(new_relay, GetTargetData);
     }
 }

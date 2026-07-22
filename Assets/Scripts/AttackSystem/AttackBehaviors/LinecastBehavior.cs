@@ -88,7 +88,7 @@ public class LinecastBehavior : MonoBehaviour
         } 
     }
 
-    public void StartLinecast(Linecast line_data, AttackTarget atk_targ) // straight shot variant
+    public void StartLinecast(Linecast line_data, TargetData atk_targ) // straight shot variant
     {
         // set data
         atk_stats = line_data.atk_stats;

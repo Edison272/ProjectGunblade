@@ -36,7 +36,7 @@ public class ProjectileBehavior : MonoBehaviour
     {
         if (collider.gameObject.tag != object_tag && collider.gameObject.tag != "NoHit")
         {
-            atk_stats.ApplyData(this.main_body.transform.position, collider.gameObject);
+            atk_stats.ApplyData(source_pos, collider.gameObject);
             curr_pierce--;
             ProjectileEffects(collider.ClosestPoint(transform.position));
         }
@@ -62,7 +62,7 @@ public class ProjectileBehavior : MonoBehaviour
 
     }
 
-    public void StartProjectile(Projectile proj_data, AttackTarget atk_targ) // straight shot variant
+    public void StartProjectile(Projectile proj_data, TargetData atk_targ) // straight shot variant
     {
         atk_stats = proj_data.atk_stats;
         speed = proj_data.typeData.projectile_speed;
