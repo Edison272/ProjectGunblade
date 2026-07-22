@@ -174,6 +174,7 @@ public class Item : MonoBehaviour
         if (!is_equipped)
         {
             animator.speed = 1/UnequipTime;
+            animator.SetTrigger("Cancel");
             animator.ResetTrigger("Resetting");
             animator.ResetTrigger("Use");
         }
@@ -253,8 +254,9 @@ public class Item : MonoBehaviour
         SetItemInputRelay(false);
         itemInputRelay.Invoke(InputEvent.Usable_ResetStart);
         animator.speed = 1/ResetTime;
-        animator.SetTrigger("Resetting");
         animator.ResetTrigger("Use");
+        animator.SetTrigger("Cancel");
+        animator.SetTrigger("Resetting");
     }
     /// <summary>
     /// Called by the animator after the reset animator finishes

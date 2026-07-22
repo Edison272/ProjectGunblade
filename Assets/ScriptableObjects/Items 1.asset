@@ -23,7 +23,7 @@ MonoBehaviour:
       AnimParameterName: Use
       AnimParameterType: 9
       <_animParamValue>k__BackingField: 0
-      AnimSpeed: 1
+      AnimSpeed: 2
   attackObjects:
   - rid: 2198171203760816235
   stackCounters:

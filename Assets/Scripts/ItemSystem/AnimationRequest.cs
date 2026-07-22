@@ -13,6 +13,7 @@ public class AnimationRequest
     public float AnimSpeed = 1f;
     public void Animate(Animator animator)
     {
+        animator.speed = 1/AnimSpeed;
         switch(AnimParameterType)
         {
             case AnimatorControllerParameterType.Float:

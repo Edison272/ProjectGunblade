@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3025238683813426482}
-  - component: {fileID: 4757664184047003229}
   m_Layer: 0
   m_Name: Back
   m_TagString: Untagged
@@ -26,26 +25,13 @@ Transform:
   m_GameObject: {fileID: 860935349640461518}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.12161, y: 1.02806, z: 0}
+  m_LocalPosition: {x: 0.062500015, y: 0.90625, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2769260746933367780}
   m_Father: {fileID: 3559126507223665180}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &4757664184047003229
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 860935349640461518}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
-  m_Sort3DAs2D: 0
 --- !u!1 &993110202620078077
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +213,7 @@ SortingGroup:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1410665497727132631}
-  m_Enabled: 1
+  m_Enabled: 0
   m_SortingLayerID: 789699345
   m_SortingLayer: 1
   m_SortingOrder: 0
@@ -779,7 +765,7 @@ Rigidbody2D:
   m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &8434768883464494250
 MonoBehaviour:
   m_ObjectHideFlags: 0
