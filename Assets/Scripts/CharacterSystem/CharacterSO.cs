@@ -29,9 +29,10 @@ public class CharacterSO : ScriptableObject
     public LayerMask detection_mask;
 
     [field: Header("Inventory Data")]
-    public int holding_capacity = 2;
+    public int HoldingCapacity = 8;
+    public int TotalItemSlots = 2;
     public ItemSO[] inventory;
-    public ActiveSlot[] inventory_slots;
+    public InventorySlot[] inventory_slots;
 
     public Character GenerateChar(Vector3 pos)
     {

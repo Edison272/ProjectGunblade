@@ -178,6 +178,7 @@ public class Item : MonoBehaviour
             animator.SetTrigger("Cancel");
             animator.ResetTrigger("Resetting");
             animator.ResetTrigger("Use");
+            SetItemInputRelay(false);
         }
         animator.SetBool("IsEquipped", is_equipped); // call set equipped function through editor
     }
@@ -189,13 +190,14 @@ public class Item : MonoBehaviour
         itemInputRelay.SetEventActive(UsableEvent.ResetEnd,isActive);
 
         itemInputRelay.SetEventActive(CharacterEvent.MainStart,isActive);
+        itemInputRelay.SetEventActive(CharacterEvent.MainUpdate,isActive);
         itemInputRelay.SetEventActive(CharacterEvent.MainEnd,isActive);
         itemInputRelay.SetEventActive(CharacterEvent.AltStart,isActive);
+        itemInputRelay.SetEventActive(CharacterEvent.AltUpdate,isActive);
         itemInputRelay.SetEventActive(CharacterEvent.AltEnd,isActive);
     }
     // Methods called by animator to actually unequip the item and make it unusuable
     private void AnimEquip(){SetItemInputRelay(true);}
-    private void AnimUnequip(){SetItemInputRelay(false);}
 
     #endregion
 
@@ -218,9 +220,10 @@ public class Item : MonoBehaviour
     private void SetInputRelay(InputEventRelay NewInputRelay)
     {
         //unsubscribe from old user if they exist
-        if (externalInputRelay != null)
+        if (externalInputRelay != null) {
+            Debug.Log("unlinking");
             itemInputRelay.UnlinkRelay(externalInputRelay);
-        
+        }
         // subscribe to old user events
         externalInputRelay = NewInputRelay;
         if (externalInputRelay != null)

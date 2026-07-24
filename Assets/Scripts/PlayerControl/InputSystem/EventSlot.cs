@@ -95,9 +95,9 @@ public class ActionSlot : EventSlot
     {
         if (!inputRelay.IsActive || !IsActive)
             return;
-        foreach (Delegate slot_sub in _subscribers) {
+        for (int i = 0; i < _subscribers.Count; i++) {
             Type d_type = delegateType;
-            ((Action)slot_sub)();
+            ((Action)_subscribers[i])();
         }
     }
     public override void Invoke<I1>(I1 arg1) {Invoke();}
@@ -118,9 +118,9 @@ public class ActionSlot<T> : EventSlot
     {
         if (!inputRelay.IsActive || !IsActive)
             return;
-        foreach (Delegate slot_sub in _subscribers) {
+        for (int i = 0; i < _subscribers.Count; i++) {
             Type d_type = delegateType;
-            ((Action<I1>)slot_sub)(arg1);
+            ((Action<I1>)_subscribers[i])(arg1);
         }
     }
     public override void Invoke<I1, I2>(I1 arg1, I2 arg2) {Invoke(arg1);}
@@ -139,9 +139,9 @@ public class ActionSlot<T1, T2> : EventSlot
     {
         if (!inputRelay.IsActive || !IsActive)
             return;
-        foreach (Delegate slot_sub in _subscribers) {
+        for (int i = 0; i < _subscribers.Count; i++) {
             Type d_type = delegateType;
-            ((Action<I1, I2>)slot_sub)(arg1, arg2);
+            ((Action<I1, I2>)_subscribers[i])(arg1, arg2);
         }
     }
 }

@@ -41,7 +41,6 @@ public class CooldownCounter : StackCounter
         }
 
         // set new
-        Debug.Log(StartCooldownEvent.InputEvent);
         inputRelay = newRelay;
         inputRelay.ConnectEvent(StartCooldownEvent.InputEvent, StartCooldown);
         inputRelay.ConnectEvent(ResetCooldownEvent.InputEvent, ResetCounter);

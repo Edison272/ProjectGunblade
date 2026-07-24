@@ -147,11 +147,9 @@ MonoBehaviour:
   rotatorObject: {fileID: 3945769674920731087}
   itemTip: {fileID: 7037610556534379554}
   animator: {fileID: 8606916593666797745}
-  y_offset: 0
   use_spd_scale: 1
   equip_spd_scale: 1
   resetSpdScale: 1
-  EquipTime: 0.5
 --- !u!95 &8606916593666797745
 Animator:
   serializedVersion: 7
@@ -339,7 +337,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2603260826784355713}
   m_Father: {fileID: 3945769674920731087}

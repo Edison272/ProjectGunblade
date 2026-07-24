@@ -18,7 +18,7 @@ MonoBehaviour:
   <ResetTime>k__BackingField: 1
   itemEffects:
   - attackObjectRefs: 00000000
-    stackCounterRefs: 000000000100000002000000
+    stackCounterRefs: 0000000001000000
     _animationRequest:
       AnimParameterName: Use
       AnimParameterType: 9
@@ -27,11 +27,11 @@ MonoBehaviour:
   attackObjects:
   - rid: 2198171203760816235
   stackCounters:
-  - rid: 2198171632553427097
   - rid: 2198171632553427168
   - rid: 2198171632553427104
   dynamic_aim: 1
   rotation_scale: 1
+  ui_image: {fileID: -266484137676524057, guid: 9db3aee8d2f6bcf458c5edfdf87fdb22, type: 3}
   references:
     version: 2
     RefIds:
@@ -42,7 +42,7 @@ MonoBehaviour:
         atk_stats:
           damage: 10
           pierce: 0
-          knockback_amt: 100
+          knockback_amt: 21.9
           effect_time: 0
           slow_amt: 3.84
           total_dot_damage: 0
@@ -53,30 +53,6 @@ MonoBehaviour:
           projectile_count: 1
           projectile_spread: 0
           even_spread: 0
-    - rid: 2198171632553427097
-      type: {class: ConstantCounter, ns: , asm: Assembly-CSharp}
-      data:
-        <stackCounterType>k__BackingField: 2
-        StartConstant:
-          InputEventType: 1
-          _globalInput: 0
-          _characterInput: 2
-          _usableInput: 0
-        CallConstant:
-          InputEventType: 0
-          _globalInput: 0
-          _characterInput: 0
-          _usableInput: 0
-        EndConstant:
-          InputEventType: 1
-          _globalInput: 0
-          _characterInput: 3
-          _usableInput: 0
-        ResetConstant:
-          InputEventType: 2
-          _globalInput: 0
-          _characterInput: 0
-          _usableInput: 3
     - rid: 2198171632553427104
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -103,9 +79,9 @@ MonoBehaviour:
         <stackCounterType>k__BackingField: 3
         cooldownTime: 0.1
         StartCooldownEvent:
-          InputEventType: 2
+          InputEventType: 1
           _globalInput: 0
-          _characterInput: 2
+          _characterInput: 3
           _usableInput: 2
         ResetCooldownEvent:
           InputEventType: 2

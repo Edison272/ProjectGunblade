@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using CustomDataStructures;
+using System.Runtime.InteropServices.WindowsRuntime;
 public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 public class Character : MonoBehaviour, IMovement, IHealth
 {
@@ -58,7 +59,9 @@ public class Character : MonoBehaviour, IMovement, IHealth
     // [SerializeField] protected bool is_AI_active = true;
     //public BehaviorController behavior_controller;    
     
-    [field: Header("Event Bus")]
+    [field: Header("Character Control")]
+    private bool MainInputActive;
+    private bool AltInputActive;
     public InputEventRelay characterRelay {get; private set;} // the internal relay used by the character
     private InputEventRelay controllerRelay; // reference to the input thing controlling this guy
     
@@ -77,8 +80,10 @@ public class Character : MonoBehaviour, IMovement, IHealth
                 (CharacterEvent.MoveEnd, typeof(Action)),
 
                 (CharacterEvent.MainStart, typeof(Action)), 
+                (CharacterEvent.MainUpdate, typeof(Action)), 
                 (CharacterEvent.MainEnd, typeof(Action)), 
                 (CharacterEvent.AltStart, typeof(Action)), 
+                (CharacterEvent.AltUpdate, typeof(Action)), 
                 (CharacterEvent.AltEnd, typeof(Action)), 
 
                 (CharacterEvent.LookPos, typeof(Action<Vector2>)), 
@@ -86,6 +91,18 @@ public class Character : MonoBehaviour, IMovement, IHealth
                 (UsableEvent.ResetStart, typeof(Action)), 
             }
         );
+
+        // attach to internal function
+        characterRelay.ConnectEvent(CharacterEvent.MoveStart, (Action<Vector2>)StartMove);
+        characterRelay.ConnectEvent(CharacterEvent.MoveEnd, StopMove);
+
+        characterRelay.ConnectEvent(CharacterEvent.MainStart, (Action)(() => {MainInputActive = true;}));
+        characterRelay.ConnectEvent(CharacterEvent.MainEnd, (Action)(() => {MainInputActive = false;}));
+        characterRelay.ConnectEvent(CharacterEvent.AltStart, (Action)(() => {AltInputActive = true;}));
+        characterRelay.ConnectEvent(CharacterEvent.AltEnd, (Action)(() => {AltInputActive = false;}));
+
+        characterRelay.ConnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Anatomy.Look);
+        characterRelay.ConnectEvent(CharacterEvent.Interact, Interact);
 
         AssignBaseData(base_data);
         GetReady();
@@ -110,13 +127,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
         // // setup AI
         // CreateBehaviorController();
-
-        // attach to internal function
-        characterRelay.ConnectEvent(CharacterEvent.MoveStart, (Action<Vector2>)StartMove);
-        characterRelay.ConnectEvent(CharacterEvent.MoveEnd, StopMove);
-
-        characterRelay.ConnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Anatomy.Look);
-        characterRelay.ConnectEvent(CharacterEvent.Interact, (Action)Inventory.SwitchItemCycle);
     }
     // make sure the operator LOOKS ready
     public void GetReady()
@@ -166,7 +176,10 @@ public class Character : MonoBehaviour, IMovement, IHealth
         // {
         //     return;
         // }
-        
+        if (MainInputActive)
+            characterRelay.Invoke(CharacterEvent.MainUpdate);   
+        if (AltInputActive)
+            characterRelay.Invoke(CharacterEvent.AltUpdate);   
 
         // Update health
         health_component.UpdateHealth();
@@ -223,7 +236,40 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #endregion
 
     #region Inventory
+    // THE DEFINITIVE INTERACITON FUNCTION
 
+    public void Interact()
+    {
+        IInteractable nearbyInteractable = FindInteractables();
+        if (nearbyInteractable != null)
+        {
+            nearbyInteractable.Interact(this);
+        }
+        else
+        {
+            Inventory.SwitchItem(-1); 
+        }
+    }
+
+
+    // returns false of the item could not be added to the inventory
+    public Item PickupItem(Item newItem) {return Inventory.PickupItem(newItem);}
+
+    public IInteractable FindInteractables()
+    {
+        ContactFilter2D interactEventable_filter = new ContactFilter2D();
+        interactEventable_filter.SetLayerMask(IInteractable.find_interactable_mask);
+        interactEventable_filter.useLayerMask = true; // Actively use the mask
+        interactEventable_filter.useTriggers = true;
+        Physics2D.OverlapCircle(GetPosition(), interactEvention_range, interactEventable_filter, interactEventables_in_range);
+        IInteractable closest_interactEventable = null;
+        if (interactEventables_in_range.Count > 0)
+        {
+            Debug.Log("target acquried");
+            closest_interactEventable = interactEventables_in_range[0].GetComponent<IInteractable>();
+        }
+        return closest_interactEventable;
+    }
     #endregion
 
     #region Movement

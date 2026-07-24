@@ -7,33 +7,45 @@ using UnityEngine;
 ///  a "slot" in the player's inventory. Holds references to one or multiple indexes of an inventory array
 /// </summary>
 [System.Serializable]
-public class ActiveSlot
+public class InventorySlot
 {
-    public int MainSlot = 0;
+    public int MainSlot = -1;
     public int AltSlot = -1;
-    private List<Item> _inventoryRef;
+    private Item[] _inventoryRef;
     public bool IsAkimbo => AltSlot > 0 ? true : false;
     public float EquipSpeed => GetEquipSpeed(false);
     public float UnequipSpeed => GetEquipSpeed(true);
-    public ActiveSlot(ActiveSlot copied)
+
+    public InventorySlot()
+    {
+        MainSlot = -1;
+        AltSlot = -1;
+    }
+    public InventorySlot(int MainSlotIndex, int AltSlotIndex = -1)
+    {
+        MainSlot = MainSlotIndex;
+        AltSlot = AltSlotIndex;
+    }
+
+    public InventorySlot(InventorySlot copied)
     {
         MainSlot = copied.MainSlot;
         AltSlot = copied.AltSlot;
         _inventoryRef = copied._inventoryRef;
     }
 
-    public ActiveSlot SetInventoryReference(List<Item> setInentory)
+    public InventorySlot SetInventoryReference(Item[] setInentory)
     {
         _inventoryRef = setInentory;
         return this;
     }
     public void SetSlotAcive(bool is_active)
     {
-        _inventoryRef[MainSlot].SetEquipped(is_active);
+        if (MainSlot > -1)
+            _inventoryRef[MainSlot].SetEquipped(is_active);
         if (AltSlot > -1)
-        {
             _inventoryRef[AltSlot].SetEquipped(is_active);
-        }
+
     }
 
     #region Helpers
@@ -41,12 +53,16 @@ public class ActiveSlot
     private float GetEquipSpeed(bool is_unequip)
     {
         float speed = 0;
-        speed += is_unequip ? _inventoryRef[MainSlot].UnequipTime : _inventoryRef[MainSlot].EquipTime;
+        if (MainSlot > -1)
+            speed += is_unequip ? _inventoryRef[MainSlot].UnequipTime : _inventoryRef[MainSlot].EquipTime;
         if (AltSlot > -1)
-        {
             speed += is_unequip ? _inventoryRef[AltSlot].UnequipTime : _inventoryRef[AltSlot].EquipTime;
-        }
         return speed;
+    }
+
+    public bool ContainsItem()
+    {
+        return MainSlot > -1 && AltSlot > -1;
     }
     #endregion
 }

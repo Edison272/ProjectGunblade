@@ -27,11 +27,11 @@ MonoBehaviour:
   attackObjects:
   - rid: 2198171613395419285
   stackCounters:
-  - rid: 2198171256505761878
   - rid: 2198171256505761870
   - rid: 2198171343949136020
   dynamic_aim: 1
   rotation_scale: 1
+  ui_image: {fileID: 21300000, guid: f85965d5552b2ca428d8e3f6ff93a77d, type: 3}
   references:
     version: 2
     RefIds:
@@ -41,35 +41,11 @@ MonoBehaviour:
         <stackCounterType>k__BackingField: 3
         cooldownTime: 0.25
         StartCooldownEvent:
-          InputEventType: 2
-          _globalInput: 0
-          _characterInput: 0
-          _usableInput: 2
-        ResetCooldownEvent:
-          InputEventType: 2
-          _globalInput: 0
-          _characterInput: 0
-          _usableInput: 3
-    - rid: 2198171256505761878
-      type: {class: ConstantCounter, ns: , asm: Assembly-CSharp}
-      data:
-        <stackCounterType>k__BackingField: 2
-        StartConstant:
-          InputEventType: 1
-          _globalInput: 0
-          _characterInput: 2
-          _usableInput: 0
-        CallConstant:
-          InputEventType: 0
-          _globalInput: 0
-          _characterInput: 0
-          _usableInput: 0
-        EndConstant:
           InputEventType: 1
           _globalInput: 0
           _characterInput: 3
-          _usableInput: 0
-        ResetConstant:
+          _usableInput: 2
+        ResetCooldownEvent:
           InputEventType: 2
           _globalInput: 0
           _characterInput: 0
