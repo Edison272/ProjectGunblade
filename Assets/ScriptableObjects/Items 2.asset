@@ -18,7 +18,7 @@ MonoBehaviour:
   <ResetTime>k__BackingField: 3
   itemEffects:
   - attackObjectRefs: 00000000
-    stackCounterRefs: 000000000100000002000000
+    stackCounterRefs: 0000000001000000
     _animationRequest:
       AnimParameterName: Use
       AnimParameterType: 9

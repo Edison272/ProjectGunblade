@@ -39,7 +39,6 @@ public class Item : MonoBehaviour
     private float user_y_offset = 0f; // the y distance from the item's main body position to the user's position
     
 
-
     private InputEventRelay externalInputRelay; // reference to another input relay which controls the item
     private InputEventRelay itemInputRelay; // a locally defined input relay
 
@@ -54,7 +53,7 @@ public class Item : MonoBehaviour
     public float ResetTime => baseData.ResetTime * resetSpdScale;
 
     // internal state data
-    private bool _isInputsActive = false; // toggled off/on when equipped/unequipped, and the item toggles select events
+    public bool IsInputsActive {get; private set;} = false; // toggled off/on when equipped/unequipped, and the item toggles select events
 
     private SortingGroup vfx_sorting; // TURN OFF SORTING when picked up by a player or other parent object with sorting. only turn on sorting when in item form
 
@@ -171,6 +170,9 @@ public class Item : MonoBehaviour
     // method called externally to start the process of unequipping the item
     public void SetEquipped(bool is_equipped)
     {
+        if (IsInputsActive == is_equipped)
+            return;
+        
         animator.speed = 1/EquipTime;
         if (!is_equipped)
         {
@@ -185,7 +187,7 @@ public class Item : MonoBehaviour
 
     private void SetItemInputRelay(bool isActive)
     {
-        _isInputsActive = isActive;
+        IsInputsActive = isActive;
         itemInputRelay.SetEventActive(UsableEvent.ResetStart,isActive);
         itemInputRelay.SetEventActive(UsableEvent.ResetEnd,isActive);
 
@@ -243,19 +245,12 @@ public class Item : MonoBehaviour
         animRequest.Animate(animator);
         itemInputRelay.Invoke(UsableEvent.Used);
     }
-    public void DropItem()
-    {
-        user = null;
-
-    }
 
 
     #region Reset Item / Data
     // Calls item animator to reset the item
     public void ResetItem() // "reload" the item
     {
-
-        if (!_isInputsActive) {return;}
         SetItemInputRelay(false);
         itemInputRelay.Invoke(UsableEvent.ResetStart);
         animator.speed = 1/ResetTime;

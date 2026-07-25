@@ -63,13 +63,12 @@ public class InputEventRelay
             EventSlot new_event = EventSlot.CreateSlot(callbackType, this);
             if (new_event != null)
             {
-                Debug.Log($" created relay for {inputType}, {callbackType}");
+                //Debug.Log($" created relay for {inputType}, {callbackType}");
                 _inputEvents[eventIndex][enumIndex] = new_event;
             }
             else
             {
-                Debug.LogError(
-                    $"'{callbackType.Name}' is not a delegate type.");
+                //Debug.LogError($"'{callbackType.Name}' is not a delegate type.");
                 return false;
             }
         }

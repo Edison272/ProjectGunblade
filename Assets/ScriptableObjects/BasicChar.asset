@@ -27,12 +27,15 @@ MonoBehaviour:
   detection_mask:
     serializedVersion: 2
     m_Bits: 0
-  holding_capacity: 2
+  HoldingCapacity: 8
+  TotalItemSlots: 2
   inventory:
   - {fileID: 11400000, guid: 1848e84891918844684352c2f2d8d3bc, type: 2}
   - {fileID: 11400000, guid: b0cc0780a51e00d4eaf5265cb42d2479, type: 2}
   inventory_slots:
-  - MainSlot: 0
-    AltSlot: -1
-  - MainSlot: 1
-    AltSlot: -1
+  - <MainSlot>k__BackingField: 0
+    <AltSlot>k__BackingField: -1
+  - <MainSlot>k__BackingField: 1
+    <AltSlot>k__BackingField: -1
+  - <MainSlot>k__BackingField: -1
+    <AltSlot>k__BackingField: -1

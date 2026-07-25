@@ -9,12 +9,13 @@ using UnityEngine;
 [System.Serializable]
 public class InventorySlot
 {
-    public int MainSlot = -1;
-    public int AltSlot = -1;
+    [field: SerializeField] public int MainSlot {get; private set;} = -1;
+    [field: SerializeField] public int AltSlot {get; private set;} = -1;
     private Item[] _inventoryRef;
     public bool IsAkimbo => AltSlot > 0 ? true : false;
     public float EquipSpeed => GetEquipSpeed(false);
     public float UnequipSpeed => GetEquipSpeed(true);
+    public bool IsEmpty => MainSlot == -1 && AltSlot == -1;
 
     public InventorySlot()
     {
@@ -47,6 +48,25 @@ public class InventorySlot
             _inventoryRef[AltSlot].SetEquipped(is_active);
 
     }
+    
+    #region Setting Indexes
+    public void SetIndexes(int MainSlot, int AltSlot)
+    {
+        SetMainIndex(MainSlot);
+        SetAltIndex(AltSlot);
+    }
+    public void SetMainIndex(int MainSlot)
+    {
+        if (MainSlot > -1 && MainSlot < _inventoryRef.Length - 1)
+            this.MainSlot = MainSlot;
+    }
+
+    public void SetAltIndex(int AltSlot)
+    {
+        if (AltSlot > -1 && AltSlot < _inventoryRef.Length - 1)
+            this.AltSlot = AltSlot;
+    }
+    #endregion
 
     #region Helpers
     // true for getting unequip speed, false for getting equip speed
@@ -57,12 +77,8 @@ public class InventorySlot
             speed += is_unequip ? _inventoryRef[MainSlot].UnequipTime : _inventoryRef[MainSlot].EquipTime;
         if (AltSlot > -1)
             speed += is_unequip ? _inventoryRef[AltSlot].UnequipTime : _inventoryRef[AltSlot].EquipTime;
+        Debug.Log($"Changing Item in {speed}");
         return speed;
-    }
-
-    public bool ContainsItem()
-    {
-        return MainSlot > -1 && AltSlot > -1;
     }
     #endregion
 }

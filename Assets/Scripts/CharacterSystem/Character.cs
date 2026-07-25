@@ -253,7 +253,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
 
     // returns false of the item could not be added to the inventory
-    public Item PickupItem(Item newItem) {return Inventory.PickupItem(newItem);}
+    public Item PickupItem(Item newItem, bool setAsAlt = false) {return Inventory.PickupItem(newItem, setAsAlt);}
 
     public IInteractable FindInteractables()
     {

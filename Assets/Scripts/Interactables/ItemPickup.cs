@@ -11,6 +11,8 @@ public class ItemPickup : MonoBehaviour, IInteractable
     public GameObject InteractionUI;
     SpriteRenderer this_sprite;
 
+    public bool EquipToAltHand = false;
+
     public void SetItem(ItemSO set_new)
     {
         new_item = set_new;
@@ -18,7 +20,10 @@ public class ItemPickup : MonoBehaviour, IInteractable
 
     public void Awake()
     {
-        this_sprite = this.GetComponent<SpriteRenderer>();
+        if (this_sprite == null)
+        {
+            this_sprite = this.GetComponent<SpriteRenderer>();
+        }
     }
     public void Start()
     {
@@ -34,11 +39,13 @@ public class ItemPickup : MonoBehaviour, IInteractable
     {        
         Debug.Log(character);
         Item item_pickup = used_item ? used_item : new_item.GenerateItem(transform.position);
-        used_item = character.PickupItem(item_pickup);
+        used_item = character.PickupItem(item_pickup, EquipToAltHand);
         if (used_item)
         {        
             this_sprite.enabled = true;
             this_sprite.sprite = used_item.baseData.ui_image;
+
+            used_item.transform.SetParent(transform, false);
         }
         else
         {
@@ -54,5 +61,18 @@ public class ItemPickup : MonoBehaviour, IInteractable
     public string GetPromptText()
     {
         return "pick up item";
+    }
+
+    public void OnValidate()
+    {
+        if (this_sprite == null)
+        {
+            this_sprite = this.GetComponent<SpriteRenderer>();
+        }
+
+        if (new_item && this_sprite.sprite != new_item.ui_image)
+        {
+            this_sprite.sprite = new_item.ui_image;
+        }
     }
 }
