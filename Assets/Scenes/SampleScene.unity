@@ -718,7 +718,7 @@ MonoBehaviour:
   new_item: {fileID: 11400000, guid: b0cc0780a51e00d4eaf5265cb42d2479, type: 2}
   used_item: {fileID: 0}
   InteractionUI: {fileID: 0}
-  EquipToAltHand: 1
+  EquipToAltHand: 0
 --- !u!212 &1877596783
 SpriteRenderer:
   serializedVersion: 2

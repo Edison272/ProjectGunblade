@@ -93,6 +93,8 @@ public class InputEventRelay
     // links this relay to a parent relay, connecting this relay's invoke methods to its parent's calls if the parent has them
     public void LinkRelay(InputEventRelay parent)
     {
+        // iterate through this event list to see which enums the parent supports
+        // then iterate through the nested list in the parent's event list to see which specific events this relay can connect to
         for (int i = 0; i < _inputEvents.Length; i++)
         {
             if (parent._inputEvents[i] == null)
@@ -144,8 +146,7 @@ public class InputEventRelay
             {
                 continue;
             }
-            
-            for (int j = 0; j < slotArr.Length; i++)
+            for (int j = 0; j < slotArr.Length; j++)
             {
                 if (parent._inputEvents[i][j] == null || slotArr[j] == null)
                 {
