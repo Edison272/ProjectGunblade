@@ -6,11 +6,11 @@ using AttackSystem;
 
 public class LinecastBehavior : MonoBehaviour
 {
-    Vector2 source_pos;
+    Vector2 sourcePos;
     Transform target_char;
-    Vector2 target_pos;
+    Vector2 targetPos;
     Vector2 end_pos; // if the linecast stops at whatever it hits (or the last thing it hits if it can pierce)
-    Vector2 vfx_target_offset;
+    Vector2 vfxTargetOffset;
 
     [field: Header("VFX")]
     public LineRenderer main_line_render; // show where the actual linecast is going
@@ -39,13 +39,13 @@ public class LinecastBehavior : MonoBehaviour
     void GenerateLinecast()
     {
         // get all targets hit in linecast
-        contacts = Physics2D.LinecastAll(source_pos, target_pos);
+        contacts = Physics2D.LinecastAll(sourcePos, targetPos);
         int curr_pierce = atk_stats.pierce+1;
         foreach(RaycastHit2D contact in contacts)
         {
             if (contact.transform.gameObject.tag != object_tag && contact.transform.gameObject.tag != "NoHit")
             {
-                atk_stats.ApplyData(source_pos, contact.transform.gameObject);
+                atk_stats.ApplyData(sourcePos, contact.transform.gameObject);
                 LinecastEffects(contact.point);
                 curr_pierce--;
             }
@@ -79,11 +79,11 @@ public class LinecastBehavior : MonoBehaviour
         main_line_render.endColor = new Color(main_line_render.endColor.r,main_line_render.endColor.g,main_line_render.endColor.b, alpha);
 
         // set line render length (temporary rendering method)
-        Vector2 render_pos = Vector2.Lerp(vfx_line_render.GetPosition(0), end_pos + vfx_target_offset, 1-curr_duration/render_duration);
+        Vector2 render_pos = Vector2.Lerp(vfx_line_render.GetPosition(0), end_pos + vfxTargetOffset, 1-curr_duration/render_duration);
         SetLRPositions(1, end_pos, render_pos);
         if (curr_duration <= 0)
         {
-            if (end_pos == target_pos) {LinecastEffects(target_pos);}
+            if (end_pos == targetPos) {LinecastEffects(targetPos);}
             EndLinecast();
         } 
     }
@@ -94,11 +94,11 @@ public class LinecastBehavior : MonoBehaviour
         atk_stats = line_data.atk_stats;
         render_duration = line_data.typeData.projectile_speed;
         curr_duration = render_duration;
-        source_pos = atk_targ.source_pos;
-        target_pos = atk_targ.target_pos;
-        end_pos = target_pos;
-        vfx_target_offset = atk_targ.vfx_target_offset;
-        owner = atk_targ.sender;
+        sourcePos = atk_targ.sourcePos;
+        targetPos = atk_targ.targetPos;
+        end_pos = targetPos;
+        vfxTargetOffset = atk_targ.vfxTargetOffset;
+        owner = atk_targ.owner;
         if (owner)
         {
             object_tag = owner.gameObject.tag;
@@ -108,14 +108,14 @@ public class LinecastBehavior : MonoBehaviour
         GenerateLinecast();
 
         // set origin position of "main" line render
-        SetLRPositions(0, atk_targ.source_pos, atk_targ.output_pos);
-        SetLRPositions(1, atk_targ.source_pos, atk_targ.output_pos);
+        SetLRPositions(0, atk_targ.sourcePos, atk_targ.vfxSourcePos);
+        SetLRPositions(1, atk_targ.sourcePos, atk_targ.vfxSourcePos);
 
     }
 
     private void LinecastEffects(Vector2 effect_position)
     {
-        //ImpactEffect.StartImpact(impact_effect, effect_position, vfx_target_offset, target_pos - source_pos, vfx_line_render.widthMultiplier * 4);
+        //ImpactEffect.StartImpact(impact_effect, effect_position, vfxTargetOffset, targetPos - sourcePos, vfx_line_render.widthMultiplier * 4);
     }
 
     private void EndLinecast()

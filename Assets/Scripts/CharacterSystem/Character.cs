@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using CustomDataStructures;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
+using NUnit.Framework;
 public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 public class Character : MonoBehaviour, IMovement, IHealth
 {
@@ -277,7 +279,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public void SetPosition(Vector2 new_position)  {Movement.SetPosition(new_position);}
     // get directional movement, useful for dynamic & sudden maneuvers
     public void SetMove(Vector2 set_move_dir) {Movement.SetMove(set_move_dir);}
-    // get target_position, useful for AI with discrete positioning
+    // get targetPosition, useful for AI with discrete positioning
     public void SetMovePos(Vector2 set_move_pos) {Movement.SetMovePos(set_move_pos);}
     public void Move() 
     {
@@ -340,10 +342,51 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #endregion
 
     #region AI
-    public TargetData GetTargetData()
+    public TargetData GetTargetData(TargetDataRequest targetDataRequest)
     {
-        return new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero, this);
+        TargetData newTargData = new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero).SetOwner(this);
+
+        if (targetDataRequest.HomingRadius > 0) 
+        {
+            Transform targetObject = FindClosestTargetInRange(targetDataRequest.TargetPos, targetDataRequest.HomingRadius);
+            Debug.Log(targetObject);
+            if (targetObject)
+            {
+                newTargData.SetObjectTarget(targetObject);
+            }
+        }
+
+        return newTargData;
     }
+
+    public Transform FindClosestTargetInRange(Vector3 searchPosition, float searchRadius, List<Collider2D> resultList = null)
+    {
+        if (resultList == null)
+        {
+            resultList = new List<Collider2D>();
+        }
+        FindTargetsInRange(searchPosition, searchRadius, resultList);
+        Debug.Log($"{resultList.Count} targets found");
+        if (resultList.Count > 0)
+        {
+            return resultList[0].transform;
+        }
+        else return null;
+    }
+    public List<Collider2D> FindTargetsInRange(Vector3 searchPosition, float searchRadius, List<Collider2D> resultList = null)
+    {
+        if (resultList == null)
+        {
+            resultList = new List<Collider2D>();
+        }
+        Debug.Log($"seatching at {searchPosition}, within a {searchRadius} unit radius");
+        ContactFilter2D searchFilter = new ContactFilter2D();
+        searchFilter.SetLayerMask(IInteractable.find_interactable_mask);
+        searchFilter.useLayerMask = true; // Actively use the mask
+        Physics2D.OverlapCircle(searchPosition, searchRadius, searchFilter, resultList);
+        return resultList;
+    }
+
     #endregion
 
     #region Stats & Status Changes

@@ -22,8 +22,8 @@ public class CameraController
     [SerializeField] public const float c_max_zoom = 5;
 
     [Header("Camera Positioning")]
-    Vector2 source_position;
-    Vector2 target_position;
+    Vector2 sourcePosition;
+    Vector2 targetPosition;
     [Header("Camera Recoil")]
     readonly Vector2 player_screen_pos;
     float max_recoil_time = 1;
@@ -60,10 +60,10 @@ public class CameraController
 
     #region Updates
     // update the data for the camera every frame
-    public void UpdateCamData(Vector2 source_position, Vector2 target_position)
+    public void UpdateCamData(Vector2 sourcePosition, Vector2 targetPosition)
     {
-        this.source_position = source_position;
-        this.target_position = target_position;
+        this.sourcePosition = sourcePosition;
+        this.targetPosition = targetPosition;
     }
 
     // every late update (called by player controller), use the data to update how the camera looks
@@ -122,13 +122,13 @@ public class CameraController
     {
         // update cam position to move to look position within circular bounds
         float cam_range = 5 + 1.5f * player_range;
-        Vector2 offset = (target_position - source_position) * 0.1f;
+        Vector2 offset = (targetPosition - sourcePosition) * 0.1f;
         if (offset.sqrMagnitude > cam_range * cam_range)
         {
             offset = offset.normalized * cam_range;
         }
 
-        Vector3 cam_pos = source_position + offset;
+        Vector3 cam_pos = sourcePosition + offset;
         cam_pos.z = -10;
 
         main_cam.transform.position = cam_pos;
@@ -137,7 +137,7 @@ public class CameraController
     public void SetCameraAtPosition()
     {
 
-        Vector3 cam_pos = source_position;
+        Vector3 cam_pos = sourcePosition;
         cam_pos.z = -10;
         main_cam.transform.position = cam_pos;
     }

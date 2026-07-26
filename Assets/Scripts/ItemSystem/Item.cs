@@ -11,7 +11,7 @@ public class Item : MonoBehaviour
 {   
     [field: SerializeField] public ItemSO baseData {get; private set;} // SO contains important base data
     public Character user;
-    public Func<TargetData> GetTargetData;
+    public Func<TargetDataRequest, TargetData> GetTargetData;
 
     [SerializeField] private ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
     public StackCounter[] stackCounters {get; private set;}
@@ -23,8 +23,8 @@ public class Item : MonoBehaviour
     public float _rotScale = 1f; // 0 for no rotation, 1 for instantaneous rotation
     Quaternion curr_rot; // save the current quaternion rotation
     public Vector2 aim_pos {get; private set;} // where the item is supposed to be aimed towards;
-    [SerializeField] private Vector2 _outputPos; // where bullets & attacks originate from
-    public Vector2 target_pos {get; private set;} // where the item is actually aimed towards (based on _rotScale)
+    private Vector2 _sourcePos; // where bullets & attacks originate from
+    public Vector2 targetPos {get; private set;} // where the item is actually aimed towards (based on _rotScale)
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
     public delegate void AimDelegate();
     public AimDelegate AimVFX;
@@ -90,12 +90,12 @@ public class Item : MonoBehaviour
         // the ACTUAL aiming aspect (get target position from aim_dir)
         Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
         curr_rot = Quaternion.Lerp(curr_rot, aim_rot, _rotScale);
-        _outputPos = transform.position + (curr_rot * Vector2.right);
-        target_pos = transform.position + (curr_rot * Vector2.right * aim_dir.magnitude);
+        _sourcePos = transform.position + (curr_rot * Vector2.right);
+        targetPos = transform.position + (curr_rot * Vector2.right * aim_dir.magnitude);
     }
     void StaticAim()
     {
-        if((rotatorObject.transform.localScale.y >= 0) != (target_pos.x >= transform.position.x)) {
+        if((rotatorObject.transform.localScale.y >= 0) != (targetPos.x >= transform.position.x)) {
             Vector3 new_vec = rotatorObject.transform.localScale;
             new_vec.x *= -1;
             rotatorObject.transform.localScale = new_vec;
@@ -106,7 +106,7 @@ public class Item : MonoBehaviour
         // set the item's rotation towards the target direction
         rotatorObject.transform.rotation = curr_rot;
         // make sure item scale is correct
-        if((rotatorObject.transform.localScale.y >= 0) != (target_pos.x >= transform.position.x)) {
+        if((rotatorObject.transform.localScale.y >= 0) != (targetPos.x >= transform.position.x)) {
             Vector3 new_vec = rotatorObject.transform.localScale;
             new_vec.y *= -1;
             rotatorObject.transform.localScale = new_vec;
@@ -210,7 +210,7 @@ public class Item : MonoBehaviour
         NewUser(NewInputRelay, new_char_user.GetTargetData);
         user_y_offset = transform.position.y - new_char_user.Position.y;
     }
-    public void NewUser(InputEventRelay NewInputRelay, Func<TargetData> GetTargetFunc)
+    public void NewUser(InputEventRelay NewInputRelay, Func<TargetDataRequest, TargetData> GetTargetFunc)
     {
         vfx_sorting.enabled = false;
         GetTargetData = GetTargetFunc;
@@ -234,11 +234,15 @@ public class Item : MonoBehaviour
     #endregion
     public void UseItem(int attackIndex, AnimationRequest animRequest)
     {
+        // request targetting data from user
+        TargetDataRequest targetDataReq = baseData.attackObjects[attackIndex].GetTargetDataReq();
+        targetDataReq.TargetPos = targetPos;
+        
         // fill in the empty values
-        TargetData get_atk_targ = GetTargetData();
-        get_atk_targ.target_pos = target_pos;
-        get_atk_targ.output_pos = _outputPos;
-        get_atk_targ.vfx_target_offset = new Vector2(0, item_y_offset + user_y_offset);
+        TargetData get_atk_targ = GetTargetData(targetDataReq);
+        get_atk_targ.targetPos = targetPos;
+        get_atk_targ.vfxSourcePos = itemTip.transform.position;
+        get_atk_targ.vfxTargetOffset = new Vector2(0, item_y_offset + user_y_offset);
         
         
         baseData.attackObjects[attackIndex].Attack(get_atk_targ);
@@ -278,12 +282,6 @@ public class Item : MonoBehaviour
 
         // input_controller.Reset();
         // functionality_controller.ResetData();
-    }
-
-    // cancels all ongoing invokes
-    public void InterruptItem()
-    {
-        
     }
     #endregion
 

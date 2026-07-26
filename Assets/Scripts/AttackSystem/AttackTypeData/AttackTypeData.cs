@@ -5,7 +5,8 @@ using System;
 public class ProjectileTypeData
 {
     public float projectile_speed;
-    public float homing_strength;
+    public float homing_radius;
+    public float HomingSpdScale;
     public int projectile_count = 1;
     public float projectile_spread;
     public bool even_spread;

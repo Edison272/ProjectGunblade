@@ -133,6 +133,8 @@ public class InputEventRelay
     }
     public void UnlinkRelay(InputEventRelay parent)
     {
+        // iterate through all of the unlinked relay's delegates. If they exist in the parent, attempt to disconnect
+        
         for (int i = 0; i < _inputEvents.Length; i++)
         {
             if (parent._inputEvents[i] == null)

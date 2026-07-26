@@ -8,18 +8,57 @@ using UnityEngine;
 [System.Serializable]
 public struct TargetData
 {
-    public Vector2 source_pos;
-    public Vector2 target_pos;
-    public Vector2 output_pos;
-    public Vector2 vfx_target_offset;
-    public Character sender;
+    // True position data
+    public Vector2 sourcePos;
+    public Vector2 targetPos;
 
-    public TargetData(Vector2 src_pos, Vector2 targ_pos, Vector2 out_pos, Vector2 vfx_targ_offset, Character send = null)
+    // VFX Data
+    public Vector2 vfxSourcePos;
+    public Vector2 vfxTargetOffset;
+    
+    // Entity Data
+    public Character owner;
+    public Transform objectTarget;
+
+    public TargetData(Vector2 src_pos, Vector2 targ_pos, Vector2 vfxSrcPos, Vector2 vfxTargPos)
     {
-        source_pos = src_pos;
-        target_pos = targ_pos;
-        output_pos = out_pos;
-        vfx_target_offset = vfx_targ_offset;
-        sender = send;
+        sourcePos = src_pos;
+        targetPos = targ_pos;
+        vfxSourcePos = vfxSrcPos;
+        vfxTargetOffset = vfxTargPos;
+        owner = null;
+        objectTarget = null;
     }
+
+    public TargetData SetOwner(Character owner)
+    {
+        this.owner = owner;
+        return this;
+    }
+    public TargetData SetObjectTarget(Transform objectTarget, Transform objectTargetVFX = null)
+    {
+        this.objectTarget = objectTarget;
+        targetPos = objectTarget.transform.position;
+        vfxTargetOffset = objectTargetVFX ? objectTargetVFX.position : objectTarget.position;
+        return this;
+    }
+
+    #region Helpers
+    public Vector2 GetDir()
+    {
+        return targetPos - sourcePos;
+    }
+    public Vector2 GetVFXDir()
+    {
+        return vfxTargetOffset - vfxSourcePos;
+    }
+    #endregion
+}
+
+
+// used to request target data, with specific reqests for the type of targetting
+public struct TargetDataRequest
+{
+    public Vector2 TargetPos;
+    public float HomingRadius; 
 }

@@ -85,7 +85,7 @@ public class ItemTester : MonoBehaviour
 
         inputRelay.Invoke(GlobalEvent.Update);
     }
-    public TargetData GetTargetData()
+    public TargetData GetTargetData(TargetDataRequest targetDataRequest)
     {
         return new TargetData(item.transform.position, Vector2.zero, Vector2.zero, Vector2.zero);
     }

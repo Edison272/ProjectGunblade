@@ -23,13 +23,13 @@ namespace AttackSystem{
         [SerializeField] int total_dot_ticks;
 
 
-        public void ApplyData(Vector3 source_pos, GameObject target)
+        public void ApplyData(Vector3 sourcePos, GameObject target)
         {
             target.GetComponent<IHealth>()?.ChangeHealth(damage);
             IMovement targ_move = target.GetComponent<IMovement>();
             if (knockback_amt > 0)
             {
-                targ_move?.ForceMove((target.transform.position - source_pos).normalized, knockback_amt * 10);
+                targ_move?.ForceMove((target.transform.position - sourcePos).normalized, knockback_amt * 10);
             }
             
             if (effect_time > 0)

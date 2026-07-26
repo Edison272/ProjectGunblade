@@ -17,12 +17,17 @@ public enum CharacterEvent
 {
     MoveStart,
     MoveEnd,
+    
+    // Main is generally LMB
     MainStart, 
     MainUpdate,
     MainEnd, 
+
+    // Alt is same as main but RMB
     AltStart, 
     AltUpdate,
     AltEnd,
+
     LookPos,
     Interact,
     InventorySelect,
@@ -32,7 +37,8 @@ public enum UsableEvent
 {
     Equip,
     Unequip,
-    Used, 
+
+    Used,
     ResetStart, 
     ResetEnd, 
 }

@@ -68,7 +68,7 @@ public class MovementComponent
         move_dir = set_move_dir.normalized;
         move_pos = GetPosition() + move_dir * 1000;
     }
-    public void SetMovePos(Vector2 set_move_pos) // get target_position, useful for AI with discrete positioning
+    public void SetMovePos(Vector2 set_move_pos) // get targetPosition, useful for AI with discrete positioning
     {
         last_move_dir = move_dir;
         destination_reached = false;

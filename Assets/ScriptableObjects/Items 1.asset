@@ -48,10 +48,11 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          projectile_speed: 10
-          homing_strength: 0
+          projectile_speed: 20
+          homing_radius: 10
+          HomingSpdScale: 0.15
           projectile_count: 1
-          projectile_spread: 0
+          projectile_spread: 90
           even_spread: 0
     - rid: 2198171632553427104
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}

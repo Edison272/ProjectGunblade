@@ -19,6 +19,11 @@ public abstract class AttackObject
     {
         this.instance = instance;
     }
+    public virtual TargetDataRequest GetTargetDataReq()
+    {
+        TargetDataRequest targetDataRequest = new TargetDataRequest();
+        return targetDataRequest;
+    }
     #endregion
     public abstract void Attack(TargetData atk_targ);
     public abstract float GetAtkSpread();
@@ -97,24 +102,30 @@ public class Projectile : AttackObject
         this.atk_stats = atk_stats;
         this.typeData = typeData;
     }
+    public override TargetDataRequest GetTargetDataReq()
+    {
+        TargetDataRequest targetDataRequest = new TargetDataRequest();
+        targetDataRequest.HomingRadius = typeData.homing_radius;
+        return targetDataRequest;
+    }
     #endregion
 
     public override void Attack(TargetData atk_targ)
     {
-        Vector2 target_pos_og = atk_targ.target_pos;
-        Vector2 source_pos_og = atk_targ.source_pos;
+        Vector2 targetPos_og = atk_targ.targetPos;
+        Vector2 sourcePos_og = atk_targ.sourcePos;
         
         // declare info that doesn't need to be in a loop
-        float target_dist = (target_pos_og - source_pos_og).magnitude;
+        float target_dist = (targetPos_og - sourcePos_og).magnitude;
         float og_speed = typeData.projectile_speed;
-        Vector2 target_dir = (target_pos_og - source_pos_og).normalized;
+        Vector2 target_dir = (targetPos_og - sourcePos_og).normalized;
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < typeData.projectile_count; i++)
         {
             TargetData atk_targ_copy = atk_targ;
-            Vector2 source_pos = atk_targ_copy.source_pos;
+            Vector2 sourcePos = atk_targ_copy.sourcePos;
             
-            GameObject projectile = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
+            GameObject projectile = GameObject.Instantiate(instance, sourcePos, Quaternion.identity);
             ProjectileBehavior projectile_data = projectile.GetComponent<ProjectileBehavior>();
 
             // add the inherent inaccuracy value of projectile
@@ -126,14 +137,14 @@ public class Projectile : AttackObject
 
                 Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
                 
-                atk_targ_copy.target_pos = source_pos + dir * target_dist;
+                atk_targ_copy.targetPos = sourcePos + dir * target_dist;
             }
             else
             {
-                Vector2 og_targ_pos = atk_targ_copy.target_pos;
-                atk_targ_copy.target_pos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
+                Vector2 og_targ_pos = atk_targ_copy.targetPos;
+                atk_targ_copy.targetPos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
                 
-                typeData.projectile_speed *= Mathf.Clamp(1 - (atk_targ_copy.target_pos - og_targ_pos).magnitude / target_dist, 0.5f, 1);
+                typeData.projectile_speed *= Mathf.Clamp(1 - (atk_targ_copy.targetPos - og_targ_pos).magnitude / target_dist, 0.5f, 1);
             }
             // new projectile! 
             projectile_data.StartProjectile(this, atk_targ_copy);
@@ -159,19 +170,19 @@ public class Linecast : Projectile
 
     public override void Attack(TargetData atk_targ)
     {
-        Vector2 target_pos_og = atk_targ.target_pos;
-        Vector2 source_pos_og = atk_targ.source_pos;
+        Vector2 targetPos_og = atk_targ.targetPos;
+        Vector2 sourcePos_og = atk_targ.sourcePos;
         
         // declare info that doesn't need to be in a loop
-        float target_dist = (target_pos_og - source_pos_og).magnitude;
-        Vector2 target_dir = (target_pos_og - source_pos_og).normalized;
+        float target_dist = (targetPos_og - sourcePos_og).magnitude;
+        Vector2 target_dir = (targetPos_og - sourcePos_og).normalized;
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < typeData.projectile_count; i++)
         {
             TargetData atk_targ_copy = atk_targ;
-            Vector2 source_pos = atk_targ_copy.source_pos;
+            Vector2 sourcePos = atk_targ_copy.sourcePos;
             
-            GameObject linecast = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
+            GameObject linecast = GameObject.Instantiate(instance, sourcePos, Quaternion.identity);
             LinecastBehavior linecast_data = linecast.GetComponent<LinecastBehavior>();
 
             // add the inherent inaccuracy value of projectile
@@ -183,11 +194,11 @@ public class Linecast : Projectile
 
                 Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
                 
-                atk_targ_copy.target_pos = source_pos + dir * target_dist;
+                atk_targ_copy.targetPos = sourcePos + dir * target_dist;
             }
             else
             {
-                atk_targ_copy.target_pos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
+                atk_targ_copy.targetPos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
             }
             // new linecast! 
             linecast_data.StartLinecast(this, atk_targ_copy);
@@ -216,19 +227,19 @@ public class MeleeAttack : AttackObject
 
     public override void Attack(TargetData atk_targ)
     {
-        Vector2 target_pos_og = atk_targ.target_pos;
-        Vector2 source_pos_og = atk_targ.source_pos;   
+        Vector2 targetPos_og = atk_targ.targetPos;
+        Vector2 sourcePos_og = atk_targ.sourcePos;   
     
         // declare info that doesn't need to be in a loop
-        float target_dist = (target_pos_og - source_pos_og).magnitude;
-        Vector2 target_dir = (target_pos_og - source_pos_og).normalized;
+        float target_dist = (targetPos_og - sourcePos_og).magnitude;
+        Vector2 target_dir = (targetPos_og - sourcePos_og).normalized;
         float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
         for (int i = 0; i < typeData.melee_count; i++)
         {
             TargetData atk_targ_copy = atk_targ;
-            Vector2 source_pos = atk_targ_copy.source_pos;
+            Vector2 sourcePos = atk_targ_copy.sourcePos;
             
-            GameObject melee_ins = GameObject.Instantiate(instance, source_pos, Quaternion.identity);
+            GameObject melee_ins = GameObject.Instantiate(instance, sourcePos, Quaternion.identity);
             MeleeBehavior melee_data = melee_ins.GetComponent<MeleeBehavior>();
 
             // add the inherent inaccuracy value of projectile
@@ -240,11 +251,11 @@ public class MeleeAttack : AttackObject
 
                 Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
                 
-                atk_targ_copy.target_pos = source_pos + dir * target_dist;
+                atk_targ_copy.targetPos = sourcePos + dir * target_dist;
             }
             else
             {
-                atk_targ_copy.target_pos += Random.insideUnitCircle * target_dist * typeData.melee_spread/360;
+                atk_targ_copy.targetPos += Random.insideUnitCircle * target_dist * typeData.melee_spread/360;
             }
             // new projectile! 
             melee_data.StartMelee(this, atk_targ_copy);
