@@ -349,7 +349,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
         if (targetDataRequest.HomingRadius > 0) 
         {
             Transform targetObject = FindClosestTargetInRange(targetDataRequest.TargetPos, targetDataRequest.HomingRadius);
-            Debug.Log(targetObject);
             if (targetObject)
             {
                 newTargData.SetObjectTarget(targetObject);
@@ -366,7 +365,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
             resultList = new List<Collider2D>();
         }
         FindTargetsInRange(searchPosition, searchRadius, resultList);
-        Debug.Log($"{resultList.Count} targets found");
         if (resultList.Count > 0)
         {
             return resultList[0].transform;
@@ -379,7 +377,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
         {
             resultList = new List<Collider2D>();
         }
-        Debug.Log($"seatching at {searchPosition}, within a {searchRadius} unit radius");
         ContactFilter2D searchFilter = new ContactFilter2D();
         searchFilter.SetLayerMask(IInteractable.find_interactable_mask);
         searchFilter.useLayerMask = true; // Actively use the mask

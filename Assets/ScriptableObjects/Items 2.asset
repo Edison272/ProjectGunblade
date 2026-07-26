@@ -84,7 +84,8 @@ MonoBehaviour:
           total_dot_ticks: 0
         typeData:
           projectile_speed: 0.1
-          homing_strength: 0
+          homing_radius: 1.42
+          HomingSpdScale: 0
           projectile_count: 3
           projectile_spread: 30
-          even_spread: 0
+          even_spread: 1

@@ -44,9 +44,8 @@ public class ProjectileBehavior : MonoBehaviour
     {
         // constantly readjust velocity for homing projectiles
         if (_targetData.objectTarget) {
-            Debug.Log("WEEEEEEE");
-            _targetData.targetPos = ((Vector2)_targetData.objectTarget.position - proj_rb.position).normalized * speed;
-            proj_rb.linearVelocity = Vector2.Lerp(proj_rb.linearVelocity, _targetData.targetPos, speed * HomingSpdScale * Time.fixedDeltaTime);
+            Vector2 targetDir = ((Vector2)_targetData.objectTarget.position - proj_rb.position).normalized;
+            proj_rb.linearVelocity = Vector2.Lerp(proj_rb.linearVelocity.normalized, targetDir, speed * HomingSpdScale * Time.fixedDeltaTime) * speed;
 
             Vector2 target_dir = proj_rb.linearVelocity.normalized;
             float angle = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;

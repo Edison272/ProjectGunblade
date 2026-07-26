@@ -51,9 +51,9 @@ MonoBehaviour:
           projectile_speed: 20
           homing_radius: 10
           HomingSpdScale: 0.15
-          projectile_count: 1
+          projectile_count: 2
           projectile_spread: 90
-          even_spread: 0
+          even_spread: 1
     - rid: 2198171632553427104
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
