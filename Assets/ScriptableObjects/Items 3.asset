@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401ed04a628f55e46808c6fa2347d8f7, type: 3}
+  m_Name: Items 3
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  item_prefab: {fileID: 3117911291600889211, guid: f702719fb9f724e488337331542e64cc, type: 3}
+  <EquipTime>k__BackingField: 1
+  <UnequipTime>k__BackingField: 0.2
+  <ResetTime>k__BackingField: 3
+  itemEffects:
+  - attackObjectRefs: 000000000100000002000000
+    stackCounterRefs: 0000000001000000
+    _animationRequest:
+      AnimParameterName: Use
+      AnimParameterType: 9
+      <_animParamValue>k__BackingField: 0
+      AnimSpeed: 0.5
+  attackObjects:
+  - rid: 2198171788663324748
+  - rid: 2198171788663324765
+  - rid: 2198171788663324791
+  stackCounters:
+  - rid: 2198171256505761870
+  - rid: 2198171788663324761
+  dynamic_aim: 1
+  rotation_scale: 1
+  ui_image: {fileID: 21300000, guid: f85965d5552b2ca428d8e3f6ff93a77d, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 2198171256505761870
+      type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 3
+        StackAnimation:
+          AnimParameterName: Use
+          AnimParameterType: 9
+          <_animParamValue>k__BackingField: 0
+          AnimSpeed: 1
+        cooldownTime: 0.6
+        StartCooldownEvent:
+          InputEventType: 1
+          _globalInput: 0
+          _characterInput: 3
+          _usableInput: 2
+        ResetCooldownEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 0
+          _usableInput: 3
+    - rid: 2198171788663324748
+      type: {class: MeleeAttack, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 2522484320474615995, guid: b7c9752db261bfb46920bd87a1e3ec4d, type: 3}
+        atk_stats:
+          damage: 40
+          pierce: 0
+          knockback_amt: 10
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          melee_duration: 0.25
+          melee_count: 1
+          melee_spread: 0
+          even_spread: 0
+          melee_size: -3
+    - rid: 2198171788663324761
+      type: {class: SequenceCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 5
+        StackAnimation:
+          AnimParameterName: Use
+          AnimParameterType: 9
+          <_animParamValue>k__BackingField: 0
+          AnimSpeed: 1
+        MaxIndex: 2
+        IterateSequenceEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 2
+          _usableInput: 2
+        ResetSequenceEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _characterInput: 0
+          _usableInput: 3
+        ResetAfterCooldown: 0
+        SequenceResetTime: 1
+    - rid: 2198171788663324765
+      type: {class: MeleeAttack, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 2522484320474615995, guid: b7c9752db261bfb46920bd87a1e3ec4d, type: 3}
+        atk_stats:
+          damage: 40
+          pierce: 0
+          knockback_amt: 20
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          melee_duration: 0.25
+          melee_count: 1
+          melee_spread: 0
+          even_spread: 0
+          melee_size: 3
+    - rid: 2198171788663324791
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        atk_stats:
+          damage: 0
+          pierce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          projectile_speed: 5
+          homing_radius: 3
+          HomingSpdScale: 1
+          projectile_count: 15
+          projectile_spread: 90
+          even_spread: 1

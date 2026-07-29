@@ -19,7 +19,7 @@ public class CooldownCounter : StackCounter
     #region Initalizers
     public CooldownCounter()
     {
-        stackCounterType = StackCountType.Cooldown;
+        stackCounterType = GetExpectedStackCountType();
     }
     public CooldownCounter(CooldownCounter copied)
     {
@@ -47,10 +47,6 @@ public class CooldownCounter : StackCounter
     }
     #endregion
     #region Base Functionality
-    public virtual void ResetCounter()
-    {
-        lastUse = Time.time;
-    }
     public override void GetEvents(List<Enum> inputEventsUsed)
     {
         inputEventsUsed.Add(StartCooldownEvent.InputEvent);
@@ -58,7 +54,11 @@ public class CooldownCounter : StackCounter
     }
     #endregion
 
-    #region Functionality
+    #region Custom Functionality
+    public virtual void ResetCounter()
+    {
+        lastUse = Time.time;
+    }
     public void StartCooldown()
     {
         if (GetIndexData() > 0)

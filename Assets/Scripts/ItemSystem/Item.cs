@@ -170,14 +170,13 @@ public class Item : MonoBehaviour
     // method called externally to start the process of unequipping the item
     public void SetEquipped(bool is_equipped)
     {
-        if (IsInputsActive == is_equipped)
+        if (animator.GetBool("IsEquipped") == is_equipped)
             return;
         
         animator.speed = 1/EquipTime;
         if (!is_equipped)
         {
             animator.speed = 1/UnequipTime;
-            animator.SetTrigger("Cancel");
             animator.ResetTrigger("Resetting");
             animator.ResetTrigger("Use");
             SetItemInputRelay(false);
@@ -198,7 +197,7 @@ public class Item : MonoBehaviour
         itemInputRelay.SetEventActive(CharacterEvent.AltUpdate,isActive);
         itemInputRelay.SetEventActive(CharacterEvent.AltEnd,isActive);
     }
-    // Methods called by animator to actually unequip the item and make it unusuable
+    // Methods called by animator to actually equip the item and make it usuable
     private void AnimEquip(){SetItemInputRelay(true);}
 
     #endregion
@@ -259,7 +258,6 @@ public class Item : MonoBehaviour
         itemInputRelay.Invoke(UsableEvent.ResetStart);
         animator.speed = 1/ResetTime;
         animator.ResetTrigger("Use");
-        animator.SetTrigger("Cancel");
         animator.SetTrigger("Resetting");
     }
     /// <summary>

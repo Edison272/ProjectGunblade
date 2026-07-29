@@ -22,8 +22,9 @@ public abstract class StackCounter
 {
     [field: SerializeField] public StackCountType stackCounterType {get; protected set;} = StackCountType.Simple;
     protected InputEventRelay inputRelay; // reference to another input relay. used to control when stack interactions happen
-    public delegate void ActivatorFunc();
+    private delegate void ActivatorFunc();
     private Action activatorEffect;
+    public AnimationRequest StackAnimation = null;
 
     #region Initializers
     public StackCounter() {}
@@ -94,8 +95,11 @@ public abstract class StackCounter
                 new_type = new CooldownCounter();
                 break;
             case StackCountType.Charge:
-                new_type = new AmmoCounter();
+                new_type = new ChargeCounter();
                 break; 
+           case StackCountType.Sequence:
+                new_type = new SequenceCounter();
+                break;
            case StackCountType.Stance:
                 new_type = new AmmoCounter();
                 break;

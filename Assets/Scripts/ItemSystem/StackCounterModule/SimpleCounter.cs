@@ -16,7 +16,10 @@ public class SimpleCounter : StackCounter
     public int default_stacks;
     
     #region Initalizers
-    public SimpleCounter() {}
+    public SimpleCounter()
+    {
+        stackCounterType = GetExpectedStackCountType();
+    }
     public SimpleCounter(SimpleCounter copied)
     {
         default_stacks = copied.default_stacks;

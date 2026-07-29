@@ -13,7 +13,7 @@ public class MeleeBehavior : MonoBehaviour
 
     [field: Header("VFX")]
     public GameObject main_body;
-    public Transform vfx_body;
+    public Transform VfxBody;
     public SpriteRenderer sprt_rendr;
     public Sprite[] melee_sprites;
     float render_duration;
@@ -77,18 +77,19 @@ public class MeleeBehavior : MonoBehaviour
             faction_tag = owner.faction_tag;
         }
         // adjust size & position based on new size
-        main_body.transform.localScale = main_body.transform.localScale * mele_data.typeData.melee_size;
-        main_body.transform.position = sourcePos + (targetPos - sourcePos).normalized * mele_data.typeData.melee_size * 0.1f;
+        main_body.transform.localScale = main_body.transform.localScale * Mathf.Abs(mele_data.typeData.melee_size);
+        VfxBody.transform.localScale = new Vector3(VfxBody.transform.localScale.x, VfxBody.transform.localScale.y * Mathf.Sign(mele_data.typeData.melee_size), 1);
+        main_body.transform.position = sourcePos + (targetPos - sourcePos).normalized * Mathf.Abs(mele_data.typeData.melee_size) * 0.25f;
 
         // adjust vfx height from vfx body
-        vfx_body.position = atk_targ.vfxSourcePos;
+        VfxBody.position = atk_targ.vfxSourcePos;
 
         // adjust vfx rotation
-        Vector3 vfx_og_pos = vfx_body.transform.position;  // save original position for later
+        Vector3 vfx_og_pos = VfxBody.transform.position;  // save original position for later
         Quaternion targ_rot = Quaternion.LookRotation(Vector3.forward, targetPos - sourcePos) * ROTATION_OFFSET;
         main_body.transform.rotation = targ_rot;
-        vfx_body.transform.position = vfx_og_pos;  // return vfx_body to original position after offset from rotation
-        vfx_body.localPosition = new Vector3(0, vfx_body.localPosition.y, 0);
+        VfxBody.transform.position = vfx_og_pos;  // return VfxBody to original position after offset from rotation
+        VfxBody.localPosition = new Vector3(0, VfxBody.localPosition.y, 0);
 
 
     }

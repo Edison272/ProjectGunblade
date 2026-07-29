@@ -91,7 +91,7 @@ public class ProjectileBehavior : MonoBehaviour
 
         // set travel time to know when to terminate the projectile
         float distance = _targetData.GetDir().magnitude;
-        travel_time = distance / speed;
+        travel_time = distance / speed * 3;
 
         curr_pierce = atk_stats.pierce+1;
     } 

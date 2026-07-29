@@ -4,21 +4,33 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// The simple counter is a simple counter. yes.
-/// It is the default counter when the value is initialized if OnValidate is active.
-/// All this counter does is keep track of one counter value and one default value.
+/// The Sequence counter is effectively an iterator, starting at 0 and resetting after reaching a maximum
+/// Most commonly used for items with combo patterns, for which it will launch different attacks depending on the sequence
+/// - Accumulates stacks as ints, so good for discrete events
+/// - Resets automatically after reaching the MaxIndex
 /// </summary>
+[Serializable]
 public class SequenceCounter : StackCounter
 {
-    public int curr_stacks;
-    public int default_stacks;
+    private int _currIndex = 0;
+    public int MaxIndex = 0;
+    public InputEventSelector IterateSequenceEvent = new InputEventSelector(UsableEvent.Used);
+    public InputEventSelector ResetSequenceEvent = new InputEventSelector(UsableEvent.ResetStart);
+    
+    public bool ResetAfterCooldown = false;
+    [ShowIf("ResetAfterCooldown")] public float SequenceResetTime = 1f;
     
     #region Initalizers
-    public SequenceCounter() {}
+    public SequenceCounter()
+    {
+        stackCounterType = GetExpectedStackCountType();
+    }
     public SequenceCounter(SequenceCounter copied)
     {
-        default_stacks = copied.default_stacks;
-        curr_stacks = default_stacks;
+        _currIndex = 0;
+        MaxIndex = copied.MaxIndex;
+        IterateSequenceEvent = copied.IterateSequenceEvent;
+        ResetSequenceEvent = copied.ResetSequenceEvent;
     }
     public override StackCounter GetCopy()
     {
@@ -26,34 +38,52 @@ public class SequenceCounter : StackCounter
     }
     public override void SetInputRelay(InputEventRelay newRelay)
     {
-        throw new NotImplementedException();
+        // unsubscribe from the previous relay
+        if (inputRelay != null)
+        {
+
+        }
+
+        // set new
+        inputRelay = newRelay;
+        inputRelay.ConnectEvent(IterateSequenceEvent.InputEvent, IterateSequence);
+        inputRelay.ConnectEvent(ResetSequenceEvent.InputEvent, ResetCounter);
     }
     #endregion
 
     #region Base Functionality
     public override void GetEvents(List<Enum> inputEventsUsed)
     {
-        throw new NotImplementedException();
+        inputEventsUsed.Add(IterateSequenceEvent.InputEvent);
+        inputEventsUsed.Add(ResetSequenceEvent.InputEvent);
     }
-    public virtual void ResetCounter()
-    {
-        throw new NotImplementedException();
-    }
+
     #endregion
 
     #region Custom Functionality
-
+    public virtual void ResetCounter()
+    {
+        _currIndex = 0;
+    }
+    public virtual void IterateSequence()
+    {
+        _currIndex++;
+        if (_currIndex > MaxIndex)
+        {
+            _currIndex = 0;
+        }
+    }
     #endregion
 
     #region Stack Status
     public override float GetIndexData()
     {
-        throw new NotImplementedException();
+        return GetStatus();
     }
 
     public override float GetStatus()
     {
-        throw new NotImplementedException();
+        return ((float)_currIndex) / MaxIndex;
     }
     #endregion
 }

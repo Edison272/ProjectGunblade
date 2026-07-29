@@ -70,7 +70,7 @@ public class AmmoCounter : StackCounter
     #region Initalizers
     public AmmoCounter()
     {
-        stackCounterType = StackCountType.Ammo;
+        stackCounterType = GetExpectedStackCountType();
         basicAmmoStats.SetDefaults();
     }
     public AmmoCounter(AmmoCounter copied)

@@ -59,7 +59,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     // [field: Header("AI")]
     public int faction_tag = 1;
     // [SerializeField] protected bool is_AI_active = true;
-    //public BehaviorController behavior_controller;    
+    private BehaviorController _behaviorController;    
     
     [field: Header("Character Control")]
     private bool MainInputActive;
@@ -68,6 +68,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     private InputEventRelay controllerRelay; // reference to the input thing controlling this guy
     
     public Action<Character> OnDeath;
+    public static readonly LayerMask find_character_mask = 1 << 6; // keep this here for now
 
     #region initalizers
     // Initialize op if it's a prefab that's placed on the scene, and has 
@@ -128,7 +129,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
         // interactEvention_range = base_data.interactEvention_range;
 
         // // setup AI
-        // CreateBehaviorController();
+        _behaviorController = new BehaviorController(this);
     }
     // make sure the operator LOOKS ready
     public void GetReady()
@@ -136,8 +137,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
         Inventory.SwitchItem(0);
         Anatomy.IdlePosition();
     }
-
-    // public virtual void CreateBehaviorController() {behavior_controller = new BehaviorController(this);}
     public virtual void ResetEventData()
     {
         
@@ -378,7 +377,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
             resultList = new List<Collider2D>();
         }
         ContactFilter2D searchFilter = new ContactFilter2D();
-        searchFilter.SetLayerMask(IInteractable.find_interactable_mask);
+        searchFilter.SetLayerMask(Character.find_character_mask);
         searchFilter.useLayerMask = true; // Actively use the mask
         Physics2D.OverlapCircle(searchPosition, searchRadius, searchFilter, resultList);
         return resultList;
