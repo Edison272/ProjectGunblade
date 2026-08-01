@@ -113,7 +113,7 @@ public class BehaviorController
         //     }
             
         //     // only switch targets if the target is in close quarters range
-        //     Character targ = GameOverseer.GetTargetCharacter(character.faction_tag, character, character.close_range, TargetType.Closest);
+        //     Character targ = GameOverseer.GetTargetCharacter(character._FactionTag, character, character.close_range, TargetType.Closest);
         //     if (targ)
         //     {
         //         character.target = targ;
@@ -137,7 +137,7 @@ public class BehaviorController
         // } 
         // else
         // {
-        //     Character targ = GameOverseer.GetTargetCharacter(character.faction_tag, character, character.curr_range * 3, favorite_target);
+        //     Character targ = GameOverseer.GetTargetCharacter(character._FactionTag, character, character.curr_range * 3, favorite_target);
         //     Debug.DrawLine(character.GetPosition(), character.GetPosition() + character.aim_dir * character.curr_range * 3, Color.black);
         //     if (targ)
         //     {
@@ -146,7 +146,7 @@ public class BehaviorController
         // }
 
         // // orders & context will add a bunch of stuff to the queue which the AI will handle 1 by 1
-        // if (character.destination_reached)
+        // if (character.DestinationReached)
         // {
         //     if (movement_queue.Count > 0)
         //     {
@@ -154,7 +154,7 @@ public class BehaviorController
         //         move();
         //         estimated_travel_time = character.GetTravelTime();
         //         curr_travel_time = 0;
-        //         prev_tile_pos = character.current_tile_pos;
+        //         prev_tile_pos = character.CurrentTilePos;
         //         //Debug.Log("movement queue in use");
         //     }
 

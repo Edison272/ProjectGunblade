@@ -34,13 +34,19 @@ public class MeleeBehavior : MonoBehaviour
 
     [field: Header("Ownership")]
     string object_tag = "Untagged";
-    int faction_tag = 1;
     Character owner;
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag != object_tag && collision.gameObject.tag != "NoHit")
         {
+            if (collision.gameObject.TryGetComponent<Character>(out Character character))
+            {
+                if (character.FactionTag == object_tag)
+                {
+                    return;
+                }
+            }
             atk_stats.ApplyData(sourcePos, collision.gameObject);
         }
     }
@@ -74,7 +80,6 @@ public class MeleeBehavior : MonoBehaviour
         if (owner)
         {
             object_tag = owner.gameObject.tag;
-            faction_tag = owner.faction_tag;
         }
         // adjust size & position based on new size
         main_body.transform.localScale = main_body.transform.localScale * Mathf.Abs(mele_data.typeData.melee_size);

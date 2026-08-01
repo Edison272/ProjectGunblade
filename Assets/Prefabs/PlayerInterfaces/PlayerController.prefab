@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d090f8aa6148fa04ea255e65deeee8f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  inputRelay:
+    IsActive: 1
   main_cinema_cam: {fileID: 4857097571171129144}
   main_cam: {fileID: 0}
   active_character: {fileID: 0}
@@ -90,7 +92,6 @@ GameObject:
   - component: {fileID: 4505813278103081325}
   - component: {fileID: 4857097571171129144}
   - component: {fileID: 686047277535024020}
-  - component: {fileID: 320713966474037461}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -187,15 +188,3 @@ MonoBehaviour:
     Time: 0
     Smoothing: 0
     IgnoreY: 0
---- !u!114 &320713966474037461
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7819042489349763990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a8a05de0ac134f4f9d01bef6b9da077, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachinePixelPerfect

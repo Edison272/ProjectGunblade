@@ -8,72 +8,83 @@ using UnityEngine.UIElements;
 public class MovementComponent
 {
     [field: Header("Base Data")]
-    public readonly float base_move_speed;
-    public readonly float base_mass;
-    public readonly float base_lin_damp;
+    public readonly float BaseMoveSpeed = 100;
+    public readonly float BaseMass = 7;
+    public readonly float BaseLinearDamp = 7; 
+    
     [field: Header("Movement")]
-    [field: SerializeField] public float move_speed {get; private set;} = 1; // maximum speed an operator can move at
-    public Vector2 move_dir {get; private set;} = Vector2.zero;
-    public Vector2 move_pos {get; private set;} = Vector2.zero;
-    private Vector2 lerp_move_pos = Vector2.zero;
-    [field: SerializeField] public bool destination_reached {get; private set;} = false;
-    public Vector2 last_move_dir {get; private set;} = Vector2.zero;
-    public Vector2 force_dir {get; private set;} = Vector2.zero;
-    [SerializeField] private Rigidbody2D entity_rb;
-    public Vector2Int current_tile_pos = Vector2Int.zero;
+    [field: SerializeField] public float MoveSpeed {get; private set;} = 1; // maximum speed an operator can move at
+    public Vector2 MoveDir {get; private set;} = Vector2.zero;
+    public Vector2 MovePos {get; private set;} = Vector2.zero;
+    public bool DestinationReached {get; private set;} = false;
+    public Vector2 LastMoveDir {get; private set;} = Vector2.zero;
+    public Rigidbody2D EntityRB {get; private set;}
+    public Vector2Int CurrentTilePos {get; private set;} = Vector2Int.zero;
 
     [field: Header("Stat Changes")]
-    public List<SpeedModifier> move_speed_modifiers = new List<SpeedModifier>();
+    [field: SerializeField] public List<SpeedModifier> MoveSpeedModifiers {get; private set;} = new List<SpeedModifier>();
 
     // speed data scalar
-    [field: SerializeField] public float speed_scale {get; private set;} = 1; // maximum speed an operator can move at
-    [field: SerializeField] public float weight_scale {get; private set;} = 1; // how much the operator can resist external forces
+    [field: SerializeField] public float SpeedScale {get; private set;} = 1; // maximum speed an operator can move at
+    [field: SerializeField] public float WeightScale {get; private set;} = 1; // how much the operator can resist external forces
 
     #region Constructor
+    public MovementComponent(MovementComponent copied, Rigidbody2D rigidbody)
+    {
+        this.EntityRB = rigidbody;
+        BaseMoveSpeed = copied.BaseMoveSpeed;
+        BaseMass = copied.BaseMass;
+        EntityRB.mass = BaseMass;
+        BaseLinearDamp = EntityRB.linearDamping;
+    }
     public MovementComponent(CharacterSO character_data, Rigidbody2D entity_rb)
     {
-        this.entity_rb = entity_rb;
-        base_move_speed = character_data.speed;
-        base_mass = character_data.mass;
-        move_speed = base_move_speed;
-        entity_rb.mass = base_mass;
-        base_lin_damp = entity_rb.linearDamping;
+        EntityRB = entity_rb;
+        BaseMoveSpeed = character_data.speed;
+        BaseMass = character_data.weight;
+        BaseLinearDamp = character_data.weight;
+        MoveSpeed = BaseMoveSpeed;
 
-        // set rb stats
-        entity_rb.mass = character_data.mass;
+        EntityRB = entity_rb;
+        EntityRB.mass = BaseMass;
+        EntityRB.linearDamping = BaseLinearDamp;
     }
     public void ResetMovementComponent()
     {
-        move_speed = base_move_speed;
-        move_dir = Vector2.zero;
-        move_pos = Vector2.zero;
-        destination_reached = true;
-        force_dir = Vector2.zero;
+        MoveDir = Vector2.zero;
+        MovePos = Vector2.zero;
+        DestinationReached = true;
 
-        move_speed_modifiers.Clear();
+        MoveSpeedModifiers.Clear();
+
+        SpeedScale = 1f;
+        WeightScale = 1f;
+
+        EntityRB.mass = BaseMass;
+        EntityRB.linearDamping = BaseLinearDamp;
     }
     #endregion
     
     #region Set Values
     public void SetPosition(Vector2 new_position)  // completely change positions and forget where they wanted to go before
     {
-        entity_rb.position = new_position;
-        move_pos = new_position;
-        destination_reached = true;
+        EntityRB.position = new_position;
+        MovePos = new_position;
+        DestinationReached = true;
     }
-    public void SetMove(Vector2 set_move_dir) // get directional movement, useful for dynamic & sudden maneuvers
+    public void SetMove(Vector2 set_MoveDir) // get directional movement, useful for dynamic & sudden maneuvers
     {
-        last_move_dir = move_dir;
-        destination_reached = false;
-        move_dir = set_move_dir.normalized;
-        move_pos = GetPosition() + move_dir * 1000;
+        LastMoveDir = MoveDir;
+        DestinationReached = false;
+        MoveDir = set_MoveDir.normalized;
+        MovePos = GetPosition() + MoveDir * 1000;
     }
-    public void SetMovePos(Vector2 set_move_pos) // get targetPosition, useful for AI with discrete positioning
+    public void SetMovePos(Vector2 set_MovePos) // get targetPosition, useful for AI with discrete positioning
     {
-        last_move_dir = move_dir;
-        destination_reached = false;
-        move_dir = (set_move_pos - GetPosition()).normalized;
-        move_pos = set_move_pos;
+        LastMoveDir = MoveDir;
+        DestinationReached = false;
+        MoveDir = (set_MovePos - GetPosition()).normalized;
+        MovePos = set_MovePos;
     }
     #endregion
     #region Update
@@ -81,37 +92,37 @@ public class MovementComponent
 
     public void FixedUpdateMovement()
     {
-        if (move_dir.sqrMagnitude > 0)
+        if (MoveDir.sqrMagnitude > 0)
         {
-            entity_rb.AddForce(move_dir * move_speed, ForceMode2D.Force);
+            EntityRB.AddForce(MoveDir * MoveSpeed, ForceMode2D.Force);
         }
     }
     public void UpdateMovement()
     {
-        entity_rb.mass = base_mass * weight_scale;
-        entity_rb.linearDamping = base_lin_damp * weight_scale;
-        move_speed = base_move_speed * weight_scale * weight_scale * speed_scale;
+        EntityRB.mass = BaseMass * WeightScale;
+        EntityRB.linearDamping = BaseLinearDamp * WeightScale;
+        MoveSpeed = BaseMoveSpeed * WeightScale * WeightScale * SpeedScale;
         
-        // if (move_speed_modifiers.Count > 0)
+        // if (MoveSpeed_modifiers.Count > 0)
         // {
         //     float net_speed_modifier = 1f;
-        //     for(int i = move_speed_modifiers.Count-1; i >= 0; i--)
+        //     for(int i = MoveSpeed_modifiers.Count-1; i >= 0; i--)
         //     {
-        //         SpeedModifier speed_mod = move_speed_modifiers[i];
+        //         SpeedModifier speed_mod = MoveSpeed_modifiers[i];
         //         if (speed_mod.effect_complete)
         //         {
         //             // swap n pop removal
-        //             int list_end = move_speed_modifiers.Count - 1;
-        //             move_speed_modifiers[i] = move_speed_modifiers[list_end];
-        //             move_speed_modifiers.RemoveAt(list_end); 
+        //             int list_end = MoveSpeed_modifiers.Count - 1;
+        //             MoveSpeed_modifiers[i] = MoveSpeed_modifiers[list_end];
+        //             MoveSpeed_modifiers.RemoveAt(list_end); 
         //         }
         //         else
         //         {
         //             net_speed_modifier *= speed_mod.UpdateModifier();
-        //             move_speed_modifiers[i] = speed_mod;
+        //             MoveSpeed_modifiers[i] = speed_mod;
         //         }
         //     }
-        //     move_speed = base_move_speed * net_speed_modifier;
+        //     MoveSpeed = BaseMoveSpeed * net_speed_modifier;
         // }
         
     }
@@ -119,15 +130,15 @@ public class MovementComponent
 
     #region Core
     // get normalized input direction, movement component starts moving!
-    public void StartMove(Vector2 move_dir)
+    public void StartMove(Vector2 MoveDir)
     {
-        this.move_dir = move_dir;
+        this.MoveDir = MoveDir;
     }
 
     // resets internal movement data
     public void StopMove()
     {
-        this.move_dir = Vector2.zero;
+        this.MoveDir = Vector2.zero;
     }
     private float Accelerate(float modifier = 1f)
     {
@@ -135,23 +146,23 @@ public class MovementComponent
     }
     #endregion
     #region Get Values
-    private Vector2 GetPosition() {return entity_rb.position;}
+    private Vector2 GetPosition() {return EntityRB.position;}
     public float GetTravelTime() // return how long it is expected to take for the operator to reach their position
     {
-        return (move_pos - GetPosition()).magnitude / base_move_speed;
+        return (MovePos - GetPosition()).magnitude / BaseMoveSpeed;
     }
     #endregion
     #region Change Stats
     public void ForceMove(Vector2 direction, float scalar, bool movement_override = false)
     {
         // // if movement override ()
-        // float force_mult = movement_override ? weight_scale : 0;
-        entity_rb.AddForce(direction * scalar, ForceMode2D.Impulse);
+        // float force_mult = movement_override ? WeightScale : 0;
+        EntityRB.AddForce(direction * scalar, ForceMode2D.Impulse);
     }
     // public void ChangeSpeed(float speed_modifier, float duration, bool is_decaying, AbilityEffectComponent effect_controller)
     // {
     //     curr_accel_time *= speed_modifier;
-    //     move_speed_modifiers.Add(new SpeedModifier(speed_modifier, duration, is_decaying, effect_controller));
+    //     MoveSpeed_modifiers.Add(new SpeedModifier(speed_modifier, duration, is_decaying, effect_controller));
     // }
     #endregion
 }

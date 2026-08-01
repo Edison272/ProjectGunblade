@@ -13,6 +13,10 @@ public enum GlobalEvent
 {
     Update, 
 }
+public enum InterfaceEvent
+{
+    Scroll,
+}
 public enum CharacterEvent
 {
     MoveStart,

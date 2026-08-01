@@ -8,10 +8,10 @@ public interface IMovement
 
     MovementComponent Movement {get;}
     
-    void Move(); // update rb position based on move_dir
-    // void SetMove(Vector2 set_move_dir); // set the move_dir
-    void StartMove(Vector2 move_dir);
-    void StopMove(); // set move_dir to zero
+    void Move(); // update rb position based on MoveDir
+    // void SetMove(Vector2 set_MoveDir); // set the MoveDir
+    void StartMove(Vector2 MoveDir);
+    void StopMove(); // set MoveDir to zero
     void ForceMove(Vector2 direction, float scalar, bool movement_override = false); // apply knockback or dashing
     //void ChangeSpeed(float scale_base, float duration, bool is_decaying, AbilityEffectComponent effect_controller = null); // increase or decrease speed
 }

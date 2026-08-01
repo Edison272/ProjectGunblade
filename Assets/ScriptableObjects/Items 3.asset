@@ -48,13 +48,15 @@ MonoBehaviour:
           AnimSpeed: 1
         cooldownTime: 0.6
         StartCooldownEvent:
-          InputEventType: 1
+          InputEventType: 2
           _globalInput: 0
+          _interfaceInput: 0
           _characterInput: 3
           _usableInput: 2
         ResetCooldownEvent:
-          InputEventType: 2
+          InputEventType: 3
           _globalInput: 0
+          _interfaceInput: 0
           _characterInput: 0
           _usableInput: 3
     - rid: 2198171788663324748
@@ -86,13 +88,15 @@ MonoBehaviour:
           AnimSpeed: 1
         MaxIndex: 2
         IterateSequenceEvent:
-          InputEventType: 2
+          InputEventType: 3
           _globalInput: 0
+          _interfaceInput: 0
           _characterInput: 2
           _usableInput: 2
         ResetSequenceEvent:
-          InputEventType: 2
+          InputEventType: 3
           _globalInput: 0
+          _interfaceInput: 0
           _characterInput: 0
           _usableInput: 3
         ResetAfterCooldown: 0

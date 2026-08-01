@@ -801,18 +801,11 @@ MonoBehaviour:
     aim_angle: 0
   animator: {fileID: 6288781344798074604}
   <Movement>k__BackingField:
-    <move_speed>k__BackingField: 0
-    <destination_reached>k__BackingField: 0
-    entity_rb: {fileID: 0}
-    current_tile_pos: {x: 0, y: 0}
-    move_speed_modifiers: []
-    <speed_scale>k__BackingField: 0
-    <weight_scale>k__BackingField: 0
-  current_tile_pos: {x: 0, y: 0}
-  <health_component>k__BackingField:
-    <curr_health>k__BackingField: 0
-    <max_health>k__BackingField: 0
-    <shield>k__BackingField: 0
+    <BaseMoveSpeed>k__BackingField: 100
+    <BaseMass>k__BackingField: 5
+    <BaseLinearDamp>k__BackingField: 5
+  <Health>k__BackingField:
+    <BaseMaxHealth>k__BackingField: 100
     health_ticks: []
   health_ui:
     bg_bar: {fileID: 0}
@@ -824,7 +817,7 @@ MonoBehaviour:
     inventorySlots: []
   interactEvention_range: 1
   target: {fileID: 0}
-  faction_tag: 1
+  FactionTag: Allies
 --- !u!95 &6288781344798074604
 Animator:
   serializedVersion: 7

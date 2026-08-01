@@ -17,17 +17,16 @@ public class PointerController
 
     [Header("Camera & Rect")]
     private Camera _cam;
-    private Rect _camRect;
 
     public PointerController(Camera camera)
     {
         _cam = camera;
-        _camRect = _cam.pixelRect;
         ResetView(_cam.transform.position);
     }
     public void ResetView(Vector2 ResetLookPos)
     {
-        _pixelPos = new Vector2(_camRect.width/2, _camRect.height/2);
+        Rect camRect = _cam.pixelRect;
+        _pixelPos = new Vector2(camRect.width/2, camRect.height/2);
         _worldPos = _cam.ScreenToWorldPoint(_pixelPos);
         _viewportPos = _cam.ViewportToWorldPoint(_pixelPos);
     }
@@ -36,10 +35,13 @@ public class PointerController
     {
         // source pos is a character position
         this._sourcePos = sourcePos;
+        Rect camRect = _cam.pixelRect;
+
+
         _pixelPos += pointerDelta;
         _pixelPos = new Vector2(
-            Mathf.Clamp(_pixelPos.x, _camRect.xMin, _camRect.xMax),
-            Mathf.Clamp(_pixelPos.y, _camRect.yMin, _camRect.yMax)
+            Mathf.Clamp(_pixelPos.x, camRect.xMin, camRect.xMax),
+            Mathf.Clamp(_pixelPos.y, camRect.yMin, camRect.yMax)
         );
         _worldPos = _cam.ScreenToWorldPoint(_pixelPos);
         _viewportPos = _cam.ViewportToWorldPoint(_pixelPos);

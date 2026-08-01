@@ -8,6 +8,7 @@ using System.Reflection;
 public enum InputEventType {
     None = -1,
     Global, 
+    Interface,
     Character, 
     Usable,
 };
@@ -20,6 +21,7 @@ public class InputEventSelector
     public InputEventType InputEventType = InputEventType.Character;
     public Enum InputEvent => GetInputEvent();
     [SerializeField] private GlobalEvent _globalInput = GlobalEvent.Update;
+    [SerializeField] private InterfaceEvent _interfaceInput = InterfaceEvent.Scroll;
     [SerializeField] private CharacterEvent _characterInput = CharacterEvent.MoveStart;
     [SerializeField] private UsableEvent _usableInput = UsableEvent.Equip;
 
@@ -37,6 +39,9 @@ public class InputEventSelector
             case GlobalEvent global:
                 SetInputEvent((GlobalEvent)inputEvent);
                 break;
+            case InterfaceEvent ui:
+                SetInputEvent((GlobalEvent)inputEvent);
+                break;
             case CharacterEvent character:
                 SetInputEvent((CharacterEvent)inputEvent);
                 break;
@@ -52,6 +57,12 @@ public class InputEventSelector
     {
         _globalInput = value;
         InputEventType = InputEventType.Global;
+    }
+
+    public void SetInputEvent(InterfaceEvent value)
+    {
+        _interfaceInput = value;
+        InputEventType = InputEventType.Interface;
     }
 
     public void SetInputEvent(CharacterEvent value)
@@ -72,6 +83,7 @@ public class InputEventSelector
         switch (InputEventType)
         {
             case InputEventType.Global: return typeof(GlobalEvent);
+            case InputEventType.Interface: return typeof(InterfaceEvent);
             case InputEventType.Character: return typeof(CharacterEvent);
             case InputEventType.Usable: return typeof(UsableEvent);
         }
@@ -83,6 +95,7 @@ public class InputEventSelector
         switch (InputEventType)
         {
             case InputEventType.Global: return _globalInput;
+            case InputEventType.Interface: return _interfaceInput;
             case InputEventType.Character: return _characterInput;
             case InputEventType.Usable: return _usableInput;
         }
@@ -101,6 +114,8 @@ public class InputEventSelector
         {
             case GlobalEvent global:
                 return InputEventType.Global;
+            case InterfaceEvent ui:
+                return InputEventType.Interface;
             case CharacterEvent character:
                 return InputEventType.Character;
             case UsableEvent usable:
@@ -113,18 +128,7 @@ public class InputEventSelector
 
     public static Type GetTypeFromEnum(Enum inputEvent)
     {
-        switch (inputEvent)
-        {
-            case GlobalEvent global:
-                return typeof(GlobalEvent);
-            case CharacterEvent character:
-                return typeof(CharacterEvent);
-            case UsableEvent usable:
-                return typeof(UsableEvent);
-            default:
-                Debug.LogWarning($"Unsupported enum type: {inputEvent.GetType()}");
-                return null;
-        }
+        return GetTypeFromInt(Convert.ToInt32(GetInputEventTypeFromEnum(inputEvent)));
     }
     public static int GetEnumLength(Enum inputEvent)
     {
@@ -136,6 +140,8 @@ public class InputEventSelector
         {
             case InputEventType.Global:
                 return typeof(GlobalEvent);
+            case InputEventType.Interface: 
+                return typeof(InterfaceEvent);
             case InputEventType.Character:
                 return typeof(CharacterEvent);
             case InputEventType.Usable:

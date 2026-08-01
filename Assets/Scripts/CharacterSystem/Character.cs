@@ -1,15 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-using CustomDataStructures;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Unity.VisualScripting;
-using NUnit.Framework;
+
+using GameAI.Factions;
+using Unity.Mathematics;
 public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
 public class Character : MonoBehaviour, IMovement, IHealth
 {
@@ -20,23 +15,21 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public Animator animator;
     [field: Header("Movement")]
     [field: SerializeField] public MovementComponent Movement {get; private set;}
-    public float move_speed => Movement.move_speed; //maximum speed an operator can move at
-    public Vector2 move_dir => Movement.move_dir;
-    public Vector2 move_pos => Movement.move_pos;
-    public bool destination_reached => Movement.destination_reached;
-    public Vector2 last_move_dir => Movement.last_move_dir;
-    public Vector2 force_dir => Movement.force_dir;
-    public Rigidbody2D entity_rb {get; private set;}
-    public Vector2Int current_tile_pos = Vector2Int.zero;
+    public float move_speed => Movement.MoveSpeed; //maximum speed an operator can move at
+    public Vector2 MovePos => Movement.MovePos;
+    public bool DestinationReached => Movement.DestinationReached;
+    public Vector2 LastMoveDir => Movement.LastMoveDir;
+    public Rigidbody2D entity_rb => Movement.EntityRB;
+    public Vector2Int CurrentTilePos => Movement.CurrentTilePos;
     public Vector2 Position => GetPosition(); // a more compact way of accessing player position
 
     [field: Header("Health Stuff")]
-    [field: SerializeField] public HealthComponent health_component {get; private set;}
-    public int curr_health => health_component.curr_health;
-    public int max_health => base_data.health;
-    public int shield => health_component.shield;
-    public float health_ratio => health_component.health_ratio;
-    public bool is_alive => health_component.is_alive;
+    [field: SerializeField] public HealthComponent Health {get; private set;}
+    public int CurrHealth => Health.CurrHealth;
+    public int MaxHealth => Health.MaxHealth;
+    public int shield => Health.shield;
+    public float health_ratio => Health.health_ratio;
+    public bool is_alive => Health.is_alive;
 
     [field: Header("Health UI")]
     [SerializeField] HealthUI health_ui = new HealthUI();
@@ -57,8 +50,8 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public float close_range => base_data.close_range;
 
     // [field: Header("AI")]
-    public int faction_tag = 1;
-    // [SerializeField] protected bool is_AI_active = true;
+    public string FactionTag = "None"; // string tags. be careful
+    [SerializeField] protected bool is_AI_active = true;
     private BehaviorController _behaviorController;    
     
     [field: Header("Character Control")]
@@ -107,30 +100,28 @@ public class Character : MonoBehaviour, IMovement, IHealth
         characterRelay.ConnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Anatomy.Look);
         characterRelay.ConnectEvent(CharacterEvent.Interact, Interact);
 
-        AssignBaseData(base_data);
-        GetReady();
-    }
-
-    // get base data from a scriptable object and assign them here. Called once at when this object is created
-    public void AssignBaseData(CharacterSO base_data)
-    {
-        this.base_data = base_data;
         // setup movement
-        entity_rb = this.GetComponent<Rigidbody2D>();
+        Movement = new MovementComponent(base_data, GetComponent<Rigidbody2D>());
+        // setup health
+        Health = new HealthComponent(base_data);
+        health_ui.InitializeHealthUI(Health);
         // setup VFX & Body parts
         Anatomy.Setup(entity_rb, animator);
-        // setup health & related ui
-        health_component = new HealthComponent(max_health, base_data.spawn_shield);
-        health_ui.InitializeHealthUI(health_component);
-        // setup movement
-        Movement = new MovementComponent(base_data, entity_rb);
-        // inventory
+        // setup unventory (must be done after anatomy)
         Inventory = new InventoryComponent(base_data, this);
-        // interactEvention_range = base_data.interactEvention_range;
-
         // // setup AI
         _behaviorController = new BehaviorController(this);
     }
+    void Start()
+    {
+        // will join or create their own factions automatically if one is listed.
+        if (FactionTag != "None")
+            FactionManager.Instance.RegisterFaction(FactionTag).AddMember(this);
+
+        
+        GetReady();
+    }
+
     // make sure the operator LOOKS ready
     public void GetReady()
     {        
@@ -141,14 +132,12 @@ public class Character : MonoBehaviour, IMovement, IHealth
     {
         
     }
-    // public void SetFactionTag(int tag) {faction_tag = tag;}
 
-    public void ConnectToEventBus(Action<Character> death)
+    // used to instantiate the character for the first time or during runtime
+    public Character Clone(Vector3 position)
     {
-        OnDeath += death;
+        return Instantiate(this.gameObject, position, quaternion.identity).GetComponent<Character>();
     }
-
-
 
     #endregion
 
@@ -183,19 +172,19 @@ public class Character : MonoBehaviour, IMovement, IHealth
             characterRelay.Invoke(CharacterEvent.AltUpdate);   
 
         // Update health
-        health_component.UpdateHealth();
+        Health.UpdateHealth();
         Movement.UpdateMovement();
         animator.SetBool("Moving", entity_rb.linearVelocity.sqrMagnitude > 0.1f);
-        animator.speed = Movement.speed_scale;
+        animator.speed = Movement.SpeedScale;
 
         // set switch item time duration
         Inventory.Update();
 
         // if (is_AI_active && !target)
         // {
-        //     if (!destination_reached)
+        //     if (!DestinationReached)
         //     {
-        //         Look(move_pos);
+        //         Look(MovePos);
         //     }
         //     // else
         //     // {
@@ -277,16 +266,16 @@ public class Character : MonoBehaviour, IMovement, IHealth
     // completely change positions and forget where they wanted to go before
     public void SetPosition(Vector2 new_position)  {Movement.SetPosition(new_position);}
     // get directional movement, useful for dynamic & sudden maneuvers
-    public void SetMove(Vector2 set_move_dir) {Movement.SetMove(set_move_dir);}
+    public void SetMove(Vector2 set_MoveDir) {Movement.SetMove(set_MoveDir);}
     // get targetPosition, useful for AI with discrete positioning
-    public void SetMovePos(Vector2 set_move_pos) {Movement.SetMovePos(set_move_pos);}
+    public void SetMovePos(Vector2 set_MovePos) {Movement.SetMovePos(set_MovePos);}
     public void Move() 
     {
         // bool move_state = animator.GetBool("Moving");
         // move_state = Movement.Move(move_state);
         // animator.SetBool("Moving", move_state);
     }
-    public void StartMove(Vector2 move_dir) {Movement.StartMove(move_dir);}
+    public void StartMove(Vector2 MoveDir) {Movement.StartMove(MoveDir);}
     public void StopMove() {Movement.StopMove();}
 
     // return how long it is expected to take for the operator to reach their position
@@ -303,16 +292,21 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #endregion
 
     #region Damage/Health System
-    public virtual void ChangeHealth(int change_amt) {health_component.ChangeHealth(change_amt);}
+    public virtual void ChangeHealth(int change_amt) {Health.ChangeHealth(change_amt);}
     // public virtual void ChangeHealthTick(int change_amt, float duration, float tick_rate, AbilityEffectComponent effect_controller = null) 
     // {
-    //     health_component.ChangeHealthTick(change_amt, duration, tick_rate, effect_controller);
+    //     Health.ChangeHealthTick(change_amt, duration, tick_rate, effect_controller);
     // }
-    // public virtual void MaxHealthBoost(int boost_amt, float duration, AbilityEffectComponent effect_controller = null) {health_component.MaxHealthBoost(boost_amt, duration, effect_controller);}
-    // public virtual void ShieldBoost(int boost_amt) {health_component.ShieldBoost(boost_amt);}
+    // public virtual void MaxHealthBoost(int boost_amt, float duration, AbilityEffectComponent effect_controller = null) {Health.MaxHealthBoost(boost_amt, duration, effect_controller);}
+    // public virtual void ShieldBoost(int boost_amt) {Health.ShieldBoost(boost_amt);}
     #endregion
 
     #region  AI Stuff
+    public void SetFaction()
+    {
+        FactionData faction = FactionManager.Instance.RegisterFaction(FactionTag);
+        faction.AddMember(this);
+    }
 
     // // public ContactPoint2D[] GetAllInRange()
     // // {
@@ -341,6 +335,8 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #endregion
 
     #region AI
+    public void SetFaction(string newTag) {FactionTag = newTag;}
+
     public TargetData GetTargetData(TargetDataRequest targetDataRequest)
     {
         TargetData newTargData = new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero).SetOwner(this);

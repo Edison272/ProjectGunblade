@@ -5,17 +5,17 @@ using UnityEngine;
 [System.Serializable]
 public class HealthComponent
 {
-    [field: Header("Origin Data")]
-    private readonly int origin_max_health;
-    private readonly int start_shield;
+    [field: Header("Base Data")]
+    public readonly int BaseMaxHealth = 100;
+
     [field: Header("Current Data")]
-    [field: SerializeField] public int curr_health {get; private set;}
-    [field: SerializeField] public int max_health {get; private set;}
+    [field: SerializeField] public int CurrHealth {get; private set;}
+    [field: SerializeField] public int MaxHealth {get; private set;}
     [field: SerializeField] public int shield {get; private set;}
-    public float health_ratio => curr_health/(float)max_health;
-    public int total_curr_hitpoints => curr_health + shield;
-    public int total_max_hitpoints => max_health + shield;
-    public bool is_alive => curr_health > 0;
+    public float health_ratio => CurrHealth/(float)MaxHealth;
+    public int total_curr_hitpoints => CurrHealth + shield;
+    public int total_max_hitpoints => MaxHealth + shield;
+    public bool is_alive => CurrHealth > 0;
     //public float  {get; private set;}
 
     private InputEventRelay _inputRelay;
@@ -24,19 +24,25 @@ public class HealthComponent
     [SerializeField] List<ChangeHealthTick> health_ticks = new List<ChangeHealthTick>();
 
     #region initializers
-    public HealthComponent(int max_health, int start_shield, float spawn_health_perc = 1)
+    // copy constructor
+    public HealthComponent(HealthComponent copied)
     {
-        this.origin_max_health = max_health;
-        this.max_health = max_health;
-        this.curr_health = (int)(max_health * spawn_health_perc);
-        this.start_shield = start_shield;
-        this.shield = start_shield;
+        this.BaseMaxHealth = copied.MaxHealth;
+        this.MaxHealth = BaseMaxHealth;
+        this.CurrHealth = BaseMaxHealth;
+        this.shield = copied.shield;
+    }
+    public HealthComponent(CharacterSO base_data)
+    {
+        this.BaseMaxHealth = base_data.health;
+        this.MaxHealth = base_data.health;
+        this.CurrHealth = base_data.health;
+        this.shield = base_data.spawn_shield;
     }
     public void ResetHealthComponent(float spawn_health_perc = 1)
     {
-        max_health = origin_max_health;
-        shield = start_shield;
-        curr_health = (int)(max_health * spawn_health_perc);
+        MaxHealth = BaseMaxHealth;
+        CurrHealth = (int)(MaxHealth * spawn_health_perc);
 
         health_ticks.Clear();
     }
@@ -82,20 +88,20 @@ public class HealthComponent
             } 
             if (damage_amt > 0)
             {
-                curr_health -= damage_amt;
-                if (curr_health < 0)
+                CurrHealth -= damage_amt;
+                if (CurrHealth < 0)
                 {
-                    curr_health = 0;
+                    CurrHealth = 0;
                 }
             }
 
         } 
         else // negative damage is healing
         {
-            curr_health -= damage_amt;
-            if (curr_health > max_health)
+            CurrHealth -= damage_amt;
+            if (CurrHealth > MaxHealth)
             {
-                curr_health = max_health;
+                CurrHealth = MaxHealth;
             }
         }
     }
@@ -107,8 +113,8 @@ public class HealthComponent
     // public void MaxHealthBoost(int boost_amt, float duration, AbilityEffectComponent effect_controller)
     // {
     //     float curr_ratio = health_ratio;
-    //     max_health += boost_amt;
-    //     curr_health = (int)(max_health * curr_ratio);
+    //     MaxHealth += boost_amt;
+    //     CurrHealth = (int)(MaxHealth * curr_ratio);
     // }
     // public void ShieldBoost(int boost_amt)
     // {

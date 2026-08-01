@@ -28,12 +28,18 @@ public class ProjectileBehavior : MonoBehaviour
 
     [field: Header("Ownership")]
     string object_tag = "Untagged";
-    int faction_tag = 1;
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag != object_tag && collider.gameObject.tag != "NoHit")
+        if (collider.gameObject.tag != "NoHit")
         {
+            if (collider.gameObject.TryGetComponent<Character>(out Character character))
+            {
+                if (character.FactionTag == object_tag)
+                {
+                    return;
+                }
+            }
             atk_stats.ApplyData(_targetData.sourcePos, collider.gameObject);
             curr_pierce--;
             ProjectileEffects(collider.ClosestPoint(transform.position));
@@ -75,7 +81,6 @@ public class ProjectileBehavior : MonoBehaviour
         if (_targetData.owner)
         {
             object_tag = _targetData.owner.gameObject.tag;
-            faction_tag = _targetData.owner.faction_tag;
         }
 
         // adjust vfx rotation

@@ -17,9 +17,12 @@ public class CharacterSO : ScriptableObject
     public int spawn_shield = 0;
 
     [field: Header("Movement")]
-    public float mass = 10;
+    public float weight = 10;
     public float speed = 3;
-    [Range(0.01f,5f)] public float accel_time = 0.5f;
+
+
+
+
     public float range = 4;
     public float close_range = 3; // entering close range forces character to retarget
     public float interaction_range = 1;
@@ -33,13 +36,4 @@ public class CharacterSO : ScriptableObject
     public int TotalItemSlots = 2;
     public ItemSO[] inventory;
     public InventorySlot[] inventory_slots;
-
-    public Character GenerateChar(Vector3 pos)
-    {
-        GameObject op_object = MonoBehaviour.Instantiate(char_prefab, pos, Quaternion.identity);
-        Character new_op = op_object.GetComponent<Character>();
-        new_op.AssignBaseData(this);
-
-        return new_op;
-    }
 }

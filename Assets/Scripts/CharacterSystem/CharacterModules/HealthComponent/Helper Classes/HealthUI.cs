@@ -27,14 +27,14 @@ public class HealthUI
 
     public void SetHealth()
     {
-        // float max_health_ratio = (float)health_component.max_health / health_component.total_max_hitpoints;
-        // float shield_ratio = 1 - max_health_ratio;
+        // float MaxHealth_ratio = (float)health_component.MaxHealth / health_component.total_max_hitpoints;
+        // float shield_ratio = 1 - MaxHealth_ratio;
         
-        // health_bar.localScale = new Vector3(health_component.health_ratio * max_health_ratio, 1, 1);
+        // health_bar.localScale = new Vector3(health_component.health_ratio * MaxHealth_ratio, 1, 1);
 
         // shield_bar.localScale = new Vector3(shield_ratio, 1, 1);
         // Vector3 shield_bar_pos = health_bar.localPosition;
-        // shield_bar_pos.x += max_health_ratio;
+        // shield_bar_pos.x += MaxHealth_ratio;
         // shield_bar.transform.localPosition = shield_bar_pos;        
     }
 }

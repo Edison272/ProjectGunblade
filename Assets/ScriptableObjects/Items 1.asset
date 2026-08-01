@@ -58,6 +58,11 @@ MonoBehaviour:
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 1
+        StackAnimation:
+          AnimParameterName: Use
+          AnimParameterType: 9
+          <_animParamValue>k__BackingField: 0
+          AnimSpeed: 1
         basicAmmoStats:
           maxAmmo: 30
           currAmmo: 30
@@ -65,11 +70,13 @@ MonoBehaviour:
           UseAmmoEvent:
             InputEventType: 2
             _globalInput: 0
+            _interfaceInput: 0
             _characterInput: 2
             _usableInput: 2
           ReloadEvent:
             InputEventType: 2
             _globalInput: 0
+            _interfaceInput: 0
             _characterInput: 4
             _usableInput: 4
         regenAmmo: 0
@@ -78,14 +85,21 @@ MonoBehaviour:
       type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 3
+        StackAnimation:
+          AnimParameterName: Use
+          AnimParameterType: 9
+          <_animParamValue>k__BackingField: 0
+          AnimSpeed: 1
         cooldownTime: 0.1
         StartCooldownEvent:
-          InputEventType: 1
+          InputEventType: 2
           _globalInput: 0
+          _interfaceInput: 0
           _characterInput: 3
           _usableInput: 2
         ResetCooldownEvent:
-          InputEventType: 2
+          InputEventType: 3
           _globalInput: 0
+          _interfaceInput: 0
           _characterInput: 3
-          _usableInput: 0
+          _usableInput: 3

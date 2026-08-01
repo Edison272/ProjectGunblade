@@ -26,12 +26,14 @@ public class InventoryComponent
     // internal setup class
     public InventoryComponent(CharacterSO baseData, Character character)
     {
-        ItemSO[] initialized_inventory = baseData.inventory;
-        InventorySlot[] initialized_active_slots = baseData.inventory_slots;
         _character = character;
-        
+        SetupInventory(baseData.inventory, baseData.inventory_slots, baseData.HoldingCapacity);
+    }
+
+    public void SetupInventory(ItemSO[] initialized_inventory, InventorySlot[] initialized_active_slots, int HoldingCapacity)
+    {
         // sets inventory size to holding capacity, but will set to the init inventory if it's bigger
-        int holding_capacity = Mathf.Max(initialized_inventory.Length, baseData.HoldingCapacity);
+        int holding_capacity = Mathf.Max(initialized_inventory.Length, HoldingCapacity);
         inventory = new Item[holding_capacity];
         inventorySlots = new InventorySlot[initialized_active_slots.Length];
         
@@ -91,7 +93,6 @@ public class InventoryComponent
         }
         // the actual "switching" part which sets the current active slot
         curr_switch_cd = CurrentSlot.UnequipSpeed + 0.0001f; // set timer before equipping new weapons
-        Debug.Log(Time.time);
         SetInventorySlot(false); //unequipped item will call the "SetSwitchItem" in animator to set the new active item
         CurrentSlot = inventorySlots[_currSlotIndex];
         
@@ -99,7 +100,6 @@ public class InventoryComponent
 
     void SetInventorySlot(bool is_active) // unequip or equip the active slot
     {
-        Debug.Log(Time.time);
         if (is_active)
         {
             _character.Anatomy.SetAimStyle(CurrentSlot.IsAkimbo); // adjust how the item(s) look in the player's hands

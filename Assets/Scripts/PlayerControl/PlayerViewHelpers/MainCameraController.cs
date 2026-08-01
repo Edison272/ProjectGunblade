@@ -6,7 +6,6 @@ public class CameraController
 {
     [Header("Controlled Objects")]
     private Camera main_cam;
-    private Transform MainCameraHolder;
     private RectTransform player_screen;
 
     [Header("Camera Render Data")]
@@ -39,11 +38,10 @@ public class CameraController
     // private PlayerViewController player_view_controller;
 
     #region Setup & Reset
-    public CameraController(Transform CameraHolder, Camera main_cam, RectTransform player_screen)
+    public CameraController(Camera main_cam, RectTransform player_screen)
     {
         this.main_cam = main_cam;
         this.player_screen = player_screen;
-        MainCameraHolder = CameraHolder;
 
         // initialize values
         target_zoom = 1;

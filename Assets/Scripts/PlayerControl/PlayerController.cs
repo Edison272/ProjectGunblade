@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private InputAction _inputUseAlt;
     private InputAction _inputReset;
     private InputAction _inputInteract;
+    private InputAction _inputScroll;
 
     // Input Relay!
     public InputEventRelay inputRelay;
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
     // [SerializeField] CameraController main_cam_controller;
     [SerializeField] CinemachineCamera main_cinema_cam;
     [SerializeField] Camera main_cam;
+    private CameraController _cameraController;
 
     // Pointer/Mouse Control
     [SerializeField] PointerController _pointerController;
@@ -48,12 +50,15 @@ public class PlayerController : MonoBehaviour
         _inputUseAlt = _playerInput.actions["UseAlt"];
         _inputReset = _playerInput.actions["Reset"];
         _inputInteract = _playerInput.actions["Interact"];
+        _inputScroll = _playerInput.actions["Scroll"];
 
 
         // connect public events to input actions
         _inputMovement.performed += ctx => {inputRelay.Invoke(CharacterEvent.MoveStart, ctx.ReadValue<Vector2>());};
         _inputMovement.canceled += ctx => {inputRelay.Invoke(CharacterEvent.MoveEnd);};
         _inputLookDelta.started += ctx => {SetLookPosition(ctx.ReadValue<Vector2>());};
+
+        _inputScroll.performed += ctx => {InputScroll(ctx.ReadValue<Vector2>());};
 
         _inputUseMain.performed += ctx => {inputRelay.Invoke(CharacterEvent.MainStart);};
         _inputUseMain.canceled += ctx => {inputRelay.Invoke(CharacterEvent.MainEnd);};
@@ -68,6 +73,9 @@ public class PlayerController : MonoBehaviour
         inputRelay = new InputEventRelay(
             new (Enum, Type)[] {
                 (GlobalEvent.Update, typeof(Action)),
+                
+                //(InterfaceEvent.Scroll, typeof(Action<Vector2>)),
+
                 (CharacterEvent.MoveStart, typeof(Action<Vector2>)),
                 (CharacterEvent.MoveEnd, typeof(Action)),
                 (CharacterEvent.MainStart, typeof(Action)), 
@@ -78,14 +86,17 @@ public class PlayerController : MonoBehaviour
                 (CharacterEvent.AltEnd, typeof(Action)), 
                 (CharacterEvent.LookPos, typeof(Action<Vector2>)), 
                 (CharacterEvent.Interact, typeof(Action)), 
+                
                 (UsableEvent.ResetStart, typeof(Action)), 
             }
         );
         #endregion
+
         #region Awake - Pointer
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         _pointerController = new PointerController(main_cam);
+        //_cameraController = new CameraController();
         #endregion
     }
 
@@ -119,4 +130,14 @@ public class PlayerController : MonoBehaviour
         _pointerController.UpdateDelta(lookDelta, active_character.Position);
 
     }
+
+    #region UI Interaction
+    
+    public void InputScroll(Vector2 scrollVec)
+    {
+        float deltaScroll = scrollVec.y * Time.deltaTime;
+        Debug.Log(deltaScroll);
+    }
+
+    #endregion
 }

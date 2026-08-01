@@ -33,7 +33,6 @@ public class LinecastBehavior : MonoBehaviour
 
     [field: Header("Ownership")]
     string object_tag = "Untagged";
-    int faction_tag = 1;
     Character owner;
 
     void GenerateLinecast()
@@ -43,8 +42,15 @@ public class LinecastBehavior : MonoBehaviour
         int curr_pierce = atk_stats.pierce+1;
         foreach(RaycastHit2D contact in contacts)
         {
-            if (contact.transform.gameObject.tag != object_tag && contact.transform.gameObject.tag != "NoHit")
+            if (contact.transform.gameObject.tag != "NoHit")
             {
+                if (contact.transform.gameObject.TryGetComponent<Character>(out Character character))
+                {
+                    if (character.FactionTag == object_tag)
+                    {
+                        return;
+                    }
+                }
                 atk_stats.ApplyData(sourcePos, contact.transform.gameObject);
                 LinecastEffects(contact.point);
                 curr_pierce--;
@@ -102,7 +108,6 @@ public class LinecastBehavior : MonoBehaviour
         if (owner)
         {
             object_tag = owner.gameObject.tag;
-            faction_tag = owner.faction_tag;
         }
         // generate the physics linecast (this also sets a new end_pos based on where the linecast hits)
         GenerateLinecast();

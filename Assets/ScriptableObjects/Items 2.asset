@@ -53,11 +53,13 @@ MonoBehaviour:
           UseAmmoEvent:
             InputEventType: 2
             _globalInput: 0
+            _interfaceInput: 0
             _characterInput: 0
             _usableInput: 2
           ReloadEvent:
             InputEventType: 2
             _globalInput: 0
+            _interfaceInput: 0
             _characterInput: 0
             _usableInput: 4
         regenAmmo: 0
@@ -74,18 +76,21 @@ MonoBehaviour:
         MaxChargeTime: 2.5
         MinChargeTime: 1
         StartChargeEvent:
-          InputEventType: 1
+          InputEventType: 2
           _globalInput: 0
+          _interfaceInput: 0
           _characterInput: 2
           _usableInput: 0
         StopChargeEvent:
-          InputEventType: 1
+          InputEventType: 2
           _globalInput: 0
+          _interfaceInput: 0
           _characterInput: 4
           _usableInput: 2
         ResetChargeEvent:
-          InputEventType: 2
+          InputEventType: 3
           _globalInput: 0
+          _interfaceInput: 0
           _characterInput: 0
           _usableInput: 3
     - rid: 2198171788663324823
