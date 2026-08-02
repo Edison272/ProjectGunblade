@@ -1,16 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GameAI.Factions;
 using UnityEngine;
 
-/*
-Behavior Controller is used by Characters in order to control how they act. 
-- Contains a reference to the controlled character and calls functions to control the character
-- Assess the situation based on weights
-
-*/
+/// <summary>
+/// A Behavior Controller keeps track of the AI for one character
+/// 
+/// </summary>
 public class BehaviorController
 {
+    // Faction Information
+    private Squad _factionSquad; // which squad this char is assigned to
+    private FactionData _factionData => _factionSquad.Faction;
+    
     // protected Dictionary<CommandMode, BehaviorModule> behavior_modules = new Dictionary<CommandMode, BehaviorModule>();
 
     protected Queue<Action> movement_queue = new Queue<Action>();
@@ -77,6 +80,12 @@ public class BehaviorController
     //     }
     //     return this;
     // }
+
+    public BehaviorController SetSquad(Squad newFaction)
+    {
+        _factionSquad = newFaction;
+        return this;
+    }
 #endregion
 #region Update
     public virtual void UpdateAI()
@@ -214,6 +223,17 @@ public class BehaviorController
     //     return net_dir;
     // }
     #endregion
+
+    #region targetting
+    // public void Character FindTarget()
+    // {
+
+    // }
+
+
+    #endregion
+
+
     #region Data Modification Functions
     public void SetActionTime(float a_time, float r_time, bool set_acting = false)
     {

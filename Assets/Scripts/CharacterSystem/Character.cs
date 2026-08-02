@@ -21,7 +21,8 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public Vector2 LastMoveDir => Movement.LastMoveDir;
     public Rigidbody2D entity_rb => Movement.EntityRB;
     public Vector2Int CurrentTilePos => Movement.CurrentTilePos;
-    public Vector2 Position => GetPosition(); // a more compact way of accessing player position
+    public Vector2 Position => entity_rb.position; // a more compact way of accessing player position
+    public Vector2Int TilePosition => Vector2Int.RoundToInt(Position); // converting physics position to its integer-based tilemap positioning
 
     [field: Header("Health Stuff")]
     [field: SerializeField] public HealthComponent Health {get; private set;}
@@ -51,7 +52,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
     // [field: Header("AI")]
     public string FactionTag = "None"; // string tags. be careful
-    [SerializeField] protected bool is_AI_active = true;
+    [SerializeField] protected bool isAIActive = true;
     private BehaviorController _behaviorController;    
     
     [field: Header("Character Control")]
@@ -180,7 +181,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
         // set switch item time duration
         Inventory.Update();
 
-        // if (is_AI_active && !target)
+        // if (isAIActive && !target)
         // {
         //     if (!DestinationReached)
         //     {
@@ -205,13 +206,12 @@ public class Character : MonoBehaviour, IMovement, IHealth
         // {
         //     return;
         // }
-        // // movement
-        // Move();
+
         // // Update AI
-        // if (is_AI_active)
-        // {
-        //     behavior_controller.UpdateAI();
-        // }
+        if (isAIActive)
+        {
+            _behaviorController.UpdateAI();
+        }
         Movement.FixedUpdateMovement();
     }
 
@@ -305,7 +305,9 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public void SetFaction()
     {
         FactionData faction = FactionManager.Instance.RegisterFaction(FactionTag);
-        faction.AddMember(this);
+        Squad _faction_squad = faction.AddMember(this);
+
+        _behaviorController.SetSquad(_faction_squad);
     }
 
     // // public ContactPoint2D[] GetAllInRange()
@@ -315,7 +317,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     // // }
     // public void ToggleAI(bool is_on)
     // {
-    //     is_AI_active = is_on;
+    //     isAIActive = is_on;
     // }
 
     // public void SetLeader(Character new_leader)

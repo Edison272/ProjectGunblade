@@ -32,8 +32,7 @@ namespace GameAI.Factions
 
             foreach (FactionInitializer faction in initialFactions)
             {
-                Debug.Log(faction.DefaultMembers);
-                //_factions[faction.FactionName] = new FactionData(faction);
+                _factions[faction.FactionName] = new FactionData(faction);
             }
         }
 

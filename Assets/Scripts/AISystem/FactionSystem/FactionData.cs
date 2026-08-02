@@ -1,19 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace GameAI.Factions
-{
-    public enum FactionStanding { Hostile, Neutral, Friendly }
-
-    /// <summary>
-    /// Represents one faction: its identity, its relationships to other factions,
-    /// its current member list, and a shared Blackboard that all members of this
-    /// faction can read/write for faction-wide facts (e.g. "last known player position
-    /// reported by ANY member", "current alert level").
-    ///
+{    /// <summary>
     /// This is intentionally a plain C# class, not a MonoBehaviour or ScriptableObject —
     /// its data changes constantly at runtime and is owned/managed by FactionManager.
     /// </summary>
+    [Serializable]
     public class FactionData
     {
         public readonly string FactionName;
@@ -22,8 +16,8 @@ namespace GameAI.Factions
         /// Each Character under this faction shares and updates the same blackboard with info
         public readonly Blackboard SharedBlackboard = new Blackboard();
 
-        /// <summary>Members currently belonging to this faction. 
-        public readonly List<Character> Members = new List<Character>();
+        /// <summary> Members are assigned to squads
+        public readonly List<Squad> Squads = new List<Squad>();
 
         public FactionData(string factionName)
         {
@@ -36,22 +30,48 @@ namespace GameAI.Factions
             foreach(CharacterSpawner spawner in factionInitializer.DefaultMembers)
             {
                 CharacterSpawner new_spawner = MonoBehaviour.Instantiate(spawner, Vector3.zero, Quaternion.identity);
-                foreach(Character new_member in new_spawner.StartSpawn())
-                {
-                    Members.Add(new_member);
-                    Members[Members.Count-1].SetFaction(FactionName);
-                }
+                Squad newSquad = new Squad(this, new_spawner.StartSpawn());
+                Squads.Add(newSquad);
             }
         }
 
-        public void AddMember(Character member)
+        public Squad AddMember(Character member, Squad squad = null)
         {
-            if (!Members.Contains(member)) Members.Add(member);
+            if (squad == null)
+                squad = AssignSquad(member);
+            
+            squad.AddMember(member);
+            return squad;
+        }
+        public void RemoveMember(Character member, Squad squad)
+        {
+            squad.RemoveMember(member);
+        }
+        public void RemoveSquad(Squad squad)
+        {
+            Squads.Remove(squad);
         }
 
-        public void RemoveMember(Character member)
+        public Squad AssignSquad(Character member)
         {
-            Members.Remove(member);
+            Squad nearestSquad = null;
+            float closestDist = 100f;
+            foreach(Squad otherSquad in Squads)
+            {
+                float currDist = (otherSquad.Position - member.Position).sqrMagnitude;
+                if (currDist < closestDist)
+                {
+                    closestDist = currDist;
+                    nearestSquad = otherSquad;
+                }
+            }
+
+            // if no nearby squad exists, make one
+            if (nearestSquad == null)
+            {
+                nearestSquad = new Squad(this);
+            }
+            return nearestSquad;
         }
 
         // --- Common well-known faction-blackboard keys, mirroring Blackboard.Keys pattern ---
