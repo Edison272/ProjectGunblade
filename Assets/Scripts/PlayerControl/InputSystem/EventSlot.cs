@@ -10,7 +10,7 @@ public abstract class EventSlot
 {
     public abstract Type delegateType { get; }
     protected readonly InputEventRelay inputRelay;
-    public Delegate relayCallback; // other delegates can connect to this
+    protected Delegate relayCallback; // other delegates can connect to this
     protected readonly List<Delegate> _subscribers = new List<Delegate>();
 
     // slot control

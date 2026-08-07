@@ -51,13 +51,13 @@ MonoBehaviour:
           currAmmo: 30
           reloadSpeed: 0
           UseAmmoEvent:
-            InputEventType: 2
+            InputEventType: 3
             _globalInput: 0
             _interfaceInput: 0
             _characterInput: 0
             _usableInput: 2
           ReloadEvent:
-            InputEventType: 2
+            InputEventType: 3
             _globalInput: 0
             _interfaceInput: 0
             _characterInput: 0
@@ -73,8 +73,8 @@ MonoBehaviour:
           AnimParameterType: 9
           <_animParamValue>k__BackingField: 0
           AnimSpeed: 1
-        MaxChargeTime: 2.5
-        MinChargeTime: 1
+        MaxChargeTime: 2
+        MinChargeTime: 0
         StartChargeEvent:
           InputEventType: 2
           _globalInput: 0
@@ -106,7 +106,7 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          projectile_speed: 0.1
+          projectile_speed: 0.5
           homing_radius: 0
           HomingSpdScale: 1
           projectile_count: 3
@@ -125,7 +125,7 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          projectile_speed: 0.1
+          projectile_speed: 1
           homing_radius: 0
           HomingSpdScale: 1
           projectile_count: 1

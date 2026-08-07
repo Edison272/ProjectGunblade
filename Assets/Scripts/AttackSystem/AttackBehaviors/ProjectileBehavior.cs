@@ -19,7 +19,6 @@ public class ProjectileBehavior : MonoBehaviour
     AttackStats atk_stats;
     public float speed;
     public float HomingSpdScale;
-    public int curr_pierce;
 
     [field: Header("Physics")]
     public Rigidbody2D proj_rb;
@@ -27,22 +26,62 @@ public class ProjectileBehavior : MonoBehaviour
     float curr_travel_time = 0;
 
     [field: Header("Ownership")]
+    Character _owner = null;
     string object_tag = "Untagged";
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag != "NoHit")
+        if (collider.gameObject.tag != "NoHit" && collider.gameObject != _owner.gameObject)
         {
+            bool destroyObject = false;
+            if (collider.gameObject.layer == 6)
+            {
+                if (atk_stats.bounce > 0)
+                {                    
+                    RaycastHit2D hit = Physics2D.Raycast(proj_rb.position - proj_rb.linearVelocity * Time.fixedDeltaTime, proj_rb.linearVelocity.normalized, speed, (1 << 6));
+                    if (hit.collider != null)
+                    {
+                        proj_rb.position = hit.point;
+                        Debug.DrawLine(hit.point, hit.point + hit.normal, Color.azure, 3);
+                        Debug.Log(hit.normal);
+                        proj_rb.linearVelocity = Vector2.Reflect(proj_rb.linearVelocity, hit.normal);
+
+                        RotateToVelocity();
+                    }
+                    
+                    // Vector2 directionToOther = (collider.ClosestPoint(transform.position) - proj_rb.position - proj_rb.linearVelocity*Time.fixedDeltaTime).normalized;
+                    // proj_rb.linearVelocity = Vector2.Reflect(proj_rb.linearVelocity.normalized, -directionToOther) * speed;
+                    // Debug.Log(proj_rb.linearVelocity.normalized);
+                    // Debug.DrawLine(proj_rb.position, proj_rb.position + directionToOther * 3, Color.aquamarine, 3);
+                    // Debug.DrawLine(collider.ClosestPoint(transform.position), collider.ClosestPoint(transform.position) + Vector2.up, Color.red, 3);
+                    
+                    travel_time += 1;
+                    atk_stats.bounce--;
+                    
+                }
+                else
+                {
+                    destroyObject = true;
+                }
+            }
+            
             if (collider.gameObject.TryGetComponent<Character>(out Character character))
             {
+                
                 if (character.FactionTag == object_tag)
                 {
                     return;
                 }
+
+                atk_stats.pierce--;
+                if (atk_stats.pierce <= 0)
+                {
+                    destroyObject = true;
+                }
             }
+
             atk_stats.ApplyData(_targetData.sourcePos, collider.gameObject);
-            curr_pierce--;
-            ProjectileEffects(collider.ClosestPoint(transform.position));
+            ProjectileEffects(collider.ClosestPoint(transform.position), destroyObject);
         }
     }
     // Update is called once per frame
@@ -53,22 +92,27 @@ public class ProjectileBehavior : MonoBehaviour
             Vector2 targetDir = ((Vector2)_targetData.objectTarget.position - proj_rb.position).normalized;
             proj_rb.linearVelocity = Vector2.Lerp(proj_rb.linearVelocity.normalized, targetDir, speed * HomingSpdScale * Time.fixedDeltaTime) * speed;
 
-            Vector2 target_dir = proj_rb.linearVelocity.normalized;
-            float angle = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
-            vfx_body.rotation = Quaternion.Euler(0, 0, angle);
+            RotateToVelocity();
         }
 
         // check if destination has been reached?
         curr_travel_time += Time.fixedDeltaTime;
         if (curr_travel_time >= travel_time)
         {
-            curr_pierce = 0;
-            ProjectileEffects(transform.position);
+            ProjectileEffects(transform.position, true);
         }
 
         // set vfx
-        vfx_body.position = Vector2.MoveTowards(vfx_body.position, proj_rb.position + _targetData.vfxTargetOffset, travel_time * Time.fixedDeltaTime);
+        vfx_body.position = Vector2.MoveTowards(vfx_body.position, proj_rb.position + _targetData.vfxTargetOffset, travel_time * Time.fixedDeltaTime * 2);
 
+    }
+
+    // causes the projectile to rotate in the direction it is flying
+    private void RotateToVelocity()
+    {
+        Vector2 target_dir = proj_rb.linearVelocity.normalized;
+        float angle = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
+        vfx_body.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     public void StartProjectile(Projectile proj_data, TargetData atk_targ) // straight shot variant
@@ -80,6 +124,7 @@ public class ProjectileBehavior : MonoBehaviour
         _targetData = atk_targ; 
         if (_targetData.owner)
         {
+            _owner = _targetData.owner;
             object_tag = _targetData.owner.gameObject.tag;
         }
 
@@ -97,14 +142,12 @@ public class ProjectileBehavior : MonoBehaviour
         // set travel time to know when to terminate the projectile
         float distance = _targetData.GetDir().magnitude;
         travel_time = distance / speed * 3;
-
-        curr_pierce = atk_stats.pierce+1;
     } 
 
-    private void ProjectileEffects(Vector2 effect_position)
+    private void ProjectileEffects(Vector2 effect_position, bool terminate = false)
     {
         //ImpactEffect.StartImpact(impact_effect, effect_position, vfxTargetOffset, targetPos - sourcePos, main_body.transform.localScale.x);
-        if (curr_pierce == 0)
+        if (terminate)
         {
             EndProjectile();
         }

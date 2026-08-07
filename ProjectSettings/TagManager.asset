@@ -14,7 +14,7 @@ TagManager:
   - Interactable
   - Water
   - UI
-  - Characters
+  - Terrain Walls
   - 
   - 
   - 
@@ -36,10 +36,10 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Faction B
+  - Faction A
+  - Player Faction
+  - Factionless
   m_SortingLayers:
   - name: Default
     uniqueID: 0

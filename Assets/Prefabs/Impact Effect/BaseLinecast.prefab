@@ -236,9 +236,9 @@ LineRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1532253401
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 789699345
+  m_SortingLayer: 1
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
@@ -309,8 +309,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8164560864404493835}
   m_Enabled: 1
-  m_SortingLayerID: 1532253401
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 789699345
+  m_SortingLayer: 1
+  m_SortingOrder: 0
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0

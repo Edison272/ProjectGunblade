@@ -41,18 +41,19 @@ MonoBehaviour:
         instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
         atk_stats:
           damage: 10
-          pierce: 2
+          pierce: 1
+          bounce: 3
           knockback_amt: 4.8
           effect_time: 0
           slow_amt: 3.84
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          projectile_speed: 20
+          projectile_speed: 30
           homing_radius: 10
-          HomingSpdScale: 0.5
-          projectile_count: 3
-          projectile_spread: 180
+          HomingSpdScale: 0
+          projectile_count: 1
+          projectile_spread: 0
           even_spread: 0
     - rid: 2198171632553427104
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}

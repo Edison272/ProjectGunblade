@@ -28,8 +28,7 @@ public class BehaviorController
     // public CommandMode command;
     // public TargetType favorite_target = TargetType.Closest;
     
-    [SerializeField] protected Character character;
-    [field: SerializeField] public Character leader {get; private set;} // who they follow/ base their strategies around
+    [SerializeField] protected Character _character;
 
     [Header("Actions")]
     protected float aggro_time = 1; // do an attack or something
@@ -49,14 +48,10 @@ public class BehaviorController
 #region Initializers
     public BehaviorController(Character c)
     {
-        character = c;
+        _character = c;
         // anchor_position = c.GetPosition();
         // AddBehavior(CommandMode.Hold).AddBehavior(CommandMode.Follow).AddBehavior(CommandMode.Engage);
         // SetCommand(CommandMode.Hold);
-    }
-    public void SetLeader(Character new_leader)
-    {
-        leader = new_leader;
     }
     // public BehaviorController AddBehavior()
     // {
@@ -84,6 +79,7 @@ public class BehaviorController
     public BehaviorController SetSquad(Squad newFaction)
     {
         _factionSquad = newFaction;
+        
         return this;
     }
 #endregion

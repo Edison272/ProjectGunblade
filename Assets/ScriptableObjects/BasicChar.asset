@@ -30,7 +30,7 @@ MonoBehaviour:
   TotalItemSlots: 2
   inventory:
   - {fileID: 11400000, guid: 1848e84891918844684352c2f2d8d3bc, type: 2}
-  - {fileID: 11400000, guid: 18eda5ba9d656594a93db11e41a1a9d4, type: 2}
+  - {fileID: 11400000, guid: b0cc0780a51e00d4eaf5265cb42d2479, type: 2}
   inventory_slots:
   - <MainSlot>k__BackingField: 0
     <AltSlot>k__BackingField: -1

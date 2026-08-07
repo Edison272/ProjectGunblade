@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3025238683813426482}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3559126507223665180}
   - component: {fileID: 4151488613019084051}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: EntityVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2334733180464748044}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 2769260746933367780}
   - component: {fileID: 2989979122563491464}
   - component: {fileID: 5449345680481540034}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -228,7 +228,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9112219210537336755}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7584100325806227133}
   - component: {fileID: 2544584274120784235}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -353,7 +353,7 @@ GameObject:
   - component: {fileID: 7478169894978975942}
   - component: {fileID: 8065610068153206507}
   - component: {fileID: 4378758342634645403}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: SpriteBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -473,7 +473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2674087659750675294}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: AltHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -504,7 +504,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1523821862320733360}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -539,7 +539,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1162040220609157847}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: TrueFront
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -570,7 +570,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4623111326238419684}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: UIVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -607,7 +607,7 @@ GameObject:
   - component: {fileID: 1481081169267966681}
   - component: {fileID: 8434768883464494250}
   - component: {fileID: 6288781344798074604}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: BaseCharacter
   m_TagString: Allies
   m_Icon: {fileID: 0}
@@ -666,7 +666,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.49
 --- !u!212 &7373701905352703998
 SpriteRenderer:
   serializedVersion: 2
@@ -801,11 +801,14 @@ MonoBehaviour:
     aim_angle: 0
   animator: {fileID: 6288781344798074604}
   <Movement>k__BackingField:
-    <BaseMoveSpeed>k__BackingField: 100
-    <BaseMass>k__BackingField: 5
-    <BaseLinearDamp>k__BackingField: 5
+    <MoveSpeed>k__BackingField: 0
+    <MoveSpeedModifiers>k__BackingField: []
+    <SpeedScale>k__BackingField: 0
+    <WeightScale>k__BackingField: 0
   <Health>k__BackingField:
-    <BaseMaxHealth>k__BackingField: 100
+    <CurrHealth>k__BackingField: 0
+    <MaxHealth>k__BackingField: 0
+    <shield>k__BackingField: 0
     health_ticks: []
   health_ui:
     bg_bar: {fileID: 0}
@@ -818,6 +821,7 @@ MonoBehaviour:
   interactEvention_range: 1
   target: {fileID: 0}
   FactionTag: Allies
+  isAIActive: 1
 --- !u!95 &6288781344798074604
 Animator:
   serializedVersion: 7
@@ -849,7 +853,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1463138407214899761}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: MainHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -880,7 +884,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5620813780406317836}
-  m_Layer: 6
+  m_Layer: 31
   m_Name: TrueBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
