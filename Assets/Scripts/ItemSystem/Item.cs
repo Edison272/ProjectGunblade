@@ -33,7 +33,7 @@ public class Item : MonoBehaviour
     public GameObject itemobject;
     public Transform rotatorObject; // rotate the object when aiming
     public Transform itemTip; // the "front" of an item which attack type vfx will align to
-    public Animator animator;
+    public Animator animator => GetComponent<Animator>();
     // VFX STUFF
     private float item_y_offset = 0f; // the y distance from item tip and item's main body position
     private float user_y_offset = 0f; // the y distance from the item's main body position to the user's position
@@ -55,12 +55,11 @@ public class Item : MonoBehaviour
     // internal state data
     public bool IsInputsActive {get; private set;} = false; // toggled off/on when equipped/unequipped, and the item toggles select events
 
-    private SortingGroup vfx_sorting; // TURN OFF SORTING when picked up by a player or other parent object with sorting. only turn on sorting when in item form
+    private SortingGroup vfx_sorting => GetComponent<SortingGroup>(); // TURN OFF SORTING when picked up by a player or other parent object with sorting. only turn on sorting when in item form
 
     #region Intializer
     void Awake()
     {
-        vfx_sorting = transform.GetComponent<SortingGroup>();
         vfx_sorting.enabled = true;
         if (baseData)
         {

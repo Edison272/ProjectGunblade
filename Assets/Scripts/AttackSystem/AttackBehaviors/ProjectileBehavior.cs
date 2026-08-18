@@ -42,8 +42,6 @@ public class ProjectileBehavior : MonoBehaviour
                     if (hit.collider != null)
                     {
                         proj_rb.position = hit.point;
-                        Debug.DrawLine(hit.point, hit.point + hit.normal, Color.azure, 3);
-                        Debug.Log(hit.normal);
                         proj_rb.linearVelocity = Vector2.Reflect(proj_rb.linearVelocity, hit.normal);
 
                         RotateToVelocity();

@@ -45,7 +45,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
     [field: Header("Detection")]
     // [SerializeField] CircleCollider2D range_collider;
     // ContactPoint2D[] things_in_range;
-    public Character target = null;
     public float curr_range {get; private set;}
     public float base_range => base_data.range;
     public float close_range => base_data.close_range;
@@ -53,7 +52,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     // [field: Header("AI")]
     public string FactionTag = "None"; // string tags. be careful
     [SerializeField] protected bool isAIActive = true;
-    private BehaviorController _behaviorController;    
+    [SerializeField] private BehaviorController _behaviorController;    
     
     [field: Header("Character Control")]
     private bool MainInputActive;
@@ -115,10 +114,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     }
     void Start()
     {
-        // will join or create their own factions automatically if one is listed.
-        if (FactionTag != "None")
-            FactionManager.Instance.RegisterFaction(FactionTag).AddMember(this);
-
+        SetFaction();
         
         GetReady();
     }
@@ -220,6 +216,8 @@ public class Character : MonoBehaviour, IMovement, IHealth
         if (!is_alive)
         {
             //OnDeath(this);
+            isAIActive = false;
+            _behaviorController.SetSquad(null);
             Destroy(this.gameObject);
         }
     }
@@ -269,12 +267,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public void SetMove(Vector2 set_MoveDir) {Movement.SetMove(set_MoveDir);}
     // get targetPosition, useful for AI with discrete positioning
     public void SetMovePos(Vector2 set_MovePos) {Movement.SetMovePos(set_MovePos);}
-    public void Move() 
-    {
-        // bool move_state = animator.GetBool("Moving");
-        // move_state = Movement.Move(move_state);
-        // animator.SetBool("Moving", move_state);
-    }
     public void StartMove(Vector2 MoveDir) {Movement.StartMove(MoveDir);}
     public void StopMove() {Movement.StopMove();}
 
@@ -304,10 +296,17 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #region  AI Stuff
     public void SetFaction()
     {
+        // will join or create their own factions automatically if one is listed.
         FactionData faction = FactionManager.Instance.RegisterFaction(FactionTag);
-        Squad _faction_squad = faction.AddMember(this);
+        Squad factionSquad = faction.AddMember(this);
+        _behaviorController.SetSquad(factionSquad);
+        Debug.Log($"{faction.FactionName}, {factionSquad.Members.Count}");
+    }
 
-        _behaviorController.SetSquad(_faction_squad);
+    // used when setting the affiliation of a chacter
+    public void SetFactionTag(string newTag)
+    {
+        FactionTag = newTag;
     }
 
     // // public ContactPoint2D[] GetAllInRange()

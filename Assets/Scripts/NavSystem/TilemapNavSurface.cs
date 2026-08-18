@@ -5,10 +5,9 @@ namespace Navigation2D
 {
     public class TilemapNavSurface : MonoBehaviour
     {
+        
         public Tilemap Floor;
         public Tilemap Walls;
-
-        [SerializeReference]
         private NavigationGraph _graph = new();
 
         public NavigationGraph Graph => _graph;
@@ -22,5 +21,11 @@ namespace Navigation2D
         {
             Debug.Log($"ReBake({dirtyArea}) not implemented yet.");
         }
+        
+        public void GenerateNavmesh()
+        {
+            
+        }
     }
+
 }

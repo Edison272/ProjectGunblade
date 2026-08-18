@@ -41,11 +41,6 @@ MonoBehaviour:
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 1
-        StackAnimation:
-          AnimParameterName: Use
-          AnimParameterType: 9
-          <_animParamValue>k__BackingField: 0
-          AnimSpeed: 1
         basicAmmoStats:
           maxAmmo: 30
           currAmmo: 30
@@ -68,11 +63,6 @@ MonoBehaviour:
       type: {class: ChargeCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 4
-        StackAnimation:
-          AnimParameterName: Use
-          AnimParameterType: 9
-          <_animParamValue>k__BackingField: 0
-          AnimSpeed: 1
         MaxChargeTime: 2
         MinChargeTime: 0
         StartChargeEvent:
@@ -93,6 +83,11 @@ MonoBehaviour:
           _interfaceInput: 0
           _characterInput: 0
           _usableInput: 3
+        ChargingAnimation:
+          AnimParameterName: Use
+          AnimParameterType: 9
+          <_animParamValue>k__BackingField: 0
+          AnimSpeed: 0.1
     - rid: 2198171788663324823
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
@@ -100,6 +95,7 @@ MonoBehaviour:
         atk_stats:
           damage: 10
           pierce: 0
+          bounce: 0
           knockback_amt: 10
           effect_time: 0
           slow_amt: 0
@@ -119,6 +115,7 @@ MonoBehaviour:
         atk_stats:
           damage: 0
           pierce: 0
+          bounce: 0
           knockback_amt: 100
           effect_time: 0
           slow_amt: 0
@@ -138,6 +135,7 @@ MonoBehaviour:
         atk_stats:
           damage: 5
           pierce: 0
+          bounce: 0
           knockback_amt: 10
           effect_time: 0
           slow_amt: 0

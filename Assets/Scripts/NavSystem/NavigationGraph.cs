@@ -10,6 +10,14 @@ namespace Navigation2D
         /// - all chunks in the graph
         /// </summary>
         public int Version;
-        public readonly List<NavigationChunk> Chunks = new();
+        private List<Waypoint> waypoints = new();
+        private Dictionary<Waypoint, List<Waypoint>> graph = new();
+
+        public void GenerateNavmesh()
+        {
+            waypoints.Clear();
+            graph.Clear();
+    
+        }
     }
 }

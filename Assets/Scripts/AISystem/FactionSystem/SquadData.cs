@@ -35,14 +35,23 @@ namespace GameAI.Factions
             Faction = factionData;
             if (newMembers.Length > 0)
             {
-                Members = newMembers.ToHashSet();
                 Leader = newMembers[0];
+                foreach(Character member in newMembers)
+                {
+                    Members.Add(member);
+                    member.SetFactionTag(Faction.FactionName);
+                }
             }
         }
-
+        #region Membership
         public void AddMember(Character member)
         {
-            if (!Members.Contains(member)) Members.Add(member);
+            if (!Members.Contains(member)) 
+            {
+                if (!Leader) Leader = member;
+                Members.Add(member);
+                member.SetFactionTag(Faction.FactionName);
+            }
         }
         public void RemoveMember(Character member)
         {
@@ -56,8 +65,105 @@ namespace GameAI.Factions
                 }
             }
         }
-    }
+        #endregion
 
+        #region Finding Target
+
+        public Character FindTarget(Character thisChar, bool targetAlly, TargetType targetType)
+        {
+            return targetAlly ? FindAlly(thisChar, targetType) : FindEnemy(thisChar, targetType);
+        }
+
+        public Character FindAlly(Character thisChar, TargetType targetType)
+        {
+            float highScore = -Mathf.Infinity;
+            Character primeTarget = null;
+            Debug.Log($"{Faction.Squads.Count}");
+            foreach(Squad squad in Faction.Squads)
+            {
+                Debug.Log($"{squad.Members.Count}");
+                foreach(Character character in squad.Members)
+                {
+                    if (character == thisChar || character == null)
+                    {
+                        continue;
+                    }
+                    float score = AssessTarget(thisChar, character, targetType);
+                    if (score > highScore)
+                    {
+                        primeTarget = character;
+                        highScore = score;
+                        
+                    }
+                }
+            }
+            return primeTarget;
+        }
+
+        public Character FindEnemy(Character thisChar, TargetType targetType)
+        {
+            float highScore = -Mathf.Infinity;
+            Character primeTarget = null;
+            foreach(FactionData faction in FactionManager.Instance.Factions.Values)
+            {
+                if (faction == Faction)
+                {
+                    continue;
+                }
+                foreach(Squad squad in faction.Squads)
+                {
+                    foreach(Character character in squad.Members)
+                    {
+                        if (character == null)
+                        {
+                            continue;
+                        }
+                        float score = AssessTarget(thisChar, character, targetType);
+                        if (score > highScore)
+                        {
+                            primeTarget = character;
+                            highScore = score;
+                            
+                        }
+                    }
+                }
+            }
+            return primeTarget;
+        }
+
+        public float AssessTarget(Character currChar, Character targetChar, TargetType targetType)
+        {
+            switch (targetType)
+            {
+                case TargetType.Closest:
+                    return GetNearestScore(currChar, targetChar);
+                case TargetType.Furthest:
+                    return GetFurthestScore(currChar, targetChar);
+                case TargetType.MostHP:
+                    return GetNearestScore(currChar, targetChar);
+                case TargetType.LeastHP:
+                    return GetNearestScore(currChar, targetChar);
+                default:
+                    return GetNearestScore(currChar, targetChar);
+            }
+        }
+        private float GetNearestScore(Character curr_character, Character target)
+        {
+            float score = 1/(curr_character.GetPosition() - target.GetPosition()).sqrMagnitude + 0.001f;
+            return score;
+        }
+
+        private float GetFurthestScore(Character curr_character, Character target)
+        {
+            float score = (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude;
+            if (score > curr_character.curr_range)
+            {
+                score = -1;
+            }
+            return score;
+        }
+        #endregion
+    }
     // a version of the blackboard reserved for localized squad usage.
     public class SquadBlackboard
     {

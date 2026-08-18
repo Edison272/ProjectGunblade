@@ -7,8 +7,6 @@ public interface IMovement
     Rigidbody2D entity_rb {get;}
 
     MovementComponent Movement {get;}
-    
-    void Move(); // update rb position based on MoveDir
     // void SetMove(Vector2 set_MoveDir); // set the MoveDir
     void StartMove(Vector2 MoveDir);
     void StopMove(); // set MoveDir to zero

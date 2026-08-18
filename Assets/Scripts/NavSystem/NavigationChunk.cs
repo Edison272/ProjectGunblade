@@ -12,6 +12,6 @@ namespace Navigation2D
         public Bounds Bounds;
         public int Version;
 
-        public readonly List<NavigationNode> Nodes = new();
+        public readonly List<Waypoint> Nodes = new();
     }
 }

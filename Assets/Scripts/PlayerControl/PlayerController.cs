@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
     public void InputScroll(Vector2 scrollVec)
     {
         float deltaScroll = scrollVec.y * Time.deltaTime;
-        Debug.Log(deltaScroll);
+        // Debug.Log(deltaScroll);
     }
 
     #endregion

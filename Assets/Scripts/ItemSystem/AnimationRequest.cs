@@ -30,4 +30,9 @@ public class AnimationRequest
                 break;
         }
     }
+
+    public void AnimateBool(Animator animator, bool boolInput)
+    {
+        animator.SetBool(AnimParameterName, boolInput);
+    }
 }

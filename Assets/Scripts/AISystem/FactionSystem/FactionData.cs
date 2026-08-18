@@ -7,6 +7,10 @@ namespace GameAI.Factions
     /// This is intentionally a plain C# class, not a MonoBehaviour or ScriptableObject —
     /// its data changes constantly at runtime and is owned/managed by FactionManager.
     /// </summary>
+    
+
+
+    public enum TargetType {Closest, Furthest, MostHP, LeastHP}
     [Serializable]
     public class FactionData
     {
@@ -35,12 +39,14 @@ namespace GameAI.Factions
             }
         }
 
+        #region Membership
         public Squad AddMember(Character member, Squad squad = null)
         {
             if (squad == null)
                 squad = AssignSquad(member);
             
             squad.AddMember(member);
+            member.FactionTag = FactionName;
             return squad;
         }
         public void RemoveMember(Character member, Squad squad)
@@ -52,6 +58,7 @@ namespace GameAI.Factions
             Squads.Remove(squad);
         }
 
+        // add a character to a squad, or create a new one for them if no one's around
         public Squad AssignSquad(Character member)
         {
             Squad nearestSquad = null;
@@ -71,15 +78,9 @@ namespace GameAI.Factions
             {
                 nearestSquad = new Squad(this);
             }
+            Squads.Add(nearestSquad);
             return nearestSquad;
         }
-
-        // --- Common well-known faction-blackboard keys, mirroring Blackboard.Keys pattern ---
-        public static class Keys
-        {
-            public const string AlertLevel = "AlertLevel";                     // float 0..1, e.g. drives music/spawns
-            public const string LastReportedPlayerPos = "LastReportedPlayerPos"; // Vector3
-            public const string LastReportedTime = "LastReportedTime";          // float (Time.time)
-        }
+        #endregion
     }
 }

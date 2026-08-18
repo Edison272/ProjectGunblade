@@ -18,7 +18,7 @@ MonoBehaviour:
   health: 100
   spawn_shield: 0
   weight: 7
-  speed: 100
+  speed: 200
   range: 4
   close_range: 3
   interaction_range: 1

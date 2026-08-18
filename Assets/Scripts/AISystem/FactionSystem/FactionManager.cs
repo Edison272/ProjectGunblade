@@ -14,7 +14,7 @@ namespace GameAI.Factions
     {
         public static FactionManager Instance { get; private set; }
 
-        private readonly Dictionary<string, FactionData> _factions = new Dictionary<string, FactionData>();
+        public readonly Dictionary<string, FactionData> Factions = new Dictionary<string, FactionData>();
 
         [Header("Factions to create at startup")]
         // [Tooltip("Just the names — set up relations in code via SetRelation, or extend this with a ScriptableObject config if you want it designer-editable.")]
@@ -32,24 +32,23 @@ namespace GameAI.Factions
 
             foreach (FactionInitializer faction in initialFactions)
             {
-                _factions[faction.FactionName] = new FactionData(faction);
+                Factions[faction.FactionName] = new FactionData(faction);
             }
         }
 
         /// <summary>Creates a new faction if one with this name doesn't already exist. Safe to call multiple times.</summary>
         public FactionData RegisterFaction(string factionName)
         {
-            if (_factions.TryGetValue(factionName, out var existing))
+            if (Factions.TryGetValue(factionName, out var existing))
                 return existing;
-
             var faction = new FactionData(factionName);
-            _factions[factionName] = faction;
+            Factions[factionName] = faction;
             return faction;
         }
 
         public FactionData GetFaction(string factionName)
         {
-            if (_factions.TryGetValue(factionName, out var faction))
+            if (Factions.TryGetValue(factionName, out var faction))
                 return faction;
 
             Debug.LogWarning($"FactionManager: no faction registered with name '{factionName}'.");
@@ -58,9 +57,9 @@ namespace GameAI.Factions
 
         public bool TryGetFaction(string factionName, out FactionData faction)
         {
-            return _factions.TryGetValue(factionName, out faction);
+            return Factions.TryGetValue(factionName, out faction);
         }
 
-        public IReadOnlyCollection<string> AllFactionNames => _factions.Keys;
+        public IReadOnlyCollection<string> AllFactionNames => Factions.Keys;
     }
 }

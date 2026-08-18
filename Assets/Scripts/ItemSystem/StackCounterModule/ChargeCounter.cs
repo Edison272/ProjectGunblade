@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -19,6 +20,9 @@ public class ChargeCounter : StackCounter
     public InputEventSelector StopChargeEvent = new InputEventSelector(CharacterEvent.MainEnd);
     public InputEventSelector ResetChargeEvent = new InputEventSelector(UsableEvent.ResetStart);
     
+    public AnimationRequest ChargeStartAnim = null;
+    public AnimationRequest ChargeEndAnim = null;
+
     #region Initalizers
     public ChargeCounter()
     {
@@ -31,6 +35,8 @@ public class ChargeCounter : StackCounter
         StartChargeEvent = copied.StartChargeEvent;
         StopChargeEvent = copied.StopChargeEvent;
         ResetChargeEvent = copied.ResetChargeEvent;
+        ChargeStartAnim = copied.ChargeStartAnim;
+        ChargeEndAnim = copied.ChargeEndAnim;
     }
     public override StackCounter GetCopy()
     {
@@ -68,10 +74,12 @@ public class ChargeCounter : StackCounter
     #region Custom Functionality
     private void StartCharging()
     {
+        ChargeStartAnim.Animate(StackAnimator);
         _startChargeTime = Time.time;
     }
     private void StopCharging()
     {
+        ChargeEndAnim.Animate(StackAnimator);
         if (Time.time - _startChargeTime > MinChargeTime)
         {
             UseActivator();

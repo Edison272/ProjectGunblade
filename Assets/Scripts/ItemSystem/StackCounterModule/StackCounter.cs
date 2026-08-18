@@ -24,7 +24,7 @@ public abstract class StackCounter
     protected InputEventRelay inputRelay; // reference to another input relay. used to control when stack interactions happen
     private delegate void ActivatorFunc();
     private Action activatorEffect;
-    public AnimationRequest StackAnimation = null;
+    protected Animator StackAnimator;
 
     #region Initializers
     public StackCounter() {}
@@ -35,6 +35,11 @@ public abstract class StackCounter
     public virtual StackCounter AddActivator(Action newActivator)
     {
         activatorEffect += newActivator;
+        return this;
+    }
+    public virtual StackCounter SetAnimator(Animator newAnimator)
+    {
+        StackAnimator = newAnimator;
         return this;
     }
     #endregion

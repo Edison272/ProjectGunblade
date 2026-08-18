@@ -10,12 +10,12 @@ namespace Navigation2D
     /// - future proofing for potentially traversing different terrain types
     /// - A list of neighbors
     /// </summary>
-    public sealed class NavigationNode
+    public sealed class Waypoint
     {
         public int Id;
         public Vector2 Position;
         public uint TraversalMask = uint.MaxValue;
-        public IReadOnlyList<NavigationNeighbor> Neighbors => _neighbors;
-        private readonly NavigationNeighbor[] _neighbors;
+        public IReadOnlyList<WaypointNeighbor> Neighbors => _neighbors;
+        private readonly WaypointNeighbor[] _neighbors;
     }
 }
