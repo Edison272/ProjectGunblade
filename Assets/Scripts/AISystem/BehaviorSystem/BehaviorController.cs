@@ -37,8 +37,8 @@ public class BehaviorController
     public Vector2 move_to_pos; // the resulting position the bot aims to move to
     private Vector2Int prev_tile_pos;
     private float avoidance_range = 1;
-    public Stack<Vector2Int> path = new Stack<Vector2Int>();
-
+    public Stack<Vector2> path = new Stack<Vector2>();
+    Vector2 targetTile;
     // finding targets
     public Character TargetChar;
 
@@ -80,24 +80,57 @@ public class BehaviorController
 
         if (path.Count == 0)
         {
-            MapManager.FindPath(Vector2Int.RoundToInt(_character.Position), Vector2Int.RoundToInt(_character.Position + Random.insideUnitCircle * 20), path);
-            Vector2 prev = _character.Position;
-            foreach(Vector2 node in path)
-            {
-                Debug.DrawLine(prev, node, Color.green, 10);
-                prev = node;
-            }
+            // Vector2 targetPos = _character.Position + Random.insideUnitCircle * 10;
+            Vector2 targetPos = TargetChar ? TargetChar.Position : _character.Position + Random.insideUnitCircle * 10;
+
+
+            bool pathfound = MapManager.FindPath(Vector2Int.FloorToInt(_character.Position), Vector2Int.FloorToInt(targetPos), path);
+            Debug.DrawLine((Vector2)Vector2Int.FloorToInt(_character.Position), (Vector2)Vector2Int.FloorToInt(targetPos), pathfound? Color.blue : Color.red, 1);
+            targetTile = path.Pop();
         }
         else
         {
-            Vector2 moveDir = path.Peek() - _character.Position;
-            if (moveDir.sqrMagnitude > 0.5f)
+            Vector2 prev = path.Peek();
+            foreach(Vector2 node in path)
             {
-                _character.characterRelay.Invoke(CharacterEvent.MoveStart, moveDir);
+                Debug.DrawLine(prev, node, Color.green);
+                prev = node;
+            }
+
+            Vector2 moveDir = targetTile - _character.Position;
+
+            // skip tiles the character can clearly walk to, but also won't get stuck on a wall
+            RaycastHit2D hit = Physics2D.Linecast(_character.Position, path.Peek(), 1 << 6);
+            bool skipTile = hit.collider == null && path.Count > 1;
+            if (skipTile)
+            {
+                foreach (Vector2Int dirVec in Directions2D.FourDirections)
+                {
+                    if (MapManager.HasObstacleAt(dirVec+path.Peek()) && Vector2.Dot(dirVec, -moveDir.normalized) > 0)
+                    {
+                        Debug.DrawLine(path.Peek(), path.Peek() + dirVec, Color.red, 2);
+                        skipTile = false;
+                        break;
+                    }
+                }
+            }
+
+
+            if (skipTile || moveDir.sqrMagnitude < 0.025f)
+            {
+                Debug.DrawLine(_character.Position, path.Peek(), Color.black, 2);
+                targetTile = path.Pop();
+                if (path.Count == 0)
+                    _character.characterRelay.Invoke(CharacterEvent.MoveEnd);
             }
             else
             {
-                path.Pop();
+                Debug.DrawLine(_character.Position, hit.point, Color.white);
+                _character.characterRelay.Invoke(CharacterEvent.MoveStart, moveDir.normalized);
+                if (!TargetChar)
+                {
+                    _character.characterRelay.Invoke(CharacterEvent.LookPos, moveDir);
+                }
             }
             
         }
