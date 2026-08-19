@@ -56,7 +56,7 @@ public class MapManager : MonoBehaviour
     public static bool FindPath(Vector2Int startPos, Vector2Int endPos, Stack<Vector2> returnPath)
     {
         
-        if (!InMapBounds(endPos))
+        if (!InMapBounds(endPos) || HasObstacleAt(endPos))
         {
             return false;
         }

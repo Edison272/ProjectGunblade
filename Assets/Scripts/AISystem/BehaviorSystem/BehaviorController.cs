@@ -80,12 +80,20 @@ public class BehaviorController
 
         if (path.Count == 0)
         {
-            // Vector2 targetPos = _character.Position + Random.insideUnitCircle * 10;
+            //Vector2 targetPos = _character.Position + Random.insideUnitCircle * 10;
             Vector2 targetPos = TargetChar ? TargetChar.Position : _character.Position + Random.insideUnitCircle * 10;
 
-
             bool pathfound = MapManager.FindPath(Vector2Int.FloorToInt(_character.Position), Vector2Int.FloorToInt(targetPos), path);
-            Debug.DrawLine((Vector2)Vector2Int.FloorToInt(_character.Position), (Vector2)Vector2Int.FloorToInt(targetPos), pathfound? Color.blue : Color.red, 1);
+
+            if (pathfound)
+                Debug.DrawLine((Vector2)Vector2Int.FloorToInt(_character.Position), (Vector2)Vector2Int.FloorToInt(targetPos), Color.blue, 1);
+
+            else
+            {
+                Debug.DrawLine((Vector2)Vector2Int.FloorToInt(_character.Position), (Vector2)Vector2Int.FloorToInt(targetPos), Color.red, 1000);
+                Debug.Log($"Failed Pathfind to {targetPos}, Vector2Int Pos: {Vector2Int.FloorToInt(targetPos)}, Vector2 Contains Wall? : {MapManager.HasObstacleAt(targetPos)}, Vector2Int Contains Wall? : {MapManager.HasObstacleAt(Vector2Int.FloorToInt(targetPos))}");
+            }
+            
             targetTile = path.Pop();
         }
         else
