@@ -24,7 +24,7 @@ namespace GameAI.Factions
         public readonly HashSet<Character> Members = new HashSet<Character>();
         public readonly SquadBlackboard SquadBoard;
 
-        public Vector2 Position => Leader.TilePosition;
+        public Vector2 Position => Leader.Position;
         
         public Squad(FactionData factionData)
         {

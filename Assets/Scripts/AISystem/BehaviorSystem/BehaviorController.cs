@@ -42,11 +42,14 @@ public class BehaviorController
     // finding targets
     public Character TargetChar;
 
+    private readonly Vector2Int[] surroundingTiles;
+
 
 #region Initializers
     public BehaviorController(Character c)
     {
         _character = c;
+        surroundingTiles = Directions2D.GetDirectionArray(5, true);
         // anchor_position = c.GetPosition();
         // AddBehavior(CommandMode.Hold).AddBehavior(CommandMode.Follow).AddBehavior(CommandMode.Engage);
         // SetCommand(CommandMode.Hold);
@@ -67,6 +70,11 @@ public class BehaviorController
 #region Update
     public virtual void UpdateAI()
     {   
+        foreach(Vector2Int offsetVec in surroundingTiles)
+        {
+            MapManager.DrawTile(_character.TilePosition + offsetVec, Color.cyan);
+        }
+        
         // temporary place for target finding
         if (!TargetChar)
         {
@@ -77,6 +85,8 @@ public class BehaviorController
         {
             _character.characterRelay.Invoke(CharacterEvent.LookPos, TargetChar.Position);
         }
+
+
 
         if (path.Count == 0)
         {
@@ -155,15 +165,9 @@ public class BehaviorController
     }
     #endregion
 
-    #region Commands
+    #region Actions
 
-    #endregion
 
-    #region Helper Vector Weight Functions
-
-    #endregion
-
-    #region targetting
 
     #endregion
 

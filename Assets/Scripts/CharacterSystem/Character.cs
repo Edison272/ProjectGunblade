@@ -13,6 +13,8 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
     public AnatomyComponent Anatomy;
     public Animator animator;
+
+
     [field: Header("Movement")]
     [field: SerializeField] public MovementComponent Movement {get; private set;}
     public float move_speed => Movement.MoveSpeed; //maximum speed an operator can move at
@@ -20,9 +22,9 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public bool DestinationReached => Movement.DestinationReached;
     public Vector2 LastMoveDir => Movement.LastMoveDir;
     public Rigidbody2D entity_rb => Movement.EntityRB;
-    public Vector2Int CurrentTilePos => Movement.CurrentTilePos;
     public Vector2 Position => entity_rb.position; // a more compact way of accessing player position
-    public Vector2Int TilePosition => Vector2Int.RoundToInt(Position); // converting physics position to its integer-based tilemap positioning
+    public Vector2Int TilePosition => Vector2Int.FloorToInt(Position);
+    public TileProperties CurrentTile; // reference to tile properties, which includes position, but also other cool goodies
 
     [field: Header("Health Stuff")]
     [field: SerializeField] public HealthComponent Health {get; private set;}
@@ -203,12 +205,17 @@ public class Character : MonoBehaviour, IMovement, IHealth
         //     return;
         // }
 
+
         // // Update AI
         if (isAIActive)
         {
             _behaviorController.UpdateAI();
         }
+
         Movement.FixedUpdateMovement();
+
+        // update tile occupation on global map
+        CurrentTile = MapManager.UpdateCharTilePos(CurrentTile, Position);
     }
 
     protected virtual void LateUpdate()

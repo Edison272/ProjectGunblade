@@ -19,7 +19,6 @@ public class MovementComponent
     public bool DestinationReached {get; private set;} = false;
     public Vector2 LastMoveDir {get; private set;} = Vector2.zero;
     public Rigidbody2D EntityRB {get; private set;}
-    public Vector2Int CurrentTilePos {get; private set;} = Vector2Int.zero;
 
     [field: Header("Stat Changes")]
     [field: SerializeField] public List<SpeedModifier> MoveSpeedModifiers {get; private set;} = new List<SpeedModifier>();

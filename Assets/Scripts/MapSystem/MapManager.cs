@@ -16,8 +16,13 @@ public class MapManager : MonoBehaviour
     public static Vector2 TILE_CENTER_OFFSET = new Vector2(0.5f, 0.5f);
 
     // used for tile array
-    public static Vector2Int VecIdxOffset => -(Vector2Int)Instance.Floor.cellBounds.min;
+
+    // adding offset because tilemap can go into negatives, but array only has min index of 0
+    // add offset to world position vectors
+    // subtract offset from x & y iterators when iterating through the 2d array
+    public static Vector2Int VecIdxOffset => -(Vector2Int)Instance.Floor.cellBounds.min; 
     public static Vector2Int VecArrayMax => (Vector2Int)Instance.Floor.cellBounds.max - (Vector2Int)Instance.Floor.cellBounds.min;
+    TileProperties[,] AllTiles;
 
     private void Awake()
     {
@@ -31,6 +36,17 @@ public class MapManager : MonoBehaviour
 
         Floor.CompressBounds();
         Wall.CompressBounds();
+        
+        AllTiles = new TileProperties[VecArrayMax.x, VecArrayMax.y];
+        for (int x = 0; x < VecArrayMax.x; x++)
+        {
+            for (int y = 0; y < VecArrayMax.y; y++)
+            {
+                Vector2Int position = new Vector2Int(x, y) - VecIdxOffset;
+                AllTiles[x, y] = new TileProperties(position);
+            }
+        }
+
     }
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -42,7 +58,39 @@ public class MapManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        // for (int x = 0; x < VecArrayMax.x; x++)
+        // {
+        //     for (int y = 0; y < VecArrayMax.y; y++)
+        //     {
+        //         TileProperties tileProperty = AllTiles[x, y];
+        //         if (tileProperty.OccupiedByCharacter)
+        //             DrawTile(tileProperty.Position, Color.red);
+        //         else
+        //             DrawTile(tileProperty.Position, Color.white);
+        //     }
+        // }
+    }
+
+    /// character.cs instances can call this function to update the "TileProperty" they are standing on every physics frame
+    /// returns the tile property of the position it's occupying, if possible
+    public static TileProperties UpdateCharTilePos(TileProperties currProperty, Vector2 currPos)
+    {
+        if (!Instance || !InMapBounds(currPos))
+            return null;
+
+        currPos = Vector2Int.FloorToInt(currPos);
+        TileProperties checkProperty = Instance.AllTiles[(int)currPos.x + VecIdxOffset.x, (int)currPos.y + VecIdxOffset.y];
+        if (checkProperty != currProperty) {
+            if (currProperty != null)
+                currProperty.OccupiedByCharacter = false;
+                checkProperty.OccupiedByCharacter = true;
+            return checkProperty;
+        }
+        else
+        {
+            currProperty.OccupiedByCharacter = true;
+            return currProperty;
+        }
     }
     public static bool InMapBounds(Vector2 pos)
     {
@@ -52,7 +100,12 @@ public class MapManager : MonoBehaviour
     {
         return Instance.Wall.GetTile(Vector3Int.FloorToInt((Vector3)pos)) != null;
     }
+    public static bool IsTileOccupied(Vector2Int pos)
+    {
+        return InMapBounds(pos) && !HasObstacleAt(pos) && Instance.AllTiles[pos.x,pos.y].OccupiedByCharacter; 
+    }
 
+    #region Pathfinding Assistance
     public static bool FindPath(Vector2Int startPos, Vector2Int endPos, Stack<Vector2> returnPath)
     {
         
@@ -213,4 +266,42 @@ public class MapManager : MonoBehaviour
             Explored = false;
         }
     }
+    #endregion
+
+    #region Tools 
+    public static void DrawTile(Vector2Int pos, Color line_color)
+    {
+        Debug.DrawLine(
+            (Vector2)pos, 
+            (Vector2)(pos + Directions2D.FourDirections[1]), 
+            line_color
+            );
+        Debug.DrawLine(
+            (Vector2)(pos + Directions2D.FourDirections[1]), 
+            (Vector2)(pos + Directions2D.FourDirections[1] + Directions2D.FourDirections[0]), 
+            line_color 
+            );
+        Debug.DrawLine(
+            (Vector2)pos, 
+            (Vector2)(pos + Directions2D.FourDirections[0]), 
+            line_color
+            );
+        Debug.DrawLine(
+            (Vector2)(pos + Directions2D.FourDirections[0]), 
+            (Vector2)(pos + Directions2D.FourDirections[0] + Directions2D.FourDirections[1]), 
+            line_color
+            );
+        // Crosses
+        Debug.DrawLine(
+            (Vector2)(pos), 
+            (Vector2)(pos + Directions2D.FourDirections[0] + Directions2D.FourDirections[1]), 
+            line_color
+            );
+        Debug.DrawLine(
+            (Vector2)(pos + Directions2D.FourDirections[0]), 
+            (Vector2)(pos + Directions2D.FourDirections[1]), 
+            line_color
+            );
+    }
+    #endregion
 }
