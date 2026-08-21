@@ -96,20 +96,20 @@ public class MapManager : MonoBehaviour
     {
         return Instance.Floor.cellBounds.Contains(Vector3Int.FloorToInt((Vector3)pos));
     }
-    public static bool HasObstacleAt(Vector2 pos)
+    public static bool HasWallAt(Vector2 pos)
     {
         return Instance.Wall.GetTile(Vector3Int.FloorToInt((Vector3)pos)) != null;
     }
     public static bool IsTileOccupied(Vector2Int pos)
     {
-        return InMapBounds(pos) && !HasObstacleAt(pos) && Instance.AllTiles[pos.x,pos.y].OccupiedByCharacter; 
+        return InMapBounds(pos) && (HasWallAt(pos) || Instance.AllTiles[pos.x + VecIdxOffset.x, pos.y + VecIdxOffset.y].OccupiedByCharacter); 
     }
 
     #region Pathfinding Assistance
     public static bool FindPath(Vector2Int startPos, Vector2Int endPos, Stack<Vector2> returnPath)
     {
         
-        if (!InMapBounds(endPos) || HasObstacleAt(endPos))
+        if (!InMapBounds(endPos) || HasWallAt(endPos))
         {
             return false;
         }

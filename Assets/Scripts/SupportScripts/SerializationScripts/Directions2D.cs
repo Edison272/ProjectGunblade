@@ -115,10 +115,17 @@ public static class Directions2D
 
     #region Specific width direction array
 
+    private static Dictionary<(int, bool), Vector2Int[]> _allDirectionArays = new Dictionary<(int, bool), Vector2Int[]>();
+
     // given size, returns a radius x radius array of Vectir2Int offsets from 0,0
     // radius MUST be atleast 1. 1 is the basic eight tiles around a single cemter tile. each radius represents one "ring"
+    // generates an array if DNE in static dict. adds it to dict for retrieval
     public static Vector2Int[] GetDirectionArray(int radius, bool circular = false) // square radius
     {
+        if (_allDirectionArays.ContainsKey((radius, circular)))
+            return _allDirectionArays[(radius, circular)];
+        
+        
         List<Vector2Int> returnVec = new List<Vector2Int>();
         radius = Mathf.Max(1, radius);
         for (int r = 1; r <= radius; r++)
@@ -132,8 +139,9 @@ public static class Directions2D
                 returnVec.Add(addVec);
             }
         }
+        _allDirectionArays.Add((radius, circular), returnVec.ToArray());
 
-        return returnVec.ToArray();
+        return _allDirectionArays[(radius, circular)];
     }
 
     #endregion
