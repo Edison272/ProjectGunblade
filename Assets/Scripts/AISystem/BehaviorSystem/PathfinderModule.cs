@@ -26,6 +26,7 @@ public class PathfinderModule
     public readonly Stack<Vector2> path = new Stack<Vector2>();
     private Vector2 _targetPosition;
     private PathFindingType _pathfindingType = PathFindingType.NONE;
+    private bool _hasLOS; 
     private int _avoidRange = 1;
 
     public Vector2 MoveDir {get; private set;} = Vector2.zero;
@@ -49,10 +50,35 @@ public class PathfinderModule
         if (path.Count == 0 || !hit)
         {
             _character.characterRelay.Invoke(CharacterEvent.MoveEnd);
+            _hasLOS = !hit;
             if (!SetNewPath(targetPos, !hit))
                 return;
-        }
+        } 
+        // add new path when LOS is broken
+
         MoveDir = _targetPosition - _character.Position;
+
+        
+        hit = Physics2D.Linecast(_character.TilePosition, _targetPosition, 1 << 6);
+        // if path is large, use raycasts to see if all nodes of path need to be followed
+        // if (path.Count > 1)
+        // {
+        //     // skip tiles the character can clearly walk to, but also won't get stuck on a wall
+            
+        //     if (hit.collider == null && !MapManager.TileAdjacentsBlocked(path.Peek(), _character.TilePosition-path.Peek()))
+        //     {
+        //         MapManager.DrawTile(Vector2Int.FloorToInt(path.Peek()), Color.red, 2);
+        //         _targetPosition = path.Pop();
+        //     }
+        // }
+        if (hit && _hasLOS)
+        {
+            Vector2 pushPoint = hit.point + Vector2.Perpendicular(MoveDir.normalized)*0.25f;
+            if (!MapManager.HasWallAt(pushPoint))
+                path.Push(Vector2Int.FloorToInt(pushPoint));
+                _hasLOS = false;
+        }
+
 
         Vector2 prev = _targetPosition;
         Debug.DrawLine(prev, _character.Position, Color.yellow);
@@ -71,6 +97,7 @@ public class PathfinderModule
         else
         {
             //MoveDir = SmartSteering(MoveDir.normalized);
+            Debug.DrawLine(_character.Position, _character.Position + MoveDir, Color.green);
             _character.characterRelay.Invoke(CharacterEvent.MoveStart, MoveDir.normalized);
         
         }
@@ -106,21 +133,15 @@ public class PathfinderModule
     /// <returns></returns>
     public Vector2 SmartSteering(Vector2 targDir)
     {
-        Vector2 steeringVector = Vector2.zero;
+        Vector2 netVec = Vector2.zero;
         foreach(Vector2Int offsetVec in Directions2D.GetDirectionArray(_avoidRange, true))
         {
-            if (!MapManager.IsTileOccupied(offsetVec + _character.TilePosition)) {
-                MapManager.DrawTile(offsetVec + _character.TilePosition, Color.gray);
-                continue;
+            Vector2 steerVec = ((Vector2)offsetVec).normalized * Mathf.Clamp01(Vector2.Dot(targDir, ((Vector2)offsetVec).normalized));
+            if (MapManager.IsTileOccupied(offsetVec + _character.TilePosition)) {
+                float distScalar = Mathf.Clamp01((_avoidRange * _avoidRange) / offsetVec.sqrMagnitude);
+                netVec += steerVec * -distScalar;
             }
-            
-            float angleScalar = -Mathf.Max(0, Vector2.Dot(targDir, ((Vector2)offsetVec).normalized));
-            float distScalar = _avoidRange / offsetVec.magnitude;
-            Debug.DrawLine(_character.Position, _character.Position + (Vector2)offsetVec * angleScalar * distScalar, Color.white);
-            steeringVector += (Vector2)offsetVec * angleScalar * distScalar;
-
         }
-        Debug.DrawLine(_character.Position, _character.Position + targDir + steeringVector.normalized, Color.green);
-        return (targDir + steeringVector.normalized).normalized;
+        return (targDir + netVec.normalized).normalized;
     }
 }
