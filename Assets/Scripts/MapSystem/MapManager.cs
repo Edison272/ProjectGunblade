@@ -78,8 +78,7 @@ public class MapManager : MonoBehaviour
         if (!Instance || !InMapBounds(currPos))
             return null;
 
-        currPos = Vector2Int.FloorToInt(currPos);
-        TileProperties checkProperty = AllTiles[(int)currPos.x + VecIdxOffset.x, (int)currPos.y + VecIdxOffset.y];
+        TileProperties checkProperty = GetTileProperties(currPos);
         if (checkProperty != currProperty) {
             if (currProperty != null)
                 currProperty.OccupiedByCharacter = false;
@@ -92,6 +91,18 @@ public class MapManager : MonoBehaviour
             return currProperty;
         }
     }
+
+    public static TileProperties GetTileProperties(Vector2 pos)
+    {
+        return InMapBounds(pos) ? AllTiles[(int)Mathf.Floor(pos.x) + VecIdxOffset.x, (int)Mathf.Floor(pos.y) + VecIdxOffset.y] : null;
+    }
+
+    // check if there are adjacent tiles blocking a direction
+    public static bool TileAdjacentsBlocked(Vector2 pos, Vector2 dir, bool diagonalsOnly = false)
+    {
+        return AllTiles[(int)Mathf.Floor(pos.x) + VecIdxOffset.x, (int)Mathf.Floor(pos.y) + VecIdxOffset.y].HasBlockedAdjacent(dir, diagonalsOnly);
+    }
+
     public static bool InMapBounds(Vector2 pos)
     {
         return Instance.Floor.cellBounds.Contains(Vector3Int.FloorToInt((Vector3)pos));
@@ -109,7 +120,7 @@ public class MapManager : MonoBehaviour
     // A* pathfinding algorithm. returns the travel time, and returns -1 if no path could be found
     public static bool FindPath(Vector2Int startPos, Vector2Int endPos, Stack<Vector2> returnPath)
     {
-        if (!InMapBounds(endPos) || HasWallAt(endPos))
+        if (!InMapBounds(endPos) || !InMapBounds(startPos) || HasWallAt(endPos) || HasWallAt(startPos))
             return false;
 
         PathNode[,] nodes = new PathNode[VecArrayMax.x, VecArrayMax.y];
@@ -141,7 +152,7 @@ public class MapManager : MonoBehaviour
                 if (
                     !Instance.Floor.cellBounds.Contains((Vector3Int)checkPos)
                     || Instance.Wall.GetTile((Vector3Int)checkPos) != null 
-                    || (dirVec.sqrMagnitude > 1 && AllTiles[currPathNode.Position.x + VecIdxOffset.x, currPathNode.Position.y + VecIdxOffset.y].HasInterferingAdjacent(dirVec))
+                    || (dirVec.sqrMagnitude > 1 && GetTileProperties(currPathNode.Position).HasBlockedAdjacent(dirVec))
                 )
                     continue;
 
@@ -277,8 +288,8 @@ public class MapManager : MonoBehaviour
 
 
         public static uint GetDistance(Vector2Int posA, Vector2Int posB) {
-            uint dstX = (uint)Math.Abs(posA.x - posB.x);
-            uint dstY = (uint)Math.Abs(posA.y - posB.y);
+            uint dstX = (uint)Mathf.Abs(posA.x - posB.x);
+            uint dstY = (uint)Mathf.Abs(posA.y - posB.y);
 
             if (dstX > dstY)
                 return 14*dstY + 10* (dstX-dstY);

@@ -12,15 +12,19 @@ public class TileProperties
 
     // Checks if there is an adjacent wall between this tile and the tareget direction 
     // returns true if there is an adjacent wall in the way of the parameter direction
-    public bool HasInterferingAdjacent(Vector2Int dir)
+    public bool HasBlockedAdjacent(Vector2 dir, bool diagonalsOnly = false)
     {
+        // Only diagonals need interference checks
+        if (diagonalsOnly && (dir.x == 0 || dir.y == 0))
+            return false;
+        
         // Horizontal neighbor
-        Vector2Int horiz = new Vector2Int(dir.x, 0);
+        Vector2Int horiz = new Vector2Int((int)Mathf.Floor(dir.x), 0);
         if (MapManager.HasWallAt(Position + horiz))
             return true;
 
         // Vertical neighbor
-        Vector2Int vert = new Vector2Int(0, dir.y);
+        Vector2Int vert = new Vector2Int(0, (int)Mathf.Floor(dir.y));
         if (MapManager.HasWallAt(Position + vert))
             return true;
         return false;

@@ -26,7 +26,7 @@ public class PathfinderModule
     public readonly Stack<Vector2> path = new Stack<Vector2>();
     private Vector2 _targetPosition;
     private PathFindingType _pathfindingType = PathFindingType.NONE;
-    private int _avoidRange = 2;
+    private int _avoidRange = 1;
 
     public Vector2 MoveDir {get; private set;} = Vector2.zero;
 
@@ -54,29 +54,8 @@ public class PathfinderModule
         }
         MoveDir = _targetPosition - _character.Position;
 
-        // if path is large, use raycasts to see if all nodes of path need to be followed
-        if (path.Count > 1)
-        {
-            // skip tiles the character can clearly walk to, but also won't get stuck on a wall
-            hit = Physics2D.Linecast(_character.Position, path.Peek(), 1 << 6);
-            if (hit.collider == null)
-            {
-                bool skipTile = true;
-                foreach (Vector2Int dirVec in Directions2D.FourDirections)
-                {
-                    if (MapManager.HasWallAt(dirVec+path.Peek()) && Vector2.Dot(dirVec, -MoveDir.normalized) > 0)
-                    {
-                        MapManager.DrawTile(Vector2Int.FloorToInt(path.Peek()), Color.red, 2);
-                        skipTile = false;
-                        break;
-                    }
-                }
-                if (skipTile)
-                    _targetPosition = path.Pop();
-            }
-        }
-
         Vector2 prev = _targetPosition;
+        Debug.DrawLine(prev, _character.Position, Color.yellow);
         foreach(Vector2 node in path)
         {
             MapManager.DrawTile(Vector2Int.FloorToInt(node), Color.black, 0);

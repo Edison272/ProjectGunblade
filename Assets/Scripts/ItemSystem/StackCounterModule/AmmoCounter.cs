@@ -25,7 +25,7 @@ public struct BasicAmmoStats
     public void UseAmmo(int ammoUsed = -1)
     {
         currAmmo += ammoUsed;
-        currAmmo = Math.Clamp(currAmmo, 0, maxAmmo);
+        currAmmo = Mathf.Clamp(currAmmo, 0, maxAmmo);
     }
 
     public void SetAmmo(float ammoPerc = 1)
