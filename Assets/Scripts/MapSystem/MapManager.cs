@@ -22,7 +22,7 @@ public class MapManager : MonoBehaviour
     // subtract offset from x & y iterators when iterating through the 2d array
     public static Vector2Int VecIdxOffset => -(Vector2Int)Instance.Floor.cellBounds.min; 
     public static Vector2Int VecArrayMax => (Vector2Int)Instance.Floor.cellBounds.max - (Vector2Int)Instance.Floor.cellBounds.min;
-    TileProperties[,] AllTiles;
+    public static TileProperties[,] AllTiles;
 
     private void Awake()
     {
@@ -79,7 +79,7 @@ public class MapManager : MonoBehaviour
             return null;
 
         currPos = Vector2Int.FloorToInt(currPos);
-        TileProperties checkProperty = Instance.AllTiles[(int)currPos.x + VecIdxOffset.x, (int)currPos.y + VecIdxOffset.y];
+        TileProperties checkProperty = AllTiles[(int)currPos.x + VecIdxOffset.x, (int)currPos.y + VecIdxOffset.y];
         if (checkProperty != currProperty) {
             if (currProperty != null)
                 currProperty.OccupiedByCharacter = false;
@@ -102,21 +102,18 @@ public class MapManager : MonoBehaviour
     }
     public static bool IsTileOccupied(Vector2Int pos)
     {
-        return InMapBounds(pos) && (HasWallAt(pos) || Instance.AllTiles[pos.x + VecIdxOffset.x, pos.y + VecIdxOffset.y].OccupiedByCharacter); 
+        return InMapBounds(pos) && (HasWallAt(pos) || AllTiles[pos.x + VecIdxOffset.x, pos.y + VecIdxOffset.y].OccupiedByCharacter); 
     }
 
     #region Pathfinding Assistance
+    // A* pathfinding algorithm. returns the travel time, and returns -1 if no path could be found
     public static bool FindPath(Vector2Int startPos, Vector2Int endPos, Stack<Vector2> returnPath)
     {
-        
         if (!InMapBounds(endPos) || HasWallAt(endPos))
-        {
             return false;
-        }
-        
+
         PathNode[,] nodes = new PathNode[VecArrayMax.x, VecArrayMax.y];
         List<Vector2Int> explore = new List<Vector2Int>();
-
         Vector2Int startIdx = startPos + VecIdxOffset;
         Vector2Int endIdx = endPos + VecIdxOffset;
 
@@ -134,16 +131,18 @@ public class MapManager : MonoBehaviour
 
         while (!pathFound && failSafe < 10000)
         {
-            foreach (Vector2Int dirVec in Directions2D.FourDirections)
+            foreach (Vector2Int dirVec in Directions2D.EightDirections)
             {
                 Vector2Int checkPos = currPathNode.Position + dirVec;
 
-                // Tilemap bounds check
-                if (!Instance.Floor.cellBounds.Contains((Vector3Int)checkPos))
-                    continue;
-
-                // Wall check
-                if (Instance.Wall.GetTile((Vector3Int)checkPos) != null)
+                // Skip check if :
+                // - Is not within the tilemap bounds
+                // - Is a Wall Tile
+                if (
+                    !Instance.Floor.cellBounds.Contains((Vector3Int)checkPos)
+                    || Instance.Wall.GetTile((Vector3Int)checkPos) != null 
+                    || (dirVec.sqrMagnitude > 1 && AllTiles[currPathNode.Position.x + VecIdxOffset.x, currPathNode.Position.y + VecIdxOffset.y].HasInterferingAdjacent(dirVec))
+                )
                     continue;
 
                 // get check node (could be uninitialized, could be preexisting)
@@ -173,16 +172,23 @@ public class MapManager : MonoBehaviour
                 // If node already exists and has been explored, but NOT evaluated, update parent direction
                 if (checkNode.Initialized && checkNode.Explored)
                 {
-                    checkNode.PointPathDir = -dirVec;
-                    nodes[checkIdx.x, checkIdx.y] = checkNode;
+                    
+                    uint newCost = PathNode.GetDistance(checkNode.Position, currPathNode.Position) + currPathNode.StartDist;
+                    if (newCost < checkNode.StartDist)
+                    {
+                        checkNode.PointPathDir = -dirVec;
+                        checkNode.StartDist = newCost;
+                        nodes[checkIdx.x, checkIdx.y] = checkNode;
+                    }
                     continue;
                 }
 
                 // Create new node
-                PathNode newNode = new PathNode(checkPos, startPos, endPos)
+                PathNode newNode = new PathNode(checkPos, currPathNode.Position, endPos)
                 {
                     Explored = true,
-                    PointPathDir = -dirVec
+                    PointPathDir = -dirVec,
+                    StartDist = PathNode.GetDistance(checkPos, currPathNode.Position) + currPathNode.StartDist
                 };
 
                 nodes[checkIdx.x, checkIdx.y] = newNode;
@@ -226,13 +232,16 @@ public class MapManager : MonoBehaviour
         {
             returnPath.Push(endPos + TILE_CENTER_OFFSET);
             failSafe = 0;
-
+            Vector2 prevDir = nodes[endPos.x + VecIdxOffset.x, endPos.y + VecIdxOffset.y].PointPathDir;
             while (currPathNode.Position != startPos && failSafe < 1000)
             {
-                returnPath.Push(currPathNode.Position + TILE_CENTER_OFFSET);
+                // only add to the path if the node switches direction
+                if (currPathNode.PointPathDir != prevDir)
+                    returnPath.Push(currPathNode.Position + TILE_CENTER_OFFSET);
 
                 Vector2Int parentPos = currPathNode.Position + currPathNode.PointPathDir;
                 Vector2Int parentIdx = parentPos + VecIdxOffset;
+                prevDir = currPathNode.PointPathDir;
 
                 currPathNode = nodes[parentIdx.x, parentIdx.y];
                 failSafe++;
@@ -249,9 +258,9 @@ public class MapManager : MonoBehaviour
         public bool Initialized;
         public Vector2Int Position;
         public Vector2Int PointPathDir;
-        public float StartDist;
-        public float EndDist;
-        public float TotalCost => StartDist + EndDist;
+        public uint StartDist; // g cost
+        public uint EndDist; // h cost
+        public uint TotalCost => StartDist + EndDist;
         public bool Evaluated;
         public bool Explored;
 
@@ -259,48 +268,64 @@ public class MapManager : MonoBehaviour
         {
             Initialized = true;
             Position = thisPos;
-            StartDist = (thisPos - startPos).sqrMagnitude;
-            EndDist = (thisPos - endPos).sqrMagnitude;
+            StartDist = GetDistance(thisPos, startPos);
+            EndDist = GetDistance(thisPos, endPos);
             PointPathDir = Vector2Int.zero;
             Evaluated = false;
             Explored = false;
+        }
+
+
+        public static uint GetDistance(Vector2Int posA, Vector2Int posB) {
+            uint dstX = (uint)Math.Abs(posA.x - posB.x);
+            uint dstY = (uint)Math.Abs(posA.y - posB.y);
+
+            if (dstX > dstY)
+                return 14*dstY + 10* (dstX-dstY);
+            return 14*dstX + 10 * (dstY-dstX);
         }
     }
     #endregion
 
     #region Tools 
-    public static void DrawTile(Vector2Int pos, Color line_color)
+    public static void DrawTile(Vector2Int pos, Color line_color, float time = 0)
     {
         Debug.DrawLine(
             (Vector2)pos, 
             (Vector2)(pos + Directions2D.FourDirections[1]), 
-            line_color
+            line_color,
+            time
             );
         Debug.DrawLine(
             (Vector2)(pos + Directions2D.FourDirections[1]), 
             (Vector2)(pos + Directions2D.FourDirections[1] + Directions2D.FourDirections[0]), 
-            line_color 
+            line_color,
+            time 
             );
         Debug.DrawLine(
             (Vector2)pos, 
             (Vector2)(pos + Directions2D.FourDirections[0]), 
-            line_color
+            line_color,
+            time
             );
         Debug.DrawLine(
             (Vector2)(pos + Directions2D.FourDirections[0]), 
             (Vector2)(pos + Directions2D.FourDirections[0] + Directions2D.FourDirections[1]), 
-            line_color
+            line_color,
+            time
             );
         // Crosses
         Debug.DrawLine(
             (Vector2)(pos), 
             (Vector2)(pos + Directions2D.FourDirections[0] + Directions2D.FourDirections[1]), 
-            line_color
+            line_color,
+            time
             );
         Debug.DrawLine(
             (Vector2)(pos + Directions2D.FourDirections[0]), 
             (Vector2)(pos + Directions2D.FourDirections[1]), 
-            line_color
+            line_color,
+            time
             );
     }
     #endregion

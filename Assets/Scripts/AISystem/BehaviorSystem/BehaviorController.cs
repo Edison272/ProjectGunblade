@@ -36,7 +36,6 @@ public class BehaviorController
     public Vector2 anchor_position; // the general point which the operator hovers around
     public Vector2 move_to_pos; // the resulting position the bot aims to move to
     private Vector2Int prev_tile_pos;
-    private float avoidance_range = 1;
 
 
     // pathfinding stuff

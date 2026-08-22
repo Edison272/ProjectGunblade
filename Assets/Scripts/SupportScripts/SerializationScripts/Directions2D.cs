@@ -134,7 +134,7 @@ public static class Directions2D
             for (int i = 0; i < r * 8; i++)
             {
                 addVec += FourDirections[(int)(i/(r*2))];
-                if (circular && addVec.sqrMagnitude > radius*radius)
+                if (circular && addVec.sqrMagnitude > radius*radius+1)
                     continue;
                 returnVec.Add(addVec);
             }

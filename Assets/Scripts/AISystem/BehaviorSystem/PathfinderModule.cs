@@ -4,6 +4,12 @@ using TMPro;
 using UnityEngine;
 
 
+public enum PathFindingType
+{
+    NONE,
+    TRACK, // moves directly towards target, or their last seen location
+    SMART, // use A* to find a path to the target
+}
 
 /// <summary>
 /// A helper class used by BehaviorController to manage character ai movement
@@ -14,11 +20,13 @@ using UnityEngine;
 public class PathfinderModule
 {
     // behavior controller data
-    private BehaviorController _behaviorController;
+    private readonly BehaviorController _behaviorController;
     private Character _character => _behaviorController.ThisCharacter;
 
-    public Stack<Vector2> path = new Stack<Vector2>();
+    public readonly Stack<Vector2> path = new Stack<Vector2>();
     private Vector2 _targetPosition;
+    private PathFindingType _pathfindingType = PathFindingType.NONE;
+    private int _avoidRange = 2;
 
     public Vector2 MoveDir {get; private set;} = Vector2.zero;
 
@@ -26,101 +34,114 @@ public class PathfinderModule
     {
         _behaviorController = behaviorController;
     }
+
     public void UpdatePathfinding(Vector2 targetPos)
     {
         // don't calculate a new path if the character is already at the targetPos
-        if (Vector2Int.FloorToInt(targetPos) == _character.TilePosition) return;
+        if (Vector2Int.FloorToInt(targetPos) == _character.TilePosition)
+        {
+            MoveDir = Vector2.zero;
+            return;
+        }
         
-        // get new path if no path
-        if (path.Count == 0) GetNewPath(targetPos);
+        // get new path if no current path, or if a clear LOS to the target is possible
+        RaycastHit2D hit = Physics2D.Linecast(_character.Position, targetPos, 1 << 6);
+        if (path.Count == 0 || !hit)
+        {
+            _character.characterRelay.Invoke(CharacterEvent.MoveEnd);
+            if (!SetNewPath(targetPos, !hit))
+                return;
+        }
+        MoveDir = _targetPosition - _character.Position;
 
+        // if path is large, use raycasts to see if all nodes of path need to be followed
+        if (path.Count > 1)
+        {
+            // skip tiles the character can clearly walk to, but also won't get stuck on a wall
+            hit = Physics2D.Linecast(_character.Position, path.Peek(), 1 << 6);
+            if (hit.collider == null)
+            {
+                bool skipTile = true;
+                foreach (Vector2Int dirVec in Directions2D.FourDirections)
+                {
+                    if (MapManager.HasWallAt(dirVec+path.Peek()) && Vector2.Dot(dirVec, -MoveDir.normalized) > 0)
+                    {
+                        MapManager.DrawTile(Vector2Int.FloorToInt(path.Peek()), Color.red, 2);
+                        skipTile = false;
+                        break;
+                    }
+                }
+                if (skipTile)
+                    _targetPosition = path.Pop();
+            }
+        }
 
-        Vector2 prev = path.Peek();
+        Vector2 prev = _targetPosition;
         foreach(Vector2 node in path)
         {
+            MapManager.DrawTile(Vector2Int.FloorToInt(node), Color.black, 0);
             Debug.DrawLine(prev, node, Color.green);
             prev = node;
         }
 
-        MoveDir = _targetPosition - _character.Position;
 
-        // skip tiles the character can clearly walk to, but also won't get stuck on a wall
-        RaycastHit2D hit = Physics2D.Linecast(_character.Position, path.Peek(), 1 << 6);
-        bool skipTile = hit.collider == null && path.Count > 1;
-        if (skipTile)
+        if (MoveDir.sqrMagnitude < 0.025f)
         {
-            foreach (Vector2Int dirVec in Directions2D.FourDirections)
-            {
-                if (MapManager.HasWallAt(dirVec+path.Peek()) && Vector2.Dot(dirVec, -MoveDir.normalized) > 0)
-                {
-                    Debug.DrawLine(path.Peek(), path.Peek() + dirVec, Color.red, 2);
-                    skipTile = false;
-                    break;
-                }
-            }
-        }
-
-
-        if (skipTile || MoveDir.sqrMagnitude < 0.025f)
-        {
-            Debug.DrawLine(_character.Position, path.Peek(), Color.black, 2);
             _targetPosition = path.Pop();
-            if (path.Count == 0)
-                _character.characterRelay.Invoke(CharacterEvent.MoveEnd);
         }
         else
         {
-            //MoveDir = SmartSteering(MoveDir);
+            //MoveDir = SmartSteering(MoveDir.normalized);
             _character.characterRelay.Invoke(CharacterEvent.MoveStart, MoveDir.normalized);
         
         }
     }
 
-    public void GetNewPath(Vector2 targetPos)
+    public bool SetNewPath(Vector2 targetPos, bool directLine)
     {
-        if(!Physics2D.Linecast(_character.Position, targetPos, 1 << 6))
+        path.Clear();
+        if(directLine)
         {
-            path.Push(targetPos);
+            _targetPosition = targetPos;
+            return true;
         }
         else
         {
             bool pathfound = MapManager.FindPath(Vector2Int.FloorToInt(_character.Position), Vector2Int.FloorToInt(targetPos), path);
 
             if (pathfound) {
-                Debug.DrawLine((Vector2)Vector2Int.FloorToInt(_character.Position), (Vector2)Vector2Int.FloorToInt(targetPos), Color.blue, 1);
                 _targetPosition = path.Pop();
+                return true;
             }
-            else
-            {
-                Debug.DrawLine((Vector2)Vector2Int.FloorToInt(_character.Position), (Vector2)Vector2Int.FloorToInt(targetPos), Color.red, 1000);
-                Debug.Log($"Failed Pathfind to {targetPos}, Vector2Int Pos: {Vector2Int.FloorToInt(targetPos)}, Vector2 Contains Wall? : {MapManager.HasWallAt(targetPos)}, Vector2Int Contains Wall? : {MapManager.HasWallAt(Vector2Int.FloorToInt(targetPos))}");
-            }   
         }
+        return false;
     }
 
     /// <summary>
     /// given a target direction, this function finds other obscales/obstructions in the surrounding area, allowing the entity to steer around them and maintain pursuit
     /// Copiles Vectors together, weighs them based on distance to entity and dot product with target direction
     /// </summary>
-    /// <param name="targDir"></param>
+    /// <param name="targDir">
+    /// takes in a normalized vector
+    /// </param>
     /// <returns></returns>
     public Vector2 SmartSteering(Vector2 targDir)
     {
         Vector2 steeringVector = Vector2.zero;
-        foreach(Vector2Int offsetVec in Directions2D.GetDirectionArray(5, true))
+        foreach(Vector2Int offsetVec in Directions2D.GetDirectionArray(_avoidRange, true))
         {
             if (!MapManager.IsTileOccupied(offsetVec + _character.TilePosition)) {
                 MapManager.DrawTile(offsetVec + _character.TilePosition, Color.gray);
                 continue;
             }
             
-            float angleScalar = -Mathf.Max(0, Vector2.Dot(targDir.normalized, offsetVec));
-            float distScalar = offsetVec.magnitude/5;
+            float angleScalar = -Mathf.Max(0, Vector2.Dot(targDir, ((Vector2)offsetVec).normalized));
+            float distScalar = _avoidRange / offsetVec.magnitude;
             Debug.DrawLine(_character.Position, _character.Position + (Vector2)offsetVec * angleScalar * distScalar, Color.white);
             steeringVector += (Vector2)offsetVec * angleScalar * distScalar;
 
         }
-        Debug.DrawLine(_character.Position, _character.Position + targDir.normalized + steeringVector.normalized, Color.green);
-        return targDir.normalized + steeringVector.normalized;
+        Debug.DrawLine(_character.Position, _character.Position + targDir + steeringVector.normalized, Color.green);
+        return (targDir + steeringVector.normalized).normalized;
     }
 }
