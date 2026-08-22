@@ -54,7 +54,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     // [field: Header("AI")]
     public string FactionTag = "None"; // string tags. be careful
     [SerializeField] protected bool isAIActive = true;
-    [SerializeField] private BehaviorController _behaviorController;    
+    [SerializeField] public BehaviorController _behaviorController;    
     
     [field: Header("Character Control")]
     private bool MainInputActive;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GameAI.Factions;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour
     private InputAction _inputReset;
     private InputAction _inputInteract;
     private InputAction _inputScroll;
+    private InputAction _inputCommanding;
 
     // Input Relay!
     public InputEventRelay inputRelay;
@@ -38,6 +40,10 @@ public class PlayerController : MonoBehaviour
     // temporary. testing for player input
     public Character active_character;
 
+    // Faction Mechanic Controller
+    private bool _isCommanding = false;
+    private FactionData _playerFaction;
+
     void Awake()
     {
         #region Awake - Inputs
@@ -51,6 +57,7 @@ public class PlayerController : MonoBehaviour
         _inputReset = _playerInput.actions["Reset"];
         _inputInteract = _playerInput.actions["Interact"];
         _inputScroll = _playerInput.actions["Scroll"];
+        _inputCommanding = _playerInput.actions["ToggleCommandMode"];
 
 
         // connect public events to input actions
@@ -58,7 +65,7 @@ public class PlayerController : MonoBehaviour
         _inputMovement.canceled += ctx => {inputRelay.Invoke(CharacterEvent.MoveEnd);};
         _inputLookDelta.started += ctx => {SetLookPosition(ctx.ReadValue<Vector2>());};
 
-        _inputScroll.performed += ctx => {InputScroll(ctx.ReadValue<Vector2>());};
+        
 
         _inputUseMain.performed += ctx => {inputRelay.Invoke(CharacterEvent.MainStart);};
         _inputUseMain.canceled += ctx => {inputRelay.Invoke(CharacterEvent.MainEnd);};
@@ -67,7 +74,9 @@ public class PlayerController : MonoBehaviour
 
         _inputReset.started += ctx => {inputRelay.Invoke(UsableEvent.ResetStart);};
         _inputInteract.started += ctx => {inputRelay.Invoke(CharacterEvent.Interact);};
-        //_inputInteract.started += ctx => {inputRelay.Invoke(InputEvent.Item_Reset);};
+
+        _inputScroll.performed += ctx => {InputScroll(ctx.ReadValue<Vector2>());};
+        _inputCommanding.performed += ctx => {SetCommandMode(!_isCommanding);};
 
         // Setup Input Relay
         inputRelay = new InputEventRelay(
@@ -103,6 +112,25 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         SetPlayerCharacter(active_character);
+
+        // setup faction control
+        _playerFaction = FactionManager.Instance.RegisterFaction(active_character.FactionTag);
+    }
+
+    void SetCommandMode(bool mode)
+    {
+        _isCommanding = mode;
+        Character target = _isCommanding ? active_character : null;
+        foreach(Squad squad in _playerFaction.Squads)
+        {
+            foreach(Character member in squad.Members)
+            {
+                if (member == active_character)
+                    continue;
+                    
+                member._behaviorController.TargetChar = target;
+            }
+        }
     }
 
     // update the accel values on input

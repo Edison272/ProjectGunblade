@@ -29,6 +29,9 @@ public class PathfinderModule
     private bool _hasLOS; 
     private int _avoidRange = 1;
 
+
+    // important
+
     public Vector2 MoveDir {get; private set;} = Vector2.zero;
 
     public PathfinderModule(BehaviorController behaviorController)
