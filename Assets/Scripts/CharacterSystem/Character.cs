@@ -219,10 +219,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
         // update tile occupation on global map
         CurrentTile = MapManager.UpdateCharTilePos(CurrentTile, Position);
-    }
 
-    protected virtual void LateUpdate()
-    {
         if (!is_alive)
         {
             //OnDeath(this);
@@ -230,6 +227,11 @@ public class Character : MonoBehaviour, IMovement, IHealth
             _behaviorController.SetSquad(null);
             Destroy(this.gameObject);
         }
+    }
+
+    protected virtual void LateUpdate()
+    {
+
     }
     #endregion
 

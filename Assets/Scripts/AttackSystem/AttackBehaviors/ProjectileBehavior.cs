@@ -31,7 +31,7 @@ public class ProjectileBehavior : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag != "NoHit" && collider.gameObject != _owner.gameObject)
+        if (collider.gameObject.tag != "NoHit" && (!_owner || collider.gameObject != _owner.gameObject))
         {
             bool destroyObject = false;
             if (collider.gameObject.layer == 6)

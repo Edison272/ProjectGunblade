@@ -25,8 +25,8 @@ public class BehaviorController
     [SerializeField] public readonly Character ThisCharacter;
 
     [Header("Actions")]
-    protected float aggro_time = 1; // do an attack or something
-    protected float rest_time = 0f; // don't attack
+    protected float aggro_time = 2f; // do an attack or something
+    protected float rest_time = -1f; // don't attack
     protected float curr_time; // time buffer
     protected bool is_acting = true;
     // BehaviorModule current_module;
@@ -88,6 +88,24 @@ public class BehaviorController
         else
         {
             ThisCharacter.characterRelay.Invoke(CharacterEvent.LookPos, TargetChar.Position);
+            if (curr_time <= 0)
+            {
+                curr_time += Time.fixedDeltaTime;
+                if (curr_time >= 0)
+                {
+                    curr_time = aggro_time;
+                    ThisCharacter.characterRelay.Invoke(CharacterEvent.MainStart);
+                }
+            }
+            else
+            {
+                curr_time -= Time.fixedDeltaTime;
+                if (curr_time <= 0)
+                {
+                    curr_time = rest_time;
+                    ThisCharacter.characterRelay.Invoke(CharacterEvent.MainEnd);
+                }
+            }
         }
 
 

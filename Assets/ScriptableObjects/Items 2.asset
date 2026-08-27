@@ -63,7 +63,7 @@ MonoBehaviour:
       type: {class: ChargeCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 4
-        MaxChargeTime: 2
+        MaxChargeTime: 1
         MinChargeTime: 0
         StartChargeEvent:
           InputEventType: 2
@@ -83,11 +83,16 @@ MonoBehaviour:
           _interfaceInput: 0
           _characterInput: 0
           _usableInput: 3
-        ChargingAnimation:
+        ChargeStartAnim:
           AnimParameterName: Use
           AnimParameterType: 9
           <_animParamValue>k__BackingField: 0
-          AnimSpeed: 0.1
+          AnimSpeed: 1
+        ChargeEndAnim:
+          AnimParameterName: Use
+          AnimParameterType: 9
+          <_animParamValue>k__BackingField: 0
+          AnimSpeed: 1
     - rid: 2198171788663324823
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:

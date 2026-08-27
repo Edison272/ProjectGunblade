@@ -64,33 +64,30 @@ public class PathfinderModule
         
         MoveDir = _targetPosition - _character.Position;
         // add new path when LOS is broken
-        RaycastHit2D hit = Physics2D.Linecast(_character.TilePosition, _targetPosition, 1 << 6);
-        if (hit) // add a new node to avoid obstacles in the path
-        {
-            // if (_hasLOS)
-            // {
-            //     Vector2 pushPoint = hit.point + Vector2.Perpendicular(MoveDir.normalized)*0.25f;
-            //     if (!MapManager.HasWallAt(pushPoint))
-            //         path.Push(Vector2Int.FloorToInt(pushPoint));
-            //         _hasLOS = false;
-            // }
-        }
-        else // if path is large, use raycasts to see if all nodes of path need to be followed
-        {
-            _hasLOS = true;
-            // if (path.Count > 1)
-            // {
-            //     // skip tiles the character can clearly walk to, but also won't get stuck on a wall
-            //     if (!MapManager.TileAdjacentsBlocked(path.Peek(), _character.TilePosition-path.Peek()))
-            //     {
-            //         MapManager.DrawTile(Vector2Int.FloorToInt(path.Peek()), Color.red, 2);
-            //         _targetPosition = path.Pop();
-            //     }
-            // }
-        }
-
-
-
+        // RaycastHit2D hit = Physics2D.Linecast(_character.TilePosition, _targetPosition, 1 << 6);
+        // if (hit) // add a new node to avoid obstacles in the path
+        // {
+        //     // if (_hasLOS)
+        //     // {
+        //     //     Vector2 pushPoint = hit.point + Vector2.Perpendicular(MoveDir.normalized)*0.25f;
+        //     //     if (!MapManager.HasWallAt(pushPoint))
+        //     //         path.Push(Vector2Int.FloorToInt(pushPoint));
+        //     //         _hasLOS = false;
+        //     // }
+        // }
+        // else // if path is large, use raycasts to see if all nodes of path need to be followed
+        // {
+        //     _hasLOS = true;
+        //     // if (path.Count > 1)
+        //     // {
+        //     //     // skip tiles the character can clearly walk to, but also won't get stuck on a wall
+        //     //     if (!MapManager.TileAdjacentsBlocked(path.Peek(), _character.TilePosition-path.Peek()))
+        //     //     {
+        //     //         MapManager.DrawTile(Vector2Int.FloorToInt(path.Peek()), Color.red, 2);
+        //     //         _targetPosition = path.Pop();
+        //     //     }
+        //     // }
+        // }
 
         Vector2 prev = _targetPosition;
         Debug.DrawLine(prev, _character.Position, Color.yellow);
@@ -113,10 +110,10 @@ public class PathfinderModule
 
     public bool SetNewPath(Vector2 targetPos, bool directLine)
     {
-        path.Clear();
+        Reset();
         if(directLine)
         {
-            _targetPosition = targetPos;
+            _targetPosition = Vector2Int.FloorToInt(targetPos) + MapManager.TILE_CENTER_OFFSET;
             return true;
         }
         else

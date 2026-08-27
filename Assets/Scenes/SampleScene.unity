@@ -15378,7 +15378,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameAI.Factions.FactionManager
   initialFactions:
   - FactionName: Evil Ahhhh
-    DefaultMembers: []
+    DefaultMembers:
+    - {fileID: 1221830570}
 --- !u!4 &2029492429
 Transform:
   m_ObjectHideFlags: 0
