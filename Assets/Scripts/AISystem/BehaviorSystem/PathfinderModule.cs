@@ -23,64 +23,73 @@ public class PathfinderModule
     private readonly BehaviorController _behaviorController;
     private Character _character => _behaviorController.ThisCharacter;
 
+    // internal
     public readonly Stack<Vector2> path = new Stack<Vector2>();
     private Vector2 _targetPosition;
     private PathFindingType _pathfindingType = PathFindingType.NONE;
     private bool _hasLOS; 
     private int _avoidRange = 1;
+    public Vector2 MoveDir {get; private set;} = Vector2.zero;
+
+    // state data
+    public bool IsPathing => MoveDir.sqrMagnitude > 0;
 
 
     // important
 
-    public Vector2 MoveDir {get; private set;} = Vector2.zero;
+    
 
     public PathfinderModule(BehaviorController behaviorController)
     {
         _behaviorController = behaviorController;
+        _targetPosition = _character.Position;
     }
 
-    public void UpdatePathfinding(Vector2 targetPos)
+    public void UpdatePathfinding()
     {
         // don't calculate a new path if the character is already at the targetPos
-        if (Vector2Int.FloorToInt(targetPos) == _character.TilePosition)
+        if (Vector2Int.FloorToInt(_targetPosition) == _character.TilePosition)
         {
-            MoveDir = Vector2.zero;
-            return;
-        }
-        
-        // get new path if no current path, or if a clear LOS to the target is possible
-        RaycastHit2D hit = Physics2D.Linecast(_character.Position, targetPos, 1 << 6);
-        if (path.Count == 0 || !hit)
-        {
-            _character.characterRelay.Invoke(CharacterEvent.MoveEnd);
-            _hasLOS = !hit;
-            if (!SetNewPath(targetPos, !hit))
+            if (path.Count == 0)
+            {
+                MoveDir = Vector2.zero;
+                _character.characterRelay.Invoke(CharacterEvent.MoveEnd);
                 return;
-        } 
-        // add new path when LOS is broken
-
-        MoveDir = _targetPosition - _character.Position;
-
-        
-        hit = Physics2D.Linecast(_character.TilePosition, _targetPosition, 1 << 6);
-        // if path is large, use raycasts to see if all nodes of path need to be followed
-        // if (path.Count > 1)
-        // {
-        //     // skip tiles the character can clearly walk to, but also won't get stuck on a wall
-            
-        //     if (hit.collider == null && !MapManager.TileAdjacentsBlocked(path.Peek(), _character.TilePosition-path.Peek()))
-        //     {
-        //         MapManager.DrawTile(Vector2Int.FloorToInt(path.Peek()), Color.red, 2);
-        //         _targetPosition = path.Pop();
-        //     }
-        // }
-        if (hit && _hasLOS)
-        {
-            Vector2 pushPoint = hit.point + Vector2.Perpendicular(MoveDir.normalized)*0.25f;
-            if (!MapManager.HasWallAt(pushPoint))
-                path.Push(Vector2Int.FloorToInt(pushPoint));
-                _hasLOS = false;
+            }
+            else
+            {
+                _targetPosition = path.Pop();
+            }
         }
+        
+        MoveDir = _targetPosition - _character.Position;
+        // add new path when LOS is broken
+        RaycastHit2D hit = Physics2D.Linecast(_character.TilePosition, _targetPosition, 1 << 6);
+        if (hit) // add a new node to avoid obstacles in the path
+        {
+            // if (_hasLOS)
+            // {
+            //     Vector2 pushPoint = hit.point + Vector2.Perpendicular(MoveDir.normalized)*0.25f;
+            //     if (!MapManager.HasWallAt(pushPoint))
+            //         path.Push(Vector2Int.FloorToInt(pushPoint));
+            //         _hasLOS = false;
+            // }
+        }
+        else // if path is large, use raycasts to see if all nodes of path need to be followed
+        {
+            _hasLOS = true;
+            // if (path.Count > 1)
+            // {
+            //     // skip tiles the character can clearly walk to, but also won't get stuck on a wall
+            //     if (!MapManager.TileAdjacentsBlocked(path.Peek(), _character.TilePosition-path.Peek()))
+            //     {
+            //         MapManager.DrawTile(Vector2Int.FloorToInt(path.Peek()), Color.red, 2);
+            //         _targetPosition = path.Pop();
+            //     }
+            // }
+        }
+
+
 
 
         Vector2 prev = _targetPosition;
@@ -92,18 +101,14 @@ public class PathfinderModule
             prev = node;
         }
 
+        //MoveDir = SmartSteering(MoveDir.normalized);
+        Debug.DrawLine(_character.Position, _character.Position + MoveDir, Color.green);
+        _character.characterRelay.Invoke(CharacterEvent.MoveStart, MoveDir.normalized);
+    }
 
-        if (MoveDir.sqrMagnitude < 0.025f)
-        {
-            _targetPosition = path.Pop();
-        }
-        else
-        {
-            //MoveDir = SmartSteering(MoveDir.normalized);
-            Debug.DrawLine(_character.Position, _character.Position + MoveDir, Color.green);
-            _character.characterRelay.Invoke(CharacterEvent.MoveStart, MoveDir.normalized);
-        
-        }
+    public bool FindPath(Vector2 targetPos)
+    {
+        return SetNewPath(targetPos, !Physics2D.Linecast(_character.Position, targetPos, 1 << 6));
     }
 
     public bool SetNewPath(Vector2 targetPos, bool directLine)
@@ -124,6 +129,12 @@ public class PathfinderModule
             }
         }
         return false;
+    }
+    public void Reset()
+    {
+        MoveDir = Vector2.zero;
+        _targetPosition = _character.Position;
+        path.Clear();
     }
 
     /// <summary>

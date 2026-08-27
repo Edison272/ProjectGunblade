@@ -8,7 +8,7 @@ using System;
 public class TileProperties
 {
     public Vector2Int Position;
-    public bool OccupiedByCharacter;    
+    public bool OccupiedByCharacter;
 
     // Checks if there is an adjacent wall between this tile and the tareget direction 
     // returns true if there is an adjacent wall in the way of the parameter direction

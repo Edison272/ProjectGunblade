@@ -25,6 +25,7 @@ namespace GameAI.Factions
         public readonly SquadBlackboard SquadBoard;
 
         public Vector2 Position => Leader.Position;
+        public Vector2 AnchorPosition; // The general position that the squad forms around
         
         public Squad(FactionData factionData)
         {

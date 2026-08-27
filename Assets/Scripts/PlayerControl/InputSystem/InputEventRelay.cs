@@ -68,7 +68,7 @@ public class InputEventRelay
             }
             else
             {
-                //Debug.LogError($"'{callbackType.Name}' is not a delegate type.");
+                Debug.LogError($"'{callbackType.Name}' is not a delegate type.");
                 return false;
             }
         }
@@ -99,7 +99,7 @@ public class InputEventRelay
         {
             if (parent._inputEvents[i] == null)
             {
-                Debug.Log($" {(InputEventType)i} does not exist in parent");
+                //Debug.Log($" {(InputEventType)i} does not exist in parent");
                 continue;
             }
                     
@@ -109,7 +109,7 @@ public class InputEventRelay
                 Enum newEnum = InputEventSelector.GetEnumFromTypeInt((InputEventType)i,j);
                 if (parent._inputEvents[i][j] == null)
                 {
-                    Debug.Log($" {newEnum} does not exist in parent");
+                    ////Debug.Log($" {newEnum} does not exist in parent");
                     continue;
                 }
                 else if (_inputEvents[i] == null || _inputEvents[i][j] == null)
@@ -122,11 +122,11 @@ public class InputEventRelay
                 bool connected = parent.ConnectEvent(newEnum, invoke_method);
                 if (connected)
                 {
-                    Debug.Log($"{slot.delegateType.Name} for {newEnum} has been linked");
+                    ////Debug.Log($"{slot.delegateType.Name} for {newEnum} has been linked");
                 }
                 else
                 {
-                    Debug.LogWarning($"{slot.delegateType.Name} for {newEnum} could not link");
+                    ////Debug.LogWarning($"{slot.delegateType.Name} for {newEnum} could not link");
                 }
             }
         }
@@ -139,7 +139,7 @@ public class InputEventRelay
         {
             if (parent._inputEvents[i] == null)
             {
-                Debug.Log($" {(InputEventType)i} does not exist in parent");
+                //Debug.Log($" {(InputEventType)i} does not exist in parent");
                 continue;
             }
             
@@ -152,7 +152,7 @@ public class InputEventRelay
             {
                 if (parent._inputEvents[i][j] == null || slotArr[j] == null)
                 {
-                    Debug.Log("nothing to unlink");
+                    //Debug.Log("nothing to unlink");
                     continue;
                 }
                 Enum newEnum = InputEventSelector.GetEnumFromTypeInt((InputEventType)i,j);
@@ -161,11 +161,11 @@ public class InputEventRelay
                 bool connected = parent.DisconnectEvent(newEnum, invoke_method);
                 if (connected)
                 {
-                    Debug.Log($"{slot.delegateType.Name} for {newEnum} has been disconnected");
+                    //Debug.Log($"{slot.delegateType.Name} for {newEnum} has been disconnected");
                 }
                 else
                 {
-                    Debug.LogWarning($"{slot.delegateType.Name} for {newEnum} could not disconnect");
+                    //Debug.LogWarning($"{slot.delegateType.Name} for {newEnum} could not disconnect");
                 }
             }
         }
@@ -261,7 +261,7 @@ public class InputEventRelay
         bool removed = _inputEvents[eventIndex][enumIndex].Remove(callback);
         if (!removed)
         {
-            Debug.LogWarning($"callback could not be found for removal");
+            //Debug.LogWarning($"callback could not be found for removal");
         }
 
         return true;

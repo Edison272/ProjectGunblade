@@ -37,10 +37,14 @@ public class BehaviorController
     public Vector2 move_to_pos; // the resulting position the bot aims to move to
     private Vector2Int prev_tile_pos;
 
+    [Header("Positioning")]
+    public int EvaluationRadius = 20;
+
 
     // pathfinding stuff
     public readonly PathfinderModule Pathfinder;
     public Vector2Int TargetMovePos;
+    public bool _pathSet = false;
 
     // finding targets
     public Character TargetChar;
@@ -54,7 +58,8 @@ public class BehaviorController
         // AddBehavior(CommandMode.Hold).AddBehavior(CommandMode.Follow).AddBehavior(CommandMode.Engage);
         // SetCommand(CommandMode.Hold);
         Pathfinder = new PathfinderModule(this);
-        
+
+        TargetMovePos = Vector2Int.FloorToInt(ThisCharacter.Position);        
     }
 
     public BehaviorController SetSquad(Squad newFaction)
@@ -72,20 +77,26 @@ public class BehaviorController
 #region Update
     public virtual void UpdateAI()
     {   
+        // Evaluate();
         // temporary place for target finding
         if (!TargetChar)
         {
             bool targetAllies = false;
             TargetChar = FactionSquad.FindTarget(ThisCharacter, targetAllies, TargetType.Closest);
-            Pathfinder.UpdatePathfinding(ThisCharacter.Position);
             ThisCharacter.characterRelay.Invoke(CharacterEvent.LookPos, Pathfinder.MoveDir);
         }
         else
         {
-            Pathfinder.UpdatePathfinding(TargetChar.Position);
             ThisCharacter.characterRelay.Invoke(CharacterEvent.LookPos, TargetChar.Position);
         }
-        Evaluate();
+
+
+        if (!Pathfinder.IsPathing && TargetMovePos != ThisCharacter.TilePosition)
+        {
+            Pathfinder.FindPath(TargetMovePos);
+        }
+
+        Pathfinder.UpdatePathfinding();
     }
 
 
@@ -95,12 +106,35 @@ public class BehaviorController
     */
     public void Evaluate()
     {
-        
+        float movementScore = -1;
+        Vector2 movePos;
+        float targetScore = -1;
+        float utilityScore = -1;
+        foreach(Vector2Int offsetVec in Directions2D.GetDirectionArray(EvaluationRadius, true))
+        {
+            TileProperties tileProp = MapManager.GetTileProperties(ThisCharacter.Position + offsetVec);
+            if (tileProp == null)   
+                continue;
+            MapManager.DrawTile(Vector2Int.FloorToInt(tileProp.Position), Color.black, 0);
+
+            // if ()
+            // {
+                
+            // }
+        }
+        // if (movementScore > -1)
+        // {
+        //     Pathfinder.SetNewPath(movePos);
+        // }
     }
     #endregion
 
     #region Actions
-
+    public void SetTargetMovePos(Vector2 setPos)
+    {
+        Pathfinder.Reset();
+        TargetMovePos = Vector2Int.FloorToInt(setPos);
+    }
 
 
     #endregion
