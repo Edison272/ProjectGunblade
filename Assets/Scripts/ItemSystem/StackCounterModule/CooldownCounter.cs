@@ -63,7 +63,6 @@ public class CooldownCounter : StackCounter
     {
         if (GetIndexData() > 0)
         {
-            UseActivator();
             lastUse = Time.time + cooldownTime;
         }
     }
@@ -79,6 +78,10 @@ public class CooldownCounter : StackCounter
     public override float GetStatus()
     {
         return Mathf.Clamp01(Time.time / lastUse);
+    }
+    public override float GetReadinessTime()
+    {
+        return lastUse > Time.time ? lastUse - Time.time : 0;
     }
     #endregion
 

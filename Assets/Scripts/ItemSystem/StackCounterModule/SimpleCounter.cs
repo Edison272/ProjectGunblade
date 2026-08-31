@@ -60,6 +60,10 @@ public class SimpleCounter : StackCounter
     {
         throw new NotImplementedException();
     }
+    public override float GetReadinessTime()
+    {
+        return 1;
+    }
     #endregion
 
 

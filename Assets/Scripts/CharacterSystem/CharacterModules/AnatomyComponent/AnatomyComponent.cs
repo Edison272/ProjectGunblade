@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// VFX helper class
+/// VFX & Aim helper class
 /// Anatomy components are responsible for locating the different parts of the body on any given character
 /// This also controls what they realistically can/can't do
 /// - How does a character aim?
@@ -50,8 +50,7 @@ public class AnatomyComponent
     Vector2 single_hand_pos = new Vector2 (0, 0.6f);  // (main pos, alt pos)
     
     [field: Header("Aiming")]
-    public Vector2 aim_dir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
-    public Vector2 offset_look = Vector2.zero;
+    public Vector2 AimDir {get; private set;} = Vector2.zero; // vector from operator to where they are looking. MAKE SURE ITS UN-NORMALIZED
     protected Action AimStyle; // single-item or akimbo aiming?
     public  float aim_angle = 0; // angle (deg) the character is looking in
     readonly Vector2 SingleWeaponRestPosition = new Vector2(1, -1);
@@ -87,19 +86,19 @@ public class AnatomyComponent
     {
         SetAimStyle(true);
         // initialize default look position
-        aim_dir = SingleWeaponRestPosition;
-        Look(entity_rb.position + aim_dir);
+        AimDir = SingleWeaponRestPosition;
+        Look(entity_rb.position + AimDir);
     }
 
 
     #endregion
 
     #region Looking & Aiming
-    public void Look(Vector2 look_pos) {
+    public void Look(Vector2 lookDir) {
         // look_dir is the direction the operator is set to look at
-        Vector2 look_dir = (look_pos - entity_rb.position).normalized;
+        Vector2 look_dir = lookDir.normalized;
 
-        if ((look_dir.x >= 0) != (aim_dir.x >= 0))
+        if ((look_dir.x >= 0) != (AimDir.x >= 0))
         {
             Vector3 look_scale = new Vector3 ((int)Mathf.Sign(look_dir.x), 1, 1);
             front.localScale = look_scale;
@@ -111,7 +110,7 @@ public class AnatomyComponent
 
 
         // aim hands and body to correct direction
-        aim_dir = look_pos - entity_rb.position;
+        AimDir = lookDir;
         AimStyle();
     }
     public void SetAimStyle(bool is_akimbo) // set the position of main & alt hands for akimbo or non-akimbo weaponry whenever weapon switch
@@ -138,9 +137,9 @@ public class AnatomyComponent
     void AkimboAim() // aim two weapons from two sides of body
     {
         // check if direction state has changed
-        if (direction_state.Item1 != aim_dir.x > 0) // direction_state.Item1 = true -> facing right
+        if (direction_state.Item1 != AimDir.x > 0) // direction_state.Item1 = true -> facing right
         {
-            direction_state.Item1 = aim_dir.x > 0; // update direction state
+            direction_state.Item1 = AimDir.x > 0; // update direction state
             
             // switch hand indexes
             main_hand.SetSiblingIndex(alt_hand.GetSiblingIndex());
@@ -151,9 +150,9 @@ public class AnatomyComponent
             alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
         }
 
-        if (direction_state.Item2 != aim_dir.y < 0) // direction_state.Item2 = true -> facing down (front)
+        if (direction_state.Item2 != AimDir.y < 0) // direction_state.Item2 = true -> facing down (front)
         {
-            direction_state.Item2 = aim_dir.y < 0; // update direction state
+            direction_state.Item2 = AimDir.y < 0; // update direction state
             
             // switch front & back index
             front.SetSiblingIndex(back.GetSiblingIndex());
@@ -168,8 +167,8 @@ public class AnatomyComponent
     }
     void SingleAim() // aim one weapon from center of mass
     {   
-        if(direction_state.Item2 != aim_dir.y <= 0) {
-            direction_state.Item2 = aim_dir.y <= 0; // update direction state
+        if(direction_state.Item2 != AimDir.y <= 0) {
+            direction_state.Item2 = AimDir.y <= 0; // update direction state
 
             // switch hand  indexes
             main_hand.SetSiblingIndex(alt_hand.GetSiblingIndex());

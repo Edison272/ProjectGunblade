@@ -48,6 +48,22 @@ public class InventorySlot
             _inventoryRef[AltSlot].SetEquipped(is_active);
 
     }
+    #region Getting Data
+    // returns a score for how usable or "ready" the items in this slot are
+    // average the scores if both slots are active
+    public float GetSlotReadiness()
+    {
+        float readinessScore = 0;
+        float dividend = 1;
+        if (MainSlot > -1)
+            readinessScore += _inventoryRef[MainSlot].ReadinessScore;
+        if (AltSlot > -1)
+            readinessScore += _inventoryRef[AltSlot].ReadinessScore;
+            dividend += 1;
+
+        return readinessScore/dividend;
+    }
+    #endregion
     
     #region Setting Indexes
     public void SetIndexes(int MainSlot, int AltSlot)

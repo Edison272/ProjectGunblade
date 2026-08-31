@@ -19,9 +19,6 @@ public class ChargeCounter : StackCounter
     public InputEventSelector StartChargeEvent = new InputEventSelector(CharacterEvent.MainStart);
     public InputEventSelector StopChargeEvent = new InputEventSelector(CharacterEvent.MainEnd);
     public InputEventSelector ResetChargeEvent = new InputEventSelector(UsableEvent.ResetStart);
-    
-    public AnimationRequest ChargeStartAnim = null;
-    public AnimationRequest ChargeEndAnim = null;
 
     #region Initalizers
     public ChargeCounter()
@@ -35,8 +32,6 @@ public class ChargeCounter : StackCounter
         StartChargeEvent = copied.StartChargeEvent;
         StopChargeEvent = copied.StopChargeEvent;
         ResetChargeEvent = copied.ResetChargeEvent;
-        ChargeStartAnim = copied.ChargeStartAnim;
-        ChargeEndAnim = copied.ChargeEndAnim;
     }
     public override StackCounter GetCopy()
     {
@@ -74,17 +69,11 @@ public class ChargeCounter : StackCounter
     #region Custom Functionality
     private void StartCharging()
     {
-        ChargeStartAnim.Animate(StackAnimator);
         _startChargeTime = Time.time;
     }
     private void StopCharging()
     {
-        ChargeEndAnim.Animate(StackAnimator);
-        if (Time.time - _startChargeTime > MinChargeTime)
-        {
-            UseActivator();
-            _startChargeTime = 0;
-        }
+        _startChargeTime = 0;
     }
 
     #endregion
@@ -97,8 +86,24 @@ public class ChargeCounter : StackCounter
 
     public override float GetStatus()
     {
-        float currChargeTime = (Time.time - _startChargeTime - MinChargeTime);
+        if (_startChargeTime == 0)
+        {
+            _startChargeTime = Time.time;
+        }
+        else if (Time.time - _startChargeTime < MinChargeTime)
+        {
+            return -1;
+        }
+        float currChargeTime = Time.time - _startChargeTime - MinChargeTime;
         return Mathf.Clamp01(currChargeTime / (MaxChargeTime));
+    }
+    public override float GetReadinessTime()
+    {
+        if (_startChargeTime == 0)
+        {
+            _startChargeTime = Time.time;
+        }
+        return MaxChargeTime - Mathf.Max(0, Time.time - _startChargeTime - MinChargeTime);
     }
     #endregion
 }

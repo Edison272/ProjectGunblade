@@ -779,25 +779,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Character
   base_data: {fileID: 11400000, guid: 7a5d7200d8b87034abfb8c64a1770fc2, type: 2}
-  Anatomy:
+  <Anatomy>k__BackingField:
     main_body: {fileID: 5274262720743981671}
     vfx_body: {fileID: 993110202620078077}
     front: {fileID: 2334733180464748044}
     back: {fileID: 3025238683813426482}
     body: {fileID: 1523821862320733360}
     body_sprite: {fileID: 2089290969598026470}
-    body_outline: {fileID: 0}
+    body_outline: {fileID: 1523821862320733360}
     main_hand: {fileID: 1463138407214899761}
     alt_hand: {fileID: 2674087659750675294}
-    head: {fileID: 9112219210537336755}
-    front_particles: {fileID: 2334733180464748044}
-    back_particles: {fileID: 3025238683813426482}
+    head: {fileID: 1523821862320733360}
+    front_particles: {fileID: 1162040220609157847}
+    back_particles: {fileID: 5620813780406317836}
     true_front: {fileID: 1162040220609157847}
     true_back: {fileID: 5620813780406317836}
     base_sprite_height: 0
     base_head_height: 0
     animator: {fileID: 0}
-    offset_look: {x: 0, y: 0}
     aim_angle: 0
   animator: {fileID: 6288781344798074604}
   <Movement>k__BackingField:
@@ -815,13 +814,23 @@ MonoBehaviour:
     health_bar: {fileID: 0}
     health_drift_bar: {fileID: 0}
     shield_bar: {fileID: 0}
+  AimStrengthScale: 1
   Inventory:
     inventory: []
     inventorySlots: []
   interactEvention_range: 1
-  target: {fileID: 0}
   FactionTag: Allies
   isAIActive: 1
+  _behaviorController:
+    base_engage_dist: 0
+    anchor_position: {x: 0, y: 0}
+    move_to_pos: {x: 0, y: 0}
+    EvaluationRadius: 0
+    TargetMovePos: {x: 0, y: 0}
+    _pathSet: 0
+    TargetAimPos: {x: 0, y: 0}
+    AimRecovery: 0
+    TargetChar: {fileID: 0}
 --- !u!95 &6288781344798074604
 Animator:
   serializedVersion: 7

@@ -182,6 +182,21 @@ public class InventoryComponent
     }
     #endregion
 
+    #region Getting Data
+    // gets the current slot's readiness score
+    public float GetActiveSlotReadiness()
+    {
+        return CurrentSlot.GetSlotReadiness();
+    }
+    
+    // gets the slot most "ready"
+    public float GetHighestReadinessSlot()
+    {
+        return CurrentSlot.GetSlotReadiness();
+    }
+
+    #endregion
+
     #region Helpers
     // starting from 0, find a slot without anything. Otherwise return -1 to signify no empty slots were found
     public int FindEmptySlot()

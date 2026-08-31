@@ -12,32 +12,42 @@ using UnityEngine.Rendering;
 /// </summary>
 
 [Serializable]
-public class ItemEffect
+public class ItemOutput
 {
-    public readonly Item baseItem;
+    private Item _baseItem;
     [SerializeReference] public int[] attackObjectRefs = new int[] {}; // contains a custom collection of index references for attack types
     [SerializeReference] public int[] stackCounterRefs = new int[] {}; // contains a custom collection of index references for stack counters
     // THE FIRST ITEM OF STACK COUNTER REFS IS THE MOST IMPORTANT. THAT IS THE ONE WHICH ACTIVATES THE ITEM EFFECT WHEN TRIGGERED
-
     [SerializeField] private AnimationRequest _animationRequest; // when making items, each animation
+    public InputEventSelector InputEvent; // mostly just for show and vfx stuff
+    public InputEventSelector OutputEvent; // reads stack inputs to get an output when called
 
     #region Initializer
     // return a deep copy of this item effect
-    public ItemEffect(ItemEffect copiedItem, Item baseItem)
+    public ItemOutput(ItemOutput copiedItem, Item baseItem)
     {
-        this.baseItem = baseItem;
+        _baseItem = baseItem;
         // attack types and refs will never change
         attackObjectRefs = copiedItem.attackObjectRefs;
         stackCounterRefs = copiedItem.stackCounterRefs;
-        baseItem.stackCounters?[stackCounterRefs[0]].AddActivator(ActivateEffect).SetAnimator(baseItem.animator);
+
+        InputEvent = copiedItem.InputEvent;
+        OutputEvent = copiedItem.OutputEvent;
+        
         // _animation requests don't change either. just keep a reference
         this._animationRequest = copiedItem._animationRequest;
         
     }
     // clean copy function
-    public ItemEffect GetCopy(Item baseItem)
+    public ItemOutput GetCopy(Item baseItem)
     {
-        return new ItemEffect(this, baseItem);
+        return new ItemOutput(this, baseItem);
+    }
+
+    public ItemOutput SetInputRelay(InputEventRelay inputRelay)
+    {
+        inputRelay.ConnectEvent(OutputEvent.InputEvent, ActivateEffect);
+        return this;
     }
     #endregion
     public float CheckStackCounters()
@@ -45,13 +55,24 @@ public class ItemEffect
         float stack_index = 1;
         foreach(int stack_ref in stackCounterRefs)
         {
-            stack_index *= baseItem.stackCounters[stack_ref].GetIndexData();
+            stack_index *= _baseItem.stackCounters[stack_ref].GetIndexData();
             if (stack_index < 0)
             {
                 return -1;
             }
         }
         return stack_index;
+    }
+    public float GetReadinessValue()
+    {
+        float greatestTime = 0;
+        foreach(int stack_ref in stackCounterRefs)
+        {
+            float curr = _baseItem.stackCounters[stack_ref].GetReadinessTime();
+            if (curr > greatestTime)
+                greatestTime = curr;
+        }
+        return greatestTime; // more readiness time, less readiness score
     }
 
     // Activates this item's effect
@@ -67,9 +88,11 @@ public class ItemEffect
         // Debug.Log(attack_ref_index);
         if (attack_ref_index > -1)
         {
-            baseItem.UseItem(attackObjectRefs[attack_ref_index], _animationRequest);
+            _baseItem.UseItem(attackObjectRefs[attack_ref_index], _animationRequest, GetReadinessValue());
         }
     }
+
+
 
     #region Helpers
 

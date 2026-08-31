@@ -25,8 +25,8 @@ public class BehaviorController
     [SerializeField] public readonly Character ThisCharacter;
 
     [Header("Actions")]
-    protected float aggro_time = 2f; // do an attack or something
-    protected float rest_time = -1f; // don't attack
+    protected float aggro_time = 3f; // do an attack or something
+    protected float rest_time = 2f; // don't attack
     protected float curr_time; // time buffer
     protected bool is_acting = true;
     // BehaviorModule current_module;
@@ -37,14 +37,17 @@ public class BehaviorController
     public Vector2 move_to_pos; // the resulting position the bot aims to move to
     private Vector2Int prev_tile_pos;
 
-    [Header("Positioning")]
+    [Header("Evaluation")]
     public int EvaluationRadius = 20;
-
 
     // pathfinding stuff
     public readonly PathfinderModule Pathfinder;
     public Vector2Int TargetMovePos;
     public bool _pathSet = false;
+
+    // aiming stuff
+    public Vector2 TargetAimPos;
+    public float AimRecovery;
 
     // finding targets
     public Character TargetChar;
@@ -83,27 +86,38 @@ public class BehaviorController
         {
             bool targetAllies = false;
             TargetChar = FactionSquad.FindTarget(ThisCharacter, targetAllies, TargetType.Closest);
-            ThisCharacter.characterRelay.Invoke(CharacterEvent.LookPos, Pathfinder.MoveDir);
+            ThisCharacter.Aim(ThisCharacter.Position + Pathfinder.MoveDir);
         }
+        // temporary attack pattern
         else
         {
-            ThisCharacter.characterRelay.Invoke(CharacterEvent.LookPos, TargetChar.Position);
+            
+            TargetAimPos = TargetChar.Position;
+            
+            ThisCharacter.Aim(TargetAimPos);
             if (curr_time <= 0)
             {
                 curr_time += Time.fixedDeltaTime;
                 if (curr_time >= 0)
                 {
                     curr_time = aggro_time;
-                    ThisCharacter.characterRelay.Invoke(CharacterEvent.MainStart);
+                    ThisCharacter.MainStart();
                 }
+                // reset if target if the target isn't a big threat (checks distance for now)
+                // float threatScore = (TargetChar.Position - ThisCharacter.Position).magnitude / TargetChar.move_speed;
+                // Debug.Log(ThisCharacter.Inventory.GetActiveSlotReadiness());
+                // if (ThisCharacter.Inventory.GetActiveSlotReadiness() > 3)
+                // {
+                //     ThisCharacter.characterRelay.Invoke(UsableEvent.ResetStart);
+                // }
             }
             else
             {
                 curr_time -= Time.fixedDeltaTime;
                 if (curr_time <= 0)
                 {
-                    curr_time = rest_time;
-                    ThisCharacter.characterRelay.Invoke(CharacterEvent.MainEnd);
+                    curr_time = -rest_time;
+                    ThisCharacter.MainEnd();
                 }
             }
         }

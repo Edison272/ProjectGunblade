@@ -202,11 +202,11 @@ public class PlayerController : MonoBehaviour
 
         this.transform.position = active_character.Position;
         main_cinema_cam.Target.TrackingTarget = _isCommanding ? transform : active_character.transform;
-
+        CharacterInputRelay.Invoke(CharacterEvent.MoveEnd);
+        
         // stop anything the player mightve been doing
         if (_isCommanding)
         {
-            CharacterInputRelay.Invoke(CharacterEvent.MoveEnd);
             CharacterInputRelay.Invoke(CharacterEvent.MainEnd);
             CharacterInputRelay.Invoke(CharacterEvent.AltEnd);
         }

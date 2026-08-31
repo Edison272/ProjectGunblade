@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 using GameAI.Factions;
 using Unity.Mathematics;
@@ -11,7 +12,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     [SerializeField] private CharacterSO base_data;
     public string character_name => base_data.character_name;
 
-    public AnatomyComponent Anatomy;
+    [field: SerializeField] public AnatomyComponent Anatomy {get; private set;}
     public Animator animator;
 
 
@@ -36,6 +37,13 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
     [field: Header("Health UI")]
     [SerializeField] HealthUI health_ui = new HealthUI();
+
+    // Aiming
+    private Vector2 _targAimPos = Vector2.zero;
+    private Quaternion _currAimRot; // save the current quaternion rotation
+    public Vector2 OffsetVec {get; private set;} = Vector2.zero;
+    public float AimStrengthScale = 1;
+    public float AimStrength => base_data.AimStrength * AimStrengthScale;
 
     [field: Header("Inventory")]
     public InventoryComponent Inventory;
@@ -92,19 +100,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
                 (UsableEvent.ResetStart, typeof(Action)), 
             }
         );
-
-        // attach to internal function
-        characterRelay.ConnectEvent(CharacterEvent.MoveStart, (Action<Vector2>)StartMove);
-        characterRelay.ConnectEvent(CharacterEvent.MoveEnd, StopMove);
-
-        characterRelay.ConnectEvent(CharacterEvent.MainStart, (Action)(() => {MainInputActive = true;}));
-        characterRelay.ConnectEvent(CharacterEvent.MainEnd, (Action)(() => {MainInputActive = false;}));
-        characterRelay.ConnectEvent(CharacterEvent.AltStart, (Action)(() => {AltInputActive = true;}));
-        characterRelay.ConnectEvent(CharacterEvent.AltEnd, (Action)(() => {AltInputActive = false;}));
-
-        characterRelay.ConnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Anatomy.Look);
-        characterRelay.ConnectEvent(CharacterEvent.Interact, Interact);
-
         // setup movement
         Movement = new MovementComponent(base_data, GetComponent<Rigidbody2D>());
         // setup health
@@ -149,13 +144,33 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public void LinkController(InputEventRelay inputRelay)
     {
         //unsubscribe from old user if they exist
-        if (controllerRelay != null)
-            characterRelay.UnlinkRelay(controllerRelay);
-        
+        if (controllerRelay != null) {
+            controllerRelay.DisconnectEvent(CharacterEvent.MoveStart, (Action<Vector2>)StartMove);
+            controllerRelay.DisconnectEvent(CharacterEvent.MoveEnd, (Action)StopMove);
+
+            controllerRelay.DisconnectEvent(CharacterEvent.MainStart, (Action)MainStart);
+            controllerRelay.DisconnectEvent(CharacterEvent.MainEnd, (Action)MainEnd);
+            controllerRelay.DisconnectEvent(CharacterEvent.AltStart, (Action)AltStart);
+            controllerRelay.DisconnectEvent(CharacterEvent.AltEnd, (Action)AltEnd);
+
+            controllerRelay.DisconnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Aim);
+            controllerRelay.DisconnectEvent(CharacterEvent.Interact, (Action)Interact);
+        }
         // subscribe to old user events
         controllerRelay = inputRelay;
-        if (controllerRelay != null)
-            characterRelay.LinkRelay(controllerRelay);
+        if (controllerRelay != null) {
+            controllerRelay.ConnectEvent(CharacterEvent.MoveStart, (Action<Vector2>)StartMove);
+            controllerRelay.ConnectEvent(CharacterEvent.MoveEnd, StopMove);
+
+            controllerRelay.ConnectEvent(CharacterEvent.MainStart, MainStart);
+            controllerRelay.ConnectEvent(CharacterEvent.MainEnd, MainEnd);
+            controllerRelay.ConnectEvent(CharacterEvent.AltStart, AltStart);
+            controllerRelay.ConnectEvent(CharacterEvent.AltEnd, AltEnd);
+
+            controllerRelay.ConnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Aim);
+            controllerRelay.ConnectEvent(CharacterEvent.Interact, Interact);
+            //controllerRelay.ConnectEvent(UsableEvent.ResetStart, ), 
+        }
     }
 
     #endregion
@@ -197,6 +212,22 @@ public class Character : MonoBehaviour, IMovement, IHealth
         // update ui helpers
         //health_ui.UpdateHealthUI();
 
+
+        // handling aim offset recovery
+        
+
+        if (OffsetVec.sqrMagnitude > 0.001)
+            OffsetVec = Vector2.Lerp(OffsetVec, Vector2.zero, Time.deltaTime);
+
+        Vector2 aimDir = _targAimPos - Position;
+        Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aimDir) * Quaternion.Euler(0, 0, 90f);
+        _currAimRot = Quaternion.Lerp(_currAimRot, aim_rot, 1);            
+        Vector2 currAimPos = Position + (Vector2)(_currAimRot * Vector2.right * aimDir.magnitude) + OffsetVec;
+
+        Anatomy.Look(aimDir);
+        characterRelay.Invoke(CharacterEvent.LookPos, currAimPos);
+
+
         // update vfx at the very end
         Anatomy.UpdateBodyVFX();
     }
@@ -235,11 +266,30 @@ public class Character : MonoBehaviour, IMovement, IHealth
     }
     #endregion
 
+    #region Aiming
+    public void Aim(Vector2 lookPos)
+    {
+        _targAimPos = lookPos;
+    }
+    public void StaggerAim(Vector2 normalDir, float scalar) // used to apply recoil, or offsets to the character's aim
+    {
+        OffsetVec += normalDir * scalar;
+    }
+    #endregion
+
+    #region  Inputs
+    public void MainStart() {MainInputActive = true;}
+    public void MainEnd() {MainInputActive = false;}
+    public void AltStart() {AltInputActive = true;}
+    public void AltEnd() {AltInputActive = false;}
+    #endregion
+
     #region Inventory
     // THE DEFINITIVE INTERACITON FUNCTION
 
     public void Interact()
     {
+        characterRelay.Invoke(CharacterEvent.Interact);   
         IInteractable nearbyInteractable = FindInteractables();
         if (nearbyInteractable != null)
         {
@@ -250,7 +300,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
             Inventory.SwitchItem(-1); 
         }
     }
-
 
     // returns false of the item could not be added to the inventory
     public Item PickupItem(Item newItem, bool setAsAlt = false) {return Inventory.PickupItem(newItem, setAsAlt);}
@@ -275,12 +324,14 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #region Movement
     // completely change positions and forget where they wanted to go before
     public void SetPosition(Vector2 new_position)  {Movement.SetPosition(new_position);}
-    // get directional movement, useful for dynamic & sudden maneuvers
-    public void SetMove(Vector2 set_MoveDir) {Movement.SetMove(set_MoveDir);}
-    // get targetPosition, useful for AI with discrete positioning
-    public void SetMovePos(Vector2 set_MovePos) {Movement.SetMovePos(set_MovePos);}
-    public void StartMove(Vector2 MoveDir) {Movement.StartMove(MoveDir);}
-    public void StopMove() {Movement.StopMove();}
+    public void StartMove(Vector2 MoveDir) {
+        characterRelay.Invoke(CharacterEvent.MoveStart);
+        Movement.StartMove(MoveDir);
+    }
+    public void StopMove() {
+        characterRelay.Invoke(CharacterEvent.MoveEnd);   
+        Movement.StopMove();
+    }
 
     // return how long it is expected to take for the operator to reach their position
     public float GetTravelTime() {return Movement.GetTravelTime();}
@@ -296,7 +347,13 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #endregion
 
     #region Damage/Health System
-    public virtual void ChangeHealth(int change_amt) {Health.ChangeHealth(change_amt);}
+    public virtual void ChangeHealth(int change_amt) {
+        Health.ChangeHealth(change_amt);
+        if (change_amt > 0)
+        {
+            StaggerAim(Random.insideUnitCircle, 3);
+        }
+    }
     // public virtual void ChangeHealthTick(int change_amt, float duration, float tick_rate, AbilityEffectComponent effect_controller = null) 
     // {
     //     Health.ChangeHealthTick(change_amt, duration, tick_rate, effect_controller);
@@ -320,31 +377,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
     {
         FactionTag = newTag;
     }
-
-    // // public ContactPoint2D[] GetAllInRange()
-    // // {
-    // //     range_collider.GetContacts(things_in_range);
-    // //     return things_in_range;
-    // // }
-    // public void ToggleAI(bool is_on)
-    // {
-    //     isAIActive = is_on;
-    // }
-
-    // public void SetLeader(Character new_leader)
-    // {
-    //     behavior_controller.SetLeader(new_leader);
-    // }
-
-    // public void SetCommandBehavior(CommandMode command)
-    // {
-    //     behavior_controller.SetCommand(command);
-    // }
-    // public virtual bool IsInAction()
-    // {
-    //     return is_alive;
-    // }
-
     #endregion
 
     #region AI

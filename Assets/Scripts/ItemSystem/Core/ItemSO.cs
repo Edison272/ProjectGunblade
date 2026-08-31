@@ -24,9 +24,9 @@ public class ItemSO : ScriptableObject
     [field: Header("Resetting")]
     [field: SerializeField] public float ResetTime {get; private set;} = 1f;
 
-    public ItemEffect[] itemEffects = new ItemEffect[] {}; // determines the attacks available in this item
-    [SerializeReference] public AttackObject[] attackObjects = new Projectile[] {}; // a collection of attack types
-    [SerializeReference] public StackCounter[] stackCounters = new StackCounter[] {}; // control when different item effects trigger
+    [field: SerializeField]public ItemOutput[] ItemOutputs {get; private set;} = new ItemOutput[] {}; // determines the attacks available in this item
+    [SerializeReference] public AttackObject[] AttackObjects = new Projectile[] {}; // a collection of attack types
+    [SerializeReference] public StackCounter[] StackCounters = new StackCounter[] {}; // control when different item effects trigger
 
     [field: Header("Aiming")]
     public bool dynamic_aim = true; // allow dynamic aim for the object to be able to turn to face the target
@@ -65,26 +65,26 @@ public class ItemSO : ScriptableObject
 
     public void OnValidate()
     {
-        for(int i = 0; i < attackObjects.Length; i++)
+        for(int i = 0; i < AttackObjects.Length; i++)
         {
-            AttackObject attackType = attackObjects[i];
+            AttackObject attackType = AttackObjects[i];
             if (attackType == null)
             {
-                attackObjects[i] = new Projectile();
-                attackType = attackObjects[i];
+                AttackObjects[i] = new Projectile();
+                attackType = AttackObjects[i];
             }
             if (attackType.instance != null)
             {
                 if (attackType.GetSpecificAttackObject() != attackType.GetType())
                 {
-                    attackObjects[i] = attackType.SmartRecast();
-                    attackType = attackObjects[i];
+                    AttackObjects[i] = attackType.SmartRecast();
+                    attackType = AttackObjects[i];
                 }
             }
         }
-        for(int i = 0; i < stackCounters.Length; i++)
+        for(int i = 0; i < StackCounters.Length; i++)
         {
-            StackCounter stackCounter = stackCounters[i];
+            StackCounter stackCounter = StackCounters[i];
             if (stackCounter == null)
             {
                 stackCounter = new SimpleCounter();
@@ -94,7 +94,7 @@ public class ItemSO : ScriptableObject
                 stackCounter = stackCounter.SmartRecast();
             }
 
-            stackCounters[i] = stackCounter;
+            StackCounters[i] = stackCounter;
             
         }
     }

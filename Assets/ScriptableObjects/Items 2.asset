@@ -16,20 +16,32 @@ MonoBehaviour:
   <EquipTime>k__BackingField: 1
   <UnequipTime>k__BackingField: 0.2
   <ResetTime>k__BackingField: 3
-  itemEffects:
-  - attackObjectRefs: 000000000100000002000000
+  <ItemOutputs>k__BackingField:
+  - attackObjectRefs: 00000000
     stackCounterRefs: 0000000001000000
     _animationRequest:
-      AnimParameterName: Use
-      AnimParameterType: 9
+      AnimParameterName: 
+      AnimParameterType: 0
       <_animParamValue>k__BackingField: 0
-      AnimSpeed: 0.3
+      AnimSpeed: 0
+    InputEvent:
+      InputEventType: 2
+      _globalInput: 0
+      _interfaceInput: 0
+      _characterInput: 2
+      _usableInput: 0
+    OutputEvent:
+      InputEventType: 2
+      _globalInput: 0
+      _interfaceInput: 0
+      _characterInput: 3
+      _usableInput: 0
   attackObjects:
   - rid: 2198171788663324832
   - rid: 2198171788663324823
   - rid: 2198171788663324825
   stackCounters:
-  - rid: 2198171788663324802
+  - rid: 267928573218914399
   - rid: 2198171343949136020
   dynamic_aim: 1
   rotation_scale: 1
@@ -37,6 +49,25 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: 267928573218914399
+      type: {class: SequenceCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 4
+        MaxIndex: 0
+        IterateSequenceEvent:
+          InputEventType: 3
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 0
+          _usableInput: 2
+        ResetSequenceEvent:
+          InputEventType: 3
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 0
+          _usableInput: 3
+        ResetAfterCooldown: 0
+        SequenceResetTime: 1
     - rid: 2198171343949136020
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -59,40 +90,6 @@ MonoBehaviour:
             _usableInput: 4
         regenAmmo: 0
         roundsReload: 0
-    - rid: 2198171788663324802
-      type: {class: ChargeCounter, ns: , asm: Assembly-CSharp}
-      data:
-        <stackCounterType>k__BackingField: 4
-        MaxChargeTime: 1
-        MinChargeTime: 0
-        StartChargeEvent:
-          InputEventType: 2
-          _globalInput: 0
-          _interfaceInput: 0
-          _characterInput: 2
-          _usableInput: 0
-        StopChargeEvent:
-          InputEventType: 2
-          _globalInput: 0
-          _interfaceInput: 0
-          _characterInput: 4
-          _usableInput: 2
-        ResetChargeEvent:
-          InputEventType: 3
-          _globalInput: 0
-          _interfaceInput: 0
-          _characterInput: 0
-          _usableInput: 3
-        ChargeStartAnim:
-          AnimParameterName: Use
-          AnimParameterType: 9
-          <_animParamValue>k__BackingField: 0
-          AnimSpeed: 1
-        ChargeEndAnim:
-          AnimParameterName: Use
-          AnimParameterType: 9
-          <_animParamValue>k__BackingField: 0
-          AnimSpeed: 1
     - rid: 2198171788663324823
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:

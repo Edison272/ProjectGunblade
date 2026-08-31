@@ -71,20 +71,6 @@ public class MovementComponent
         MovePos = new_position;
         DestinationReached = true;
     }
-    public void SetMove(Vector2 set_MoveDir) // get directional movement, useful for dynamic & sudden maneuvers
-    {
-        LastMoveDir = MoveDir;
-        DestinationReached = false;
-        MoveDir = set_MoveDir.normalized;
-        MovePos = GetPosition() + MoveDir * 1000;
-    }
-    public void SetMovePos(Vector2 set_MovePos) // get targetPosition, useful for AI with discrete positioning
-    {
-        LastMoveDir = MoveDir;
-        DestinationReached = false;
-        MoveDir = (set_MovePos - GetPosition()).normalized;
-        MovePos = set_MovePos;
-    }
     #endregion
     #region Update
     // Called by the controlling character or whoever. Updates speed modifiers, and physics data

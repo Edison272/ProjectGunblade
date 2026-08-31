@@ -20,6 +20,8 @@ public class CharacterSO : ScriptableObject
     public float weight = 10;
     public float speed = 3;
 
+    [field: Header("Aiming")]
+    public float AimStrength;
 
 
 

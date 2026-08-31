@@ -16,91 +16,175 @@ MonoBehaviour:
   <EquipTime>k__BackingField: 1
   <UnequipTime>k__BackingField: 1
   <ResetTime>k__BackingField: 1
-  itemEffects:
+  <ItemOutputs>k__BackingField:
+  - attackObjectRefs: 00000000
+    stackCounterRefs: 00000000
+    _animationRequest:
+      AnimParameterName: Null
+      AnimParameterType: 0
+      <_animParamValue>k__BackingField: 0
+      AnimSpeed: 0
+    InputEvent:
+      InputEventType: 2
+      _globalInput: 0
+      _interfaceInput: 0
+      _characterInput: 2
+      _usableInput: 0
+    OutputEvent:
+      InputEventType: 2
+      _globalInput: 0
+      _interfaceInput: 0
+      _characterInput: 3
+      _usableInput: 0
   - attackObjectRefs: 00000000
     stackCounterRefs: 0000000001000000
     _animationRequest:
-      AnimParameterName: Use
-      AnimParameterType: 9
+      AnimParameterName: Null
+      AnimParameterType: 0
       <_animParamValue>k__BackingField: 0
-      AnimSpeed: 0.2
-  attackObjects:
-  - rid: 2198171203760816235
-  stackCounters:
-  - rid: 2198171632553427168
-  - rid: 2198171632553427104
+      AnimSpeed: 0
+    InputEvent:
+      InputEventType: 2
+      _globalInput: 0
+      _interfaceInput: 0
+      _characterInput: 2
+      _usableInput: 0
+    OutputEvent:
+      InputEventType: 2
+      _globalInput: 0
+      _interfaceInput: 0
+      _characterInput: 3
+      _usableInput: 0
+  - attackObjectRefs: 01000000
+    stackCounterRefs: 0100000002000000
+    _animationRequest:
+      AnimParameterName: Null
+      AnimParameterType: 0
+      <_animParamValue>k__BackingField: 0
+      AnimSpeed: 0
+    InputEvent:
+      InputEventType: 2
+      _globalInput: 0
+      _interfaceInput: 0
+      _characterInput: 2
+      _usableInput: 0
+    OutputEvent:
+      InputEventType: 2
+      _globalInput: 0
+      _interfaceInput: 0
+      _characterInput: 4
+      _usableInput: 0
+  AttackObjects:
+  - rid: 267928573218914418
+  - rid: 267928573218914452
+  StackCounters:
+  - rid: 267928573218914422
+  - rid: 267928573218914447
+  - rid: 267928573218914462
   dynamic_aim: 1
   rotation_scale: 1
   ui_image: {fileID: -266484137676524057, guid: 9db3aee8d2f6bcf458c5edfdf87fdb22, type: 3}
   references:
     version: 2
     RefIds:
-    - rid: 2198171203760816235
+    - rid: 267928573218914418
       type: {class: Projectile, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
         atk_stats:
-          damage: 10
-          pierce: 1
-          bounce: 3
-          knockback_amt: 4.8
+          damage: 1
+          pierce: 0
+          bounce: 0
+          knockback_amt: 0
           effect_time: 0
-          slow_amt: 3.84
+          slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
           projectile_speed: 30
-          homing_radius: 10
-          HomingSpdScale: 0
+          homing_radius: 0
+          HomingSpdScale: 1
           projectile_count: 1
           projectile_spread: 0
           even_spread: 0
-    - rid: 2198171632553427104
-      type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
-      data:
-        <stackCounterType>k__BackingField: 1
-        StackAnimation:
-          AnimParameterName: Use
-          AnimParameterType: 9
-          <_animParamValue>k__BackingField: 0
-          AnimSpeed: 1
-        basicAmmoStats:
-          maxAmmo: 30
-          currAmmo: 30
-          reloadSpeed: 1
-          UseAmmoEvent:
-            InputEventType: 2
-            _globalInput: 0
-            _interfaceInput: 0
-            _characterInput: 2
-            _usableInput: 2
-          ReloadEvent:
-            InputEventType: 2
-            _globalInput: 0
-            _interfaceInput: 0
-            _characterInput: 4
-            _usableInput: 4
-        regenAmmo: 0
-        roundsReload: 0
-    - rid: 2198171632553427168
+    - rid: 267928573218914422
       type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
       data:
-        <stackCounterType>k__BackingField: 3
-        StackAnimation:
-          AnimParameterName: Use
-          AnimParameterType: 9
-          <_animParamValue>k__BackingField: 0
-          AnimSpeed: 1
+        <stackCounterType>k__BackingField: 2
         cooldownTime: 0.1
         StartCooldownEvent:
-          InputEventType: 2
+          InputEventType: 3
           _globalInput: 0
           _interfaceInput: 0
-          _characterInput: 3
+          _characterInput: 0
           _usableInput: 2
         ResetCooldownEvent:
           InputEventType: 3
           _globalInput: 0
           _interfaceInput: 0
-          _characterInput: 3
+          _characterInput: 0
           _usableInput: 3
+    - rid: 267928573218914447
+      type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 1
+        basicAmmoStats:
+          maxAmmo: 300
+          currAmmo: 300
+          reloadSpeed: 1
+          UseAmmoEvent:
+            InputEventType: 3
+            _globalInput: 0
+            _interfaceInput: 0
+            _characterInput: 0
+            _usableInput: 2
+          ReloadEvent:
+            InputEventType: 3
+            _globalInput: 0
+            _interfaceInput: 0
+            _characterInput: 0
+            _usableInput: 4
+        regenAmmo: 0
+        roundsReload: 0
+    - rid: 267928573218914452
+      type: {class: Linecast, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        atk_stats:
+          damage: 0
+          pierce: 0
+          bounce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          projectile_speed: 0.3
+          homing_radius: 0
+          HomingSpdScale: 1
+          projectile_count: 10
+          projectile_spread: 15
+          even_spread: 0
+    - rid: 267928573218914462
+      type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
+      data:
+        <stackCounterType>k__BackingField: 1
+        basicAmmoStats:
+          maxAmmo: 30
+          currAmmo: 30
+          reloadSpeed: 1
+          UseAmmoEvent:
+            InputEventType: 3
+            _globalInput: 0
+            _interfaceInput: 0
+            _characterInput: 0
+            _usableInput: 2
+          ReloadEvent:
+            InputEventType: 3
+            _globalInput: 0
+            _interfaceInput: 0
+            _characterInput: 0
+            _usableInput: 4
+        regenAmmo: 0
+        roundsReload: 0

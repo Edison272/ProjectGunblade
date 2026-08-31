@@ -6,7 +6,6 @@ public enum StackCountType
 {
     Simple, 
     Ammo, 
-    Constant,
     Cooldown,
     Charge, 
     Sequence, 
@@ -22,36 +21,16 @@ public abstract class StackCounter
 {
     [field: SerializeField] public StackCountType stackCounterType {get; protected set;} = StackCountType.Simple;
     protected InputEventRelay inputRelay; // reference to another input relay. used to control when stack interactions happen
-    private delegate void ActivatorFunc();
-    private Action activatorEffect;
-    protected Animator StackAnimator;
 
     #region Initializers
     public StackCounter() {}
     // creates a deepy copy of this class.
     public abstract StackCounter GetCopy();
-
-    // builder. A reference to a function which the counter calls when certain conditions are met
-    public virtual StackCounter AddActivator(Action newActivator)
-    {
-        activatorEffect += newActivator;
-        return this;
-    }
-    public virtual StackCounter SetAnimator(Animator newAnimator)
-    {
-        StackAnimator = newAnimator;
-        return this;
-    }
     #endregion
 
     #region Functionality
     // Set the input relay/user. unsubscribe from a previous relay if necessary
     public abstract void SetInputRelay(InputEventRelay newRelay);
-
-    public void UseActivator()
-    {
-        activatorEffect?.Invoke();
-    }
     #endregion
 
     #region Stack Status
@@ -59,6 +38,7 @@ public abstract class StackCounter
     public abstract float GetIndexData();
     // provides the precise status data
     public abstract float GetStatus();
+    public abstract float GetReadinessTime(); // gets time till readiness
     #endregion
 
 
@@ -75,7 +55,6 @@ public abstract class StackCounter
         return this switch
         {
             AmmoCounter => StackCountType.Ammo,
-            ConstantCounter => StackCountType.Constant,
             CooldownCounter => StackCountType.Cooldown,
             ChargeCounter => StackCountType.Charge,
             SequenceCounter => StackCountType.Sequence,
@@ -92,9 +71,6 @@ public abstract class StackCounter
                 break;
             case StackCountType.Ammo:
                 new_type = new AmmoCounter();
-                break;
-            case StackCountType.Constant:
-                new_type = new ConstantCounter();
                 break;
             case StackCountType.Cooldown:
                 new_type = new CooldownCounter();

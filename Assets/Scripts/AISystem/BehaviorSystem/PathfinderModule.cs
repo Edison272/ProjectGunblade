@@ -53,7 +53,7 @@ public class PathfinderModule
             if (path.Count == 0)
             {
                 MoveDir = Vector2.zero;
-                _character.characterRelay.Invoke(CharacterEvent.MoveEnd);
+                _character.StopMove();
                 return;
             }
             else
@@ -100,7 +100,7 @@ public class PathfinderModule
 
         //MoveDir = SmartSteering(MoveDir.normalized);
         Debug.DrawLine(_character.Position, _character.Position + MoveDir, Color.green);
-        _character.characterRelay.Invoke(CharacterEvent.MoveStart, MoveDir.normalized);
+        _character.StartMove(MoveDir.normalized);
     }
 
     public bool FindPath(Vector2 targetPos)

@@ -85,5 +85,9 @@ public class SequenceCounter : StackCounter
     {
         return ((float)_currIndex) / MaxIndex;
     }
+    public override float GetReadinessTime()
+    {
+        return Mathf.Infinity; // no time sensitive values, so not relevant for readiness
+    }
     #endregion
 }
