@@ -166,6 +166,7 @@ public class PlayerController : MonoBehaviour
         set_character?.LinkController(CharacterInputRelay);
         // set camera target
         main_cinema_cam.Target.TrackingTarget = set_character.transform;
+        CanvasController.Instance.PlayerHUD.GetComponent<ItemUIController>().active_character = active_character;
     }
 
     void Update()

@@ -136,7 +136,6 @@ public class InventoryComponent
         new_item.transform.localScale = new Vector3(Mathf.Abs(scale), Mathf.Abs(scale), Mathf.Abs(scale));
         SetItemUser(new_item); // set up the new shi
         
-        
         Item switch_out_item = null;
         // simply add the item in if there's still an empty slot
         int setSlotIdx = FindEmptySlot();
@@ -197,6 +196,10 @@ public class InventoryComponent
     public float GetHighestReadinessSlot()
     {
         return CurrentSlot.GetSlotReadiness();
+    }
+    public Item GetCurrentSlotItem()
+    {
+        return inventory[CurrentSlot.MainSlot];
     }
 
     #endregion

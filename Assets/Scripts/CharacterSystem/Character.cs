@@ -39,10 +39,9 @@ public class Character : MonoBehaviour, IMovement, IHealth
     [SerializeField] HealthUI health_ui = new HealthUI();
 
     // Aiming
-    private Vector2 _targAimPos = Vector2.zero;
+    public Vector2 TargetAimPos {get; private set;} = Vector2.zero;
     private Quaternion _currAimRot; // save the current quaternion rotation
     public Vector2 OffsetVec {get; private set;} = Vector2.zero;
-    public float MaxOffsetMagnitude {get; private set;} = 3; 
     public Vector2 AimPosition {get; private set;} = Vector2.zero;
     public float AimStrengthScale = 1;
     public float AimStrength => base_data.AimStrength * AimStrengthScale;
@@ -126,7 +125,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     {        
         Inventory.SwitchItem(0);
         Anatomy.IdlePosition();
-        _targAimPos = Position;
+        TargetAimPos = Position;
         AimPosition = Position;
     }
     public virtual void ResetEventData()
@@ -218,12 +217,12 @@ public class Character : MonoBehaviour, IMovement, IHealth
         //health_ui.UpdateHealthUI();
 
         // handling aim offset recovery        
-        if (OffsetVec.sqrMagnitude > 0.0001)
+        if (OffsetVec.sqrMagnitude > 0.000001)
             OffsetVec = Vector2.Lerp(OffsetVec, Vector2.zero, Time.deltaTime);
-            if (OffsetVec.sqrMagnitude < 0.0001)
+            if (OffsetVec.sqrMagnitude < 0.000001)
                 OffsetVec = Vector2.zero;
 
-        Vector2 aimDir = _targAimPos - Position;
+        Vector2 aimDir = TargetAimPos + Movement.MoveSpeedDir * Time.deltaTime - Position;
         Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aimDir) * Quaternion.Euler(0, 0, 90f);
         _currAimRot = Quaternion.Lerp(_currAimRot, aim_rot, Time.deltaTime * AimStrength);
         float currAimDirMag = Mathf.Sqrt(Mathf.Lerp((AimPosition - Position).sqrMagnitude, aimDir.sqrMagnitude, Time.deltaTime * AimStrength));
@@ -234,7 +233,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
         Anatomy.Look(aimDir);
         characterRelay.Invoke(CharacterEvent.LookPos, AimPosition + OffsetVec * currAimDirMag);
 
-        Debug.DrawLine(Position, _targAimPos, Color.black);
+        Debug.DrawLine(Position, TargetAimPos, Color.black);
         Debug.DrawLine(Position, AimPosition + OffsetVec * currAimDirMag, Color.gray);
 
         // update vfx at the very end
@@ -278,7 +277,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #region Aiming
     public void Aim(Vector2 lookPos)
     {
-        _targAimPos = lookPos;
+        TargetAimPos = lookPos;
     }
     public void StaggerAim(Vector2 normalDir, float scalar) // used to apply recoil, or offsets to the character's aim
     {

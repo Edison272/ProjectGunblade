@@ -120,7 +120,6 @@ public class BehaviorController
 
             if (ThisCharacter.Inventory.GetActiveSlotNeedsReset())
             {
-                Debug.Log("Resetting");
                 ThisCharacter.characterRelay.Invoke(UsableEvent.ResetStart);
             }
         }

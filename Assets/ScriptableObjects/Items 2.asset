@@ -17,80 +17,46 @@ MonoBehaviour:
   <UnequipTime>k__BackingField: 0.2
   <ResetTime>k__BackingField: 3
   <ItemOutputs>k__BackingField:
-  - attackObjectRefs: 00000000
-    stackCounterRefs: 0000000001000000
-    _animationRequest:
-      AnimParameterName: 
-      AnimParameterType: 0
-      <_animParamValue>k__BackingField: 0
-      AnimSpeed: 0
-    InputEvent:
-      InputEventType: 2
-      _globalInput: 0
-      _interfaceInput: 0
-      _characterInput: 2
-      _usableInput: 0
-    OutputEvent:
-      InputEventType: 2
-      _globalInput: 0
-      _interfaceInput: 0
-      _characterInput: 3
-      _usableInput: 0
-  attackObjects:
-  - rid: 2198171788663324832
-  - rid: 2198171788663324823
-  - rid: 2198171788663324825
-  stackCounters:
-  - rid: 267928573218914399
-  - rid: 2198171343949136020
+  - rid: 6178397772526125167
+  AttackObjects:
+  - rid: 6178397772526125269
+  StackCounters:
+  - rid: 6178397772526125271
   dynamic_aim: 1
   rotation_scale: 1
   ui_image: {fileID: 21300000, guid: f85965d5552b2ca428d8e3f6ff93a77d, type: 3}
   references:
     version: 2
     RefIds:
-    - rid: 267928573218914399
-      type: {class: SequenceCounter, ns: , asm: Assembly-CSharp}
+    - rid: 6178397772526125167
+      type: {class: GunOutput, ns: , asm: Assembly-CSharp}
       data:
-        <stackCounterType>k__BackingField: 4
-        MaxIndex: 0
-        IterateSequenceEvent:
-          InputEventType: 3
+        itemOutputType: 0
+        attackObjectRefs: 00000000
+        stackCounterRefs: 00000000
+        _animationRequest:
+          AnimParameterName: Use
+          AnimParameterType: 9
+          <_animParamValue>k__BackingField: 0
+          AnimSpeed: 1
+        InputEvent:
+          InputEventType: 2
           _globalInput: 0
           _interfaceInput: 0
-          _characterInput: 0
-          _usableInput: 2
-        ResetSequenceEvent:
-          InputEventType: 3
+          _characterInput: 2
+          _usableInput: 0
+        OutputEvent:
+          InputEventType: 2
           _globalInput: 0
           _interfaceInput: 0
-          _characterInput: 0
-          _usableInput: 3
-        ResetAfterCooldown: 0
-        SequenceResetTime: 1
-    - rid: 2198171343949136020
-      type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
-      data:
-        <stackCounterType>k__BackingField: 1
-        basicAmmoStats:
-          maxAmmo: 30
-          currAmmo: 30
-          reloadSpeed: 0
-          UseAmmoEvent:
-            InputEventType: 3
-            _globalInput: 0
-            _interfaceInput: 0
-            _characterInput: 0
-            _usableInput: 2
-          ReloadEvent:
-            InputEventType: 3
-            _globalInput: 0
-            _interfaceInput: 0
-            _characterInput: 0
-            _usableInput: 4
-        regenAmmo: 0
-        roundsReload: 0
-    - rid: 2198171788663324823
+          _characterInput: 4
+          _usableInput: 0
+        AmmoCounterRef: -1
+        AmmoUse: 0
+        recoil_increment: 0.1
+        recoil_multiplier: 0.5
+        recoil_max: 1
+    - rid: 6178397772526125269
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
@@ -98,55 +64,39 @@ MonoBehaviour:
           damage: 10
           pierce: 0
           bounce: 0
-          knockback_amt: 10
+          knockback_amt: 0
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          projectile_speed: 0.5
-          homing_radius: 0
-          HomingSpdScale: 1
-          projectile_count: 3
-          projectile_spread: 15
-          even_spread: 0
-    - rid: 2198171788663324825
-      type: {class: Linecast, ns: , asm: Assembly-CSharp}
-      data:
-        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
-        atk_stats:
-          damage: 0
-          pierce: 0
-          bounce: 0
-          knockback_amt: 100
-          effect_time: 0
-          slow_amt: 0
-          total_dot_damage: 0
-          total_dot_ticks: 0
-        typeData:
-          projectile_speed: 1
+          projectile_speed: 0.1
           homing_radius: 0
           HomingSpdScale: 1
           projectile_count: 1
           projectile_spread: 0
           even_spread: 0
-    - rid: 2198171788663324832
-      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+    - rid: 6178397772526125271
+      type: {class: ChargeCounter, ns: , asm: Assembly-CSharp}
       data:
-        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
-        atk_stats:
-          damage: 5
-          pierce: 0
-          bounce: 0
-          knockback_amt: 10
-          effect_time: 0
-          slow_amt: 0
-          total_dot_damage: 0
-          total_dot_ticks: 0
-        typeData:
-          projectile_speed: 10
-          homing_radius: 0
-          HomingSpdScale: 1
-          projectile_count: 1
-          projectile_spread: 0
-          even_spread: 0
+        <stackCounterType>k__BackingField: 3
+        MaxChargeTime: 1
+        MinChargeTime: 0
+        StartChargeEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 2
+          _usableInput: 0
+        StopChargeEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 4
+          _usableInput: 2
+        ResetChargeEvent:
+          InputEventType: 3
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 0
+          _usableInput: 3

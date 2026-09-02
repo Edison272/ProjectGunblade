@@ -18,7 +18,7 @@ Different Outputs will mechanically alter the item beyond its normal capabilitie
 public class GunOutput : ItemOutput
 {
     [Header("Ammo")]
-    public int AmmoCounterRef;
+    public int AmmoCounterRef = -1;
     public int AmmoUse;
 
     [Header("Recoil")]
@@ -64,7 +64,6 @@ public class GunOutput : ItemOutput
         {
             _currRecoil = Mathf.Min(recoil_max, (_currRecoil  + recoil_increment) * recoil_multiplier);
             _baseItem.user.StaggerAim(Random.insideUnitCircle, _currRecoil);
-            Debug.Log(NeedsReset());
             _baseItem.NeedsReset = NeedsReset();
         }
         
