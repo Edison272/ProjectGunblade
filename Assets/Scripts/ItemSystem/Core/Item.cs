@@ -19,21 +19,21 @@ public class Item : MonoBehaviour
     public Character user;
     public Func<TargetDataRequest, TargetData> GetTargetData;
 
-    [SerializeField] private ItemOutput[] _itemOutputs = new ItemOutput[] {}; // determines the attacks available in this item
-    public StackCounter[] stackCounters {get; private set;}
+    [SerializeReference] private ItemOutput[] _itemOutputs = new ItemOutput[] {}; // determines the attacks available in this item
+    [field: SerializeReference] public StackCounter[] stackCounters {get; private set;}
 
 
 
     [field: Header("Aiming")]
-    static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90f); // RotateTowards() is stupid so we need to offset it
     public float _rotScale = 1f; // 0 for no rotation, 1 for instantaneous rotation
     Quaternion curr_rot; // save the current quaternion rotation
     public Vector2 aim_pos {get; private set;} // where the item is supposed to be aimed towards;
     private Vector2 _sourcePos; // where bullets & attacks originate from
-    public Vector2 targetPos {get; private set;} // where the item is actually aimed towards (based on _rotScale)
+    public Vector2 targetPos; // where the item is actually aimed towards (based on _rotScale)
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
     public delegate void AimDelegate();
     public AimDelegate AimVFX;
+    static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90f); // RotateTowards() is stupid so we need to offset it
 
     [field: Header("VFX Body")]
     public GameObject itemobject;
@@ -65,6 +65,17 @@ public class Item : MonoBehaviour
     // Readiness score is generally a time value- equip time, charge time, attack speed, whatever. The lower the time, the higher the score
     public float ReadinessScore {get; private set;} = 0; 
     private float _bestReadinessScore = 0; 
+
+    private bool _noNeedReset = true;
+    public bool NeedsReset
+    {
+        get
+            {return !_noNeedReset;}
+        set
+        {
+            _noNeedReset = _noNeedReset && !value;
+        }
+    }
 
     private SortingGroup vfx_sorting => GetComponent<SortingGroup>(); // TURN OFF SORTING when picked up by a player or other parent object with sorting. only turn on sorting when in item form
 
@@ -206,7 +217,6 @@ public class Item : MonoBehaviour
         ReadinessScore = _bestReadinessScore;;
         animator.SetBool("IsEquipped", is_equipped); // call set equipped function through editor
     }
-
     private void SetItemInputRelay(bool isActive)
     {
         IsInputsActive = isActive;
@@ -231,6 +241,7 @@ public class Item : MonoBehaviour
     {
         NewUser(NewInputRelay, new_char_user.GetTargetData);
         user_y_offset = transform.position.y - new_char_user.Position.y;
+        user = new_char_user;
     }
     public void NewUser(InputEventRelay NewInputRelay, Func<TargetDataRequest, TargetData> GetTargetFunc)
     {
@@ -283,6 +294,7 @@ public class Item : MonoBehaviour
     {
         SetItemInputRelay(false);
         ItemInputRelay.Invoke(UsableEvent.ResetStart);
+        _noNeedReset = true;
         animator.speed = 1/ResetTime;
         animator.ResetTrigger("Use");
         animator.SetTrigger("Resetting");
@@ -312,6 +324,7 @@ public class Item : MonoBehaviour
     #endregion
 
     #region Getting Data
+
 
     #endregion
 }

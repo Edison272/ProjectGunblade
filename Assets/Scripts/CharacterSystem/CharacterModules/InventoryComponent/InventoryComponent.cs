@@ -188,6 +188,10 @@ public class InventoryComponent
     {
         return CurrentSlot.GetSlotReadiness();
     }
+    public bool GetActiveSlotNeedsReset()
+    {
+        return CurrentSlot.GetSlotNeedsReset();
+    }
     
     // gets the slot most "ready"
     public float GetHighestReadinessSlot()

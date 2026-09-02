@@ -75,6 +75,7 @@ public class AmmoCounter : StackCounter
     }
     public AmmoCounter(AmmoCounter copied)
     {
+        stackCounterType = StackCountType.Ammo;
         basicAmmoStats = copied.basicAmmoStats;
 
     }

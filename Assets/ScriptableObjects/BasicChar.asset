@@ -19,7 +19,7 @@ MonoBehaviour:
   spawn_shield: 2
   weight: 7
   speed: 200
-  AimStrength: 0
+  AimStrength: 14.55
   range: 4
   close_range: 3
   interaction_range: 1

@@ -63,6 +63,17 @@ public class InventorySlot
 
         return readinessScore/dividend;
     }
+    // a simple function to see if anything needs a reset
+    public bool GetSlotNeedsReset()
+    {
+        bool needsReset = false;
+        if (MainSlot > -1)
+            needsReset = needsReset || _inventoryRef[MainSlot].NeedsReset;
+        if (AltSlot > -1)
+            needsReset = needsReset || _inventoryRef[AltSlot].NeedsReset;
+
+        return needsReset;
+    }
     #endregion
     
     #region Setting Indexes

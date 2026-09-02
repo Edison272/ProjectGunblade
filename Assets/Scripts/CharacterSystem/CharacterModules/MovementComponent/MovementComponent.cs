@@ -16,6 +16,7 @@ public class MovementComponent
     [field: SerializeField] public float MoveSpeed {get; private set;} = 1; // maximum speed an operator can move at
     public Vector2 MoveDir {get; private set;} = Vector2.zero;
     public Vector2 MovePos {get; private set;} = Vector2.zero;
+    public Vector2 MoveSpeedDir => MoveDir * MoveSpeed;
     public bool DestinationReached {get; private set;} = false;
     public Vector2 LastMoveDir {get; private set;} = Vector2.zero;
     public Rigidbody2D EntityRB {get; private set;}

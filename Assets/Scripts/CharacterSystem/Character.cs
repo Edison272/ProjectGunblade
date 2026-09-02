@@ -42,6 +42,8 @@ public class Character : MonoBehaviour, IMovement, IHealth
     private Vector2 _targAimPos = Vector2.zero;
     private Quaternion _currAimRot; // save the current quaternion rotation
     public Vector2 OffsetVec {get; private set;} = Vector2.zero;
+    public float MaxOffsetMagnitude {get; private set;} = 3; 
+    public Vector2 AimPosition {get; private set;} = Vector2.zero;
     public float AimStrengthScale = 1;
     public float AimStrength => base_data.AimStrength * AimStrengthScale;
 
@@ -124,6 +126,8 @@ public class Character : MonoBehaviour, IMovement, IHealth
     {        
         Inventory.SwitchItem(0);
         Anatomy.IdlePosition();
+        _targAimPos = Position;
+        AimPosition = Position;
     }
     public virtual void ResetEventData()
     {
@@ -155,6 +159,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
             controllerRelay.DisconnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Aim);
             controllerRelay.DisconnectEvent(CharacterEvent.Interact, (Action)Interact);
+            controllerRelay.DisconnectEvent(UsableEvent.ResetStart, (Action)ResetActiveSlot);
         }
         // subscribe to old user events
         controllerRelay = inputRelay;
@@ -169,7 +174,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
             controllerRelay.ConnectEvent(CharacterEvent.LookPos, (Action<Vector2>)Aim);
             controllerRelay.ConnectEvent(CharacterEvent.Interact, Interact);
-            //controllerRelay.ConnectEvent(UsableEvent.ResetStart, ), 
+            controllerRelay.ConnectEvent(UsableEvent.ResetStart, ResetActiveSlot);
         }
     }
 
@@ -212,21 +217,25 @@ public class Character : MonoBehaviour, IMovement, IHealth
         // update ui helpers
         //health_ui.UpdateHealthUI();
 
-
-        // handling aim offset recovery
-        
-
-        if (OffsetVec.sqrMagnitude > 0.001)
+        // handling aim offset recovery        
+        if (OffsetVec.sqrMagnitude > 0.0001)
             OffsetVec = Vector2.Lerp(OffsetVec, Vector2.zero, Time.deltaTime);
+            if (OffsetVec.sqrMagnitude < 0.0001)
+                OffsetVec = Vector2.zero;
 
         Vector2 aimDir = _targAimPos - Position;
         Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aimDir) * Quaternion.Euler(0, 0, 90f);
-        _currAimRot = Quaternion.Lerp(_currAimRot, aim_rot, 1);            
-        Vector2 currAimPos = Position + (Vector2)(_currAimRot * Vector2.right * aimDir.magnitude) + OffsetVec;
+        _currAimRot = Quaternion.Lerp(_currAimRot, aim_rot, Time.deltaTime * AimStrength);
+        float currAimDirMag = Mathf.Sqrt(Mathf.Lerp((AimPosition - Position).sqrMagnitude, aimDir.sqrMagnitude, Time.deltaTime * AimStrength));
+
+        Vector2 currAimDir = _currAimRot * Vector2.right * currAimDirMag;
+        AimPosition = Position + currAimDir;
 
         Anatomy.Look(aimDir);
-        characterRelay.Invoke(CharacterEvent.LookPos, currAimPos);
+        characterRelay.Invoke(CharacterEvent.LookPos, AimPosition + OffsetVec * currAimDirMag);
 
+        Debug.DrawLine(Position, _targAimPos, Color.black);
+        Debug.DrawLine(Position, AimPosition + OffsetVec * currAimDirMag, Color.gray);
 
         // update vfx at the very end
         Anatomy.UpdateBodyVFX();
@@ -274,6 +283,11 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public void StaggerAim(Vector2 normalDir, float scalar) // used to apply recoil, or offsets to the character's aim
     {
         OffsetVec += normalDir * scalar;
+        // float magnitude = OffsetVec.magnitude;
+        // if (magnitude > MaxOffsetMagnitude)
+        // {
+        //     OffsetVec = OffsetVec.normalized * MaxOffsetMagnitude;
+        // }
     }
     #endregion
 
@@ -286,7 +300,10 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
     #region Inventory
     // THE DEFINITIVE INTERACITON FUNCTION
-
+    public void ResetActiveSlot()
+    {
+        characterRelay.Invoke(UsableEvent.ResetStart);   
+    }
     public void Interact()
     {
         characterRelay.Invoke(CharacterEvent.Interact);   
@@ -351,7 +368,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
         Health.ChangeHealth(change_amt);
         if (change_amt > 0)
         {
-            StaggerAim(Random.insideUnitCircle, 3);
+            StaggerAim(Random.insideUnitCircle, 0.1f);
         }
     }
     // public virtual void ChangeHealthTick(int change_amt, float duration, float tick_rate, AbilityEffectComponent effect_controller = null) 

@@ -172,7 +172,8 @@ public class PlayerController : MonoBehaviour
     {        
         pointer_world_pos = _pointerController.GetSourceTo_worldPos(active_character.Position);
         CharacterInputRelay.Invoke(CharacterEvent.LookPos, pointer_world_pos);   
-        Debug.DrawLine(active_character.Position, pointer_world_pos);
+    
+            
 
         if (_isCommanding && cmd_view_move_dir != Vector2.zero)
         {

@@ -17,70 +17,13 @@ MonoBehaviour:
   <UnequipTime>k__BackingField: 1
   <ResetTime>k__BackingField: 1
   <ItemOutputs>k__BackingField:
-  - attackObjectRefs: 00000000
-    stackCounterRefs: 00000000
-    _animationRequest:
-      AnimParameterName: Null
-      AnimParameterType: 0
-      <_animParamValue>k__BackingField: 0
-      AnimSpeed: 0
-    InputEvent:
-      InputEventType: 2
-      _globalInput: 0
-      _interfaceInput: 0
-      _characterInput: 2
-      _usableInput: 0
-    OutputEvent:
-      InputEventType: 2
-      _globalInput: 0
-      _interfaceInput: 0
-      _characterInput: 3
-      _usableInput: 0
-  - attackObjectRefs: 00000000
-    stackCounterRefs: 0000000001000000
-    _animationRequest:
-      AnimParameterName: Null
-      AnimParameterType: 0
-      <_animParamValue>k__BackingField: 0
-      AnimSpeed: 0
-    InputEvent:
-      InputEventType: 2
-      _globalInput: 0
-      _interfaceInput: 0
-      _characterInput: 2
-      _usableInput: 0
-    OutputEvent:
-      InputEventType: 2
-      _globalInput: 0
-      _interfaceInput: 0
-      _characterInput: 3
-      _usableInput: 0
-  - attackObjectRefs: 01000000
-    stackCounterRefs: 0100000002000000
-    _animationRequest:
-      AnimParameterName: Null
-      AnimParameterType: 0
-      <_animParamValue>k__BackingField: 0
-      AnimSpeed: 0
-    InputEvent:
-      InputEventType: 2
-      _globalInput: 0
-      _interfaceInput: 0
-      _characterInput: 2
-      _usableInput: 0
-    OutputEvent:
-      InputEventType: 2
-      _globalInput: 0
-      _interfaceInput: 0
-      _characterInput: 4
-      _usableInput: 0
+  - rid: 6178397756706783337
   AttackObjects:
   - rid: 267928573218914418
   - rid: 267928573218914452
   StackCounters:
   - rid: 267928573218914422
-  - rid: 267928573218914447
-  - rid: 267928573218914462
+  - rid: 6178397772526125197
   dynamic_aim: 1
   rotation_scale: 1
   ui_image: {fileID: -266484137676524057, guid: 9db3aee8d2f6bcf458c5edfdf87fdb22, type: 3}
@@ -124,28 +67,6 @@ MonoBehaviour:
           _interfaceInput: 0
           _characterInput: 0
           _usableInput: 3
-    - rid: 267928573218914447
-      type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
-      data:
-        <stackCounterType>k__BackingField: 1
-        basicAmmoStats:
-          maxAmmo: 300
-          currAmmo: 300
-          reloadSpeed: 1
-          UseAmmoEvent:
-            InputEventType: 3
-            _globalInput: 0
-            _interfaceInput: 0
-            _characterInput: 0
-            _usableInput: 2
-          ReloadEvent:
-            InputEventType: 3
-            _globalInput: 0
-            _interfaceInput: 0
-            _characterInput: 0
-            _usableInput: 4
-        regenAmmo: 0
-        roundsReload: 0
     - rid: 267928573218914452
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
@@ -166,7 +87,35 @@ MonoBehaviour:
           projectile_count: 10
           projectile_spread: 15
           even_spread: 0
-    - rid: 267928573218914462
+    - rid: 6178397756706783337
+      type: {class: GunOutput, ns: , asm: Assembly-CSharp}
+      data:
+        itemOutputType: 0
+        attackObjectRefs: 00000000
+        stackCounterRefs: 0000000001000000
+        _animationRequest:
+          AnimParameterName: Use
+          AnimParameterType: 9
+          <_animParamValue>k__BackingField: 0
+          AnimSpeed: 1
+        InputEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 2
+          _usableInput: 0
+        OutputEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 3
+          _usableInput: 0
+        AmmoCounterRef: 1
+        AmmoUse: 0
+        recoil_increment: 0.1
+        recoil_multiplier: 0.5
+        recoil_max: 0.5
+    - rid: 6178397772526125197
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
         <stackCounterType>k__BackingField: 1

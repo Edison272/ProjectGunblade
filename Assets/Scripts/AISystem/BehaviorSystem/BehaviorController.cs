@@ -106,10 +106,7 @@ public class BehaviorController
                 // reset if target if the target isn't a big threat (checks distance for now)
                 // float threatScore = (TargetChar.Position - ThisCharacter.Position).magnitude / TargetChar.move_speed;
                 // Debug.Log(ThisCharacter.Inventory.GetActiveSlotReadiness());
-                // if (ThisCharacter.Inventory.GetActiveSlotReadiness() > 3)
-                // {
-                //     ThisCharacter.characterRelay.Invoke(UsableEvent.ResetStart);
-                // }
+                //Debug.Log(ThisCharacter.Inventory.GetActiveSlotNeedsReset());
             }
             else
             {
@@ -119,6 +116,12 @@ public class BehaviorController
                     curr_time = -rest_time;
                     ThisCharacter.MainEnd();
                 }
+            }
+
+            if (ThisCharacter.Inventory.GetActiveSlotNeedsReset())
+            {
+                Debug.Log("Resetting");
+                ThisCharacter.characterRelay.Invoke(UsableEvent.ResetStart);
             }
         }
 

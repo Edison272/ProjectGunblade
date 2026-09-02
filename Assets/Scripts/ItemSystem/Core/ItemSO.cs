@@ -24,7 +24,7 @@ public class ItemSO : ScriptableObject
     [field: Header("Resetting")]
     [field: SerializeField] public float ResetTime {get; private set;} = 1f;
 
-    [field: SerializeField]public ItemOutput[] ItemOutputs {get; private set;} = new ItemOutput[] {}; // determines the attacks available in this item
+    [field: SerializeReference] public ItemOutput[] ItemOutputs {get; private set;} = new ItemOutput[] {}; // determines the attacks available in this item
     [SerializeReference] public AttackObject[] AttackObjects = new Projectile[] {}; // a collection of attack types
     [SerializeReference] public StackCounter[] StackCounters = new StackCounter[] {}; // control when different item effects trigger
 
@@ -65,6 +65,15 @@ public class ItemSO : ScriptableObject
 
     public void OnValidate()
     {
+        for(int i = 0; i < ItemOutputs.Length; i++)
+        {
+            ItemOutput itemOutput = ItemOutputs[i];
+            if (itemOutput == null)
+                itemOutput = new GunOutput();
+            if (itemOutput.itemOutputType != itemOutput.GetExpectedItemOutputType())
+                itemOutput = itemOutput.SmartRecast();
+            ItemOutputs[i] = itemOutput;
+        }
         for(int i = 0; i < AttackObjects.Length; i++)
         {
             AttackObject attackType = AttackObjects[i];
@@ -86,16 +95,10 @@ public class ItemSO : ScriptableObject
         {
             StackCounter stackCounter = StackCounters[i];
             if (stackCounter == null)
-            {
                 stackCounter = new SimpleCounter();
-            }
             if (stackCounter.stackCounterType != stackCounter.GetExpectedStackCountType())
-            {
                 stackCounter = stackCounter.SmartRecast();
-            }
-
             StackCounters[i] = stackCounter;
-            
         }
     }
 
