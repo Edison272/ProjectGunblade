@@ -24,7 +24,6 @@ public abstract class ItemOutput
     [SerializeReference] public int[] stackCounterRefs = new int[] {}; // contains a custom collection of index references for stack counters
     // THE FIRST ITEM OF STACK COUNTER REFS IS THE MOST IMPORTANT. THAT IS THE ONE WHICH ACTIVATES THE ITEM EFFECT WHEN TRIGGERED
     [SerializeField] protected AnimationRequest _animationRequest; // when making items, each animation
-    public InputEventSelector InputEvent; // mostly just for show and vfx stuff
     public InputEventSelector OutputEvent; // reads stack inputs to get an output when called
 
     #region Initializer
@@ -37,7 +36,6 @@ public abstract class ItemOutput
         attackObjectRefs = copiedOutput.attackObjectRefs;
         stackCounterRefs = copiedOutput.stackCounterRefs;
 
-        InputEvent = copiedOutput.InputEvent;
         OutputEvent = copiedOutput.OutputEvent;
         
         // _animation requests don't change either. just keep a reference

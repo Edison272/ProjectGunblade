@@ -291,10 +291,22 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #endregion
 
     #region  Inputs
-    public void MainStart() {MainInputActive = true;}
-    public void MainEnd() {MainInputActive = false;}
-    public void AltStart() {AltInputActive = true;}
-    public void AltEnd() {AltInputActive = false;}
+    public void MainStart() {
+        characterRelay.Invoke(CharacterEvent.MainStart);  
+        MainInputActive = true;
+        }
+    public void MainEnd() {
+        characterRelay.Invoke(CharacterEvent.MainEnd);  
+        MainInputActive = false;
+        }
+    public void AltStart() {
+        characterRelay.Invoke(CharacterEvent.AltStart);  
+        AltInputActive = true;
+        }
+    public void AltEnd() {
+        characterRelay.Invoke(CharacterEvent.AltEnd);  
+        AltInputActive = false;
+        }
     #endregion
 
     #region Inventory

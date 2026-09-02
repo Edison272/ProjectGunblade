@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,15 @@ public class ItemUIController : MonoBehaviour
     public RectTransform reset_bar;
     [Header("UI - Recoil Circle")]
     [SerializeField] int circle_step = 100;
+
+
+    [Header("UI StatUI")]
+    public float StatBarHeight = 10;
+    public float StatBarSpacing => UIBarGroup.transform.GetComponent<VerticalLayoutGroup>().spacing;
+    public RectTransform UIBarGroup;
+    public GameObject StatBarPrefab;
+    public List<GameObject> StatBars = new List<GameObject>();
+
 
     public LineRenderer MainReticle;
     public LineRenderer OffsetReticle;
@@ -58,6 +68,23 @@ public class ItemUIController : MonoBehaviour
         {
             item_sprite.sprite = _selectedItem.baseData.ui_image;
         }
+
+        // stat bars
+        foreach (GameObject bar in StatBars)
+        {
+            bar.SetActive(false);
+        }
+        for(int i = 0; i < _selectedItem.stackCounters.Length; i++)
+        {
+            if (StatBars.Count < i+1)
+            {
+                StatBars.Add(Instantiate(StatBarPrefab, UIBarGroup));
+            }
+            StatBars[i].SetActive(true);
+            StatBars[i].GetComponent<StackBarUI>().StackCounter = _selectedItem.stackCounters[i];
+        }
+        UIBarGroup.sizeDelta = new Vector2(UIBarGroup.sizeDelta.x, StatBars.Count * (StatBarHeight + StatBarSpacing));
+
         // switch (active_character.main_item.func_module)
         // {
         //     case Gun:

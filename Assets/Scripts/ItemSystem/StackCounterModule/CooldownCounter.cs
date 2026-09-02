@@ -77,7 +77,7 @@ public class CooldownCounter : StackCounter
     }
     public override float GetStatus()
     {
-        return Mathf.Clamp01(Time.time / lastUse);
+        return Mathf.Clamp01((Time.time - lastUse) / cooldownTime);
     }
     public override float GetReadinessTime()
     {

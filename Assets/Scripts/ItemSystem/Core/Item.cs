@@ -173,7 +173,6 @@ public class Item : MonoBehaviour
         // find which stack counters use what inputs, update relay
         foreach(ItemOutput output in _itemOutputs)
         {
-            ItemInputRelay.AddEvent(output.InputEvent.GetInputEvent(), typeof(Action));
             ItemInputRelay.AddEvent(output.OutputEvent.GetInputEvent(), typeof(Action));
             output.SetInputRelay(ItemInputRelay);
         }

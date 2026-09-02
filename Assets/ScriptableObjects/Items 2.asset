@@ -20,6 +20,7 @@ MonoBehaviour:
   - rid: 6178397772526125167
   AttackObjects:
   - rid: 6178397772526125269
+  - rid: 6178397772526125360
   StackCounters:
   - rid: 6178397772526125271
   dynamic_aim: 1
@@ -32,19 +33,13 @@ MonoBehaviour:
       type: {class: GunOutput, ns: , asm: Assembly-CSharp}
       data:
         itemOutputType: 0
-        attackObjectRefs: 00000000
+        attackObjectRefs: 0000000001000000
         stackCounterRefs: 00000000
         _animationRequest:
           AnimParameterName: Use
           AnimParameterType: 9
           <_animParamValue>k__BackingField: 0
           AnimSpeed: 1
-        InputEvent:
-          InputEventType: 2
-          _globalInput: 0
-          _interfaceInput: 0
-          _characterInput: 2
-          _usableInput: 0
         OutputEvent:
           InputEventType: 2
           _globalInput: 0
@@ -100,3 +95,23 @@ MonoBehaviour:
           _interfaceInput: 0
           _characterInput: 0
           _usableInput: 3
+    - rid: 6178397772526125360
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        atk_stats:
+          damage: 10
+          pierce: 0
+          bounce: 1
+          knockback_amt: 3.2
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          projectile_speed: 40
+          homing_radius: 10
+          HomingSpdScale: 0.1
+          projectile_count: 10
+          projectile_spread: 90
+          even_spread: 0

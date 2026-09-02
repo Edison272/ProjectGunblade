@@ -88,9 +88,9 @@ public class ChargeCounter : StackCounter
     {
         if (_startChargeTime == 0)
         {
-            _startChargeTime = Time.time;
+            return -1;
         }
-        else if (Time.time - _startChargeTime < MinChargeTime)
+        if (Time.time - _startChargeTime < MinChargeTime)
         {
             return -1;
         }
