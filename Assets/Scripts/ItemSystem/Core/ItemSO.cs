@@ -98,6 +98,7 @@ public class ItemSO : ScriptableObject
                 stackCounter = new SimpleCounter();
             if (stackCounter.stackCounterType != stackCounter.GetExpectedStackCountType())
                 stackCounter = stackCounter.SmartRecast();
+            stackCounter.UISetting.LoadUI(true);
             StackCounters[i] = stackCounter;
         }
     }

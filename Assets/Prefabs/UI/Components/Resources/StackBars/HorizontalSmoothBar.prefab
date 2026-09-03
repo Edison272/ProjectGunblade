@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 2249396249718359196}
   - component: {fileID: 7470311785850949753}
   m_Layer: 5
-  m_Name: HorizontalStatBar
+  m_Name: HorizontalSmoothBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

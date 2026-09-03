@@ -67,7 +67,18 @@ public class SimpleCounter : StackCounter
     {
         return 1;
     }
+
+
     #endregion
+    #region RawData
+    public override float GetMaxValue()
+    {
+        throw new NotImplementedException();
+    }
 
-
+    public override float GetCurrentValue()
+    {
+        throw new NotImplementedException();
+    }
+    #endregion
 }

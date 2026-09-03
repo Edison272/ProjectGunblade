@@ -13,7 +13,14 @@ public enum UIPlacement
     Reticle_Right,
     Reticle_Up,
     Reticle_Down,
-    Reticle_Center
+    Reticle_Center,
+    ItemUI_Bars,
+}
+
+public enum UICounterDesign
+{
+    Smooth, // a smoothly interpolating bar
+    Segments, // discrete counter values
 }
 
 public enum TextDisplay
@@ -28,35 +35,47 @@ public enum TextDisplay
 public class StackCounterUISetting
 {
     public Image.FillMethod ImageFillType = Image.FillMethod.Horizontal;
+    public UICounterDesign CounterDesign = UICounterDesign.Smooth;
     public UIPlacement PlacementDirection = UIPlacement.Reticle_Right; // where will this be placed on the UI (i just used a built in enum)
     public TextDisplay DisplayTest = TextDisplay.None;
-    
-
     private GameObject _resourceObject = null;
 
-    public GameObject LoadUI()
+    public GameObject LoadUI(bool ForceLoadResource = false)
     {
+        // force the object to load from resources. used at the beginning of the game
+        if (ForceLoadResource)
+            _resourceObject = null;
         // if the object is already loaded, find it
-        if (_resourceObject)
+        else if (_resourceObject)
         {
             return _resourceObject;
         }
-        
-        
-        string filename = "HorizontalStatBar";
+
+        string placement = "Horizontal";
         switch (PlacementDirection)
         {
             case UIPlacement.Reticle_Left:
-                filename = "VerticalStatBar";
+                placement = "Vertical";
                 break;
             case UIPlacement.Reticle_Right: 
-                filename = "VerticalStatBar";
+                placement = "Vertical";
                 break;
             case UIPlacement.Reticle_Up:
-                filename = "HorizontalStatBar";
+                placement = "Horizontal";
                 break;
             case UIPlacement.Reticle_Down:
-                filename = "HorizontalStatBar";
+                placement = "Horizontal";
+                break;
+        }
+        
+        string design = "";
+        switch (CounterDesign)
+        {
+            case UICounterDesign.Smooth:
+                design = "SmoothBar";
+                break;
+            case UICounterDesign.Segments: 
+                design = "SegmentBar";
                 break;
         }
         
@@ -64,7 +83,7 @@ public class StackCounterUISetting
         // save the loaded object to prevent calling again
         if (_resourceObject == null)
         {
-            _resourceObject = Resources.Load<GameObject>("StackBars/" + filename);
+            _resourceObject = Resources.Load<GameObject>("StackBars/" + placement + design);
         }
         return _resourceObject;
     }

@@ -49,6 +49,11 @@ public abstract class StackCounter
     public abstract float GetReadinessTime(); // gets time till readiness
     #endregion
 
+    #region RawData
+    public abstract float GetMaxValue(); // return max value if possible
+    public abstract float GetCurrentValue(); // return the primary value
+    #endregion
+
 
     #region Helpers
     /// Used to see which events this counter subscribes to.

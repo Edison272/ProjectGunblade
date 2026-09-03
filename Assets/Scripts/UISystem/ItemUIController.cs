@@ -19,8 +19,8 @@ public class ItemUIController : MonoBehaviour
     public float StatBarHeight = 10;
     public float StatBarSpacing => UIBarGroup.transform.GetComponent<VerticalLayoutGroup>().spacing;
     public RectTransform UIBarGroup;
-    public List<(GameObject,StackBarUI)> ActiveStatBars = new List<(GameObject,StackBarUI)>(); // save the resource as item1 to re-add back to pool
-    private Dictionary<GameObject, Queue<StackBarUI>> _unusedStatBars = new Dictionary<GameObject, Queue<StackBarUI>>(); // used for pooling resources
+    public List<(GameObject,StackCounterUI)> ActiveStatBars = new List<(GameObject,StackCounterUI)>(); // save the resource as item1 to re-add back to pool
+    private Dictionary<GameObject, Queue<StackCounterUI>> _unusedStatBars = new Dictionary<GameObject, Queue<StackCounterUI>>(); // used for pooling resources
 
     [Header("Reticle")]
     public RectTransform Reticle;
@@ -77,7 +77,7 @@ public class ItemUIController : MonoBehaviour
         // deactivate any active stat bars
         for (int i = ActiveStatBars.Count-1; i >= 0; i--)
         {
-            (GameObject, StackBarUI) bar = ActiveStatBars[i];
+            (GameObject, StackCounterUI) bar = ActiveStatBars[i];
             bar.Item2.gameObject.SetActive(false);
             _unusedStatBars[bar.Item1].Enqueue(bar.Item2);
             ActiveStatBars.RemoveAt(i);
@@ -88,14 +88,14 @@ public class ItemUIController : MonoBehaviour
                 continue;
             
             GameObject uiType = _selectedItem.stackCounters[i].UISetting.LoadUI();
-            StackBarUI newUI = null;
+            StackCounterUI newUI = null;
             if (!_unusedStatBars.ContainsKey(uiType))
             {
-                _unusedStatBars[uiType] = new Queue<StackBarUI>();
+                _unusedStatBars[uiType] = new Queue<StackCounterUI>();
             }
             if (_unusedStatBars[uiType].Count == 0)
             {
-                newUI = Instantiate(uiType, UIBarGroup).GetComponent<StackBarUI>();
+                newUI = Instantiate(uiType, UIBarGroup).GetComponent<StackCounterUI>();
                 _unusedStatBars[uiType].Enqueue(newUI);
                 
             }
@@ -126,7 +126,7 @@ public class ItemUIController : MonoBehaviour
     }
 
     // used by SetUI to place a StatBar in the proper area
-    private void PlaceStatBar(StackCounter counter, StackBarUI ui)
+    private void PlaceStatBar(StackCounter counter, StackCounterUI ui)
     {
         switch (counter.UISetting.PlacementDirection)
         {
@@ -141,6 +141,12 @@ public class ItemUIController : MonoBehaviour
                 break;
             case UIPlacement.Reticle_Down:
                 ui.transform.SetParent(Reticle.GetChild(3), false);
+                break;
+            case UIPlacement.Reticle_Center:
+                ui.transform.SetParent(Reticle, false);
+                break;
+            case UIPlacement.ItemUI_Bars:
+                ui.transform.SetParent(UIBarGroup, false);
                 break;
         }
         ui.transform.position = Vector3.zero;

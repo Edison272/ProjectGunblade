@@ -89,6 +89,15 @@ public class CooldownCounter : StackCounter
     #endregion
 
 
+    #region Raw Data
+    public override float GetMaxValue()
+    {
+        return cooldownTime;
+    }
 
-
+    public override float GetCurrentValue()
+    {
+        return GetStatus() * cooldownTime;
+    }
+    #endregion
 }

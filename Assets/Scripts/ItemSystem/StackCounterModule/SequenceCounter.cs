@@ -92,4 +92,16 @@ public class SequenceCounter : StackCounter
         return Mathf.Infinity; // no time sensitive values, so not relevant for readiness
     }
     #endregion
+    
+    #region RawData
+    public override float GetMaxValue()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override float GetCurrentValue()
+    {
+        throw new NotImplementedException();
+    }
+    #endregion
 }

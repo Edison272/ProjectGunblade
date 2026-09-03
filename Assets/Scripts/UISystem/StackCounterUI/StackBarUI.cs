@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /*
 Display the stats of a stack counter using bars
 */
-public class StackBarUI : MonoBehaviour
+public class StackBarUI : StackCounterUI
 {
     [field: Header("UI Elements")]
     public RectTransform Background;
@@ -13,8 +13,16 @@ public class StackBarUI : MonoBehaviour
     public Image StatDrift;
 
     private const float c_health_drift_lerp = 5;
-    
-    public StackCounter StackCounter;
+
+    public override StackCounter StackCounter 
+    {
+        get {return _stackCounter;} 
+        set
+        {
+            _stackCounter = value;
+            StatBar.fillAmount = _stackCounter.GetStatus(); 
+        }
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

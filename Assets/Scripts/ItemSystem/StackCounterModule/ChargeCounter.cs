@@ -109,4 +109,23 @@ public class ChargeCounter : StackCounter
         return MaxChargeTime - Mathf.Max(0, Time.time - _startChargeTime - MinChargeTime);
     }
     #endregion
+    #region Raw Data
+    public override float GetMaxValue()
+    {
+        return MaxChargeTime;
+    }
+
+    public override float GetCurrentValue()
+    {
+        if (_startChargeTime == 0)
+        {
+            return 0;
+        }
+        if (Time.time - _startChargeTime < MinChargeTime)
+        {
+            return 0;
+        }
+        return Time.time - _startChargeTime - MinChargeTime;;
+    }
+    #endregion
 }

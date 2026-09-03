@@ -25,7 +25,7 @@ MonoBehaviour:
   - rid: 267928573218914422
   - rid: 6178397772526125197
   dynamic_aim: 1
-  rotation_scale: 1
+  rotation_scale: 0.9997
   ui_image: {fileID: -266484137676524057, guid: 9db3aee8d2f6bcf458c5edfdf87fdb22, type: 3}
   references:
     version: 2
@@ -56,7 +56,8 @@ MonoBehaviour:
         HasUI: 1
         UISetting:
           ImageFillType: 0
-          PlacementDirection: 1
+          CounterDesign: 0
+          PlacementDirection: 0
           DisplayTest: 0
         <stackCounterType>k__BackingField: 2
         cooldownTime: 0.1
@@ -120,7 +121,8 @@ MonoBehaviour:
         HasUI: 1
         UISetting:
           ImageFillType: 0
-          PlacementDirection: 3
+          CounterDesign: 1
+          PlacementDirection: 5
           DisplayTest: 0
         <stackCounterType>k__BackingField: 1
         basicAmmoStats:

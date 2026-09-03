@@ -136,4 +136,15 @@ public class AmmoCounter : StackCounter
         return currAmmo > 0 ? 0 : reloadSpeed;
     }
     #endregion
+    #region Raw Data
+    public override float GetMaxValue()
+    {
+        return maxAmmo;
+    }
+
+    public override float GetCurrentValue()
+    {
+        return currAmmo;
+    }
+    #endregion
 }
