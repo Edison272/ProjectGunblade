@@ -222,7 +222,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
             if (OffsetVec.sqrMagnitude < 0.000001)
                 OffsetVec = Vector2.zero;
 
-        Vector2 aimDir = TargetAimPos + Movement.MoveSpeedDir * Time.deltaTime - Position;
+        Vector2 aimDir = TargetAimPos - Position;
         Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aimDir) * Quaternion.Euler(0, 0, 90f);
         _currAimRot = Quaternion.Lerp(_currAimRot, aim_rot, Time.deltaTime * AimStrength);
         float currAimDirMag = Mathf.Sqrt(Mathf.Lerp((AimPosition - Position).sqrMagnitude, aimDir.sqrMagnitude, Time.deltaTime * AimStrength));

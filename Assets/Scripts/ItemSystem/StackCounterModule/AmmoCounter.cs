@@ -78,6 +78,8 @@ public class AmmoCounter : StackCounter
         stackCounterType = StackCountType.Ammo;
         basicAmmoStats = copied.basicAmmoStats;
 
+        HasUI = copied.HasUI;
+        UISetting = copied.UISetting;
     }
     // creates a deepy copy of this class.
     public override StackCounter GetCopy()

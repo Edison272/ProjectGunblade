@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ItemUIController : MonoBehaviour
 {
@@ -18,10 +19,11 @@ public class ItemUIController : MonoBehaviour
     public float StatBarHeight = 10;
     public float StatBarSpacing => UIBarGroup.transform.GetComponent<VerticalLayoutGroup>().spacing;
     public RectTransform UIBarGroup;
-    public GameObject StatBarPrefab;
-    public List<GameObject> StatBars = new List<GameObject>();
+    public List<(GameObject,StackBarUI)> ActiveStatBars = new List<(GameObject,StackBarUI)>(); // save the resource as item1 to re-add back to pool
+    private Dictionary<GameObject, Queue<StackBarUI>> _unusedStatBars = new Dictionary<GameObject, Queue<StackBarUI>>(); // used for pooling resources
 
-
+    [Header("Reticle")]
+    public RectTransform Reticle;
     public LineRenderer MainReticle;
     public LineRenderer OffsetReticle;
 
@@ -44,6 +46,9 @@ public class ItemUIController : MonoBehaviour
     {
         if (active_character)
         {
+            
+            Reticle.position = active_character.TargetAimPos;
+            
             DrawRecoilCircle(MainReticle, active_character.TargetAimPos, 0.1f, 20);
             DrawRecoilCircle(OffsetReticle, active_character.AimPosition, active_character.OffsetVec.magnitude * (active_character.AimPosition - active_character.Position).magnitude + 0.2f, 100);
             
@@ -69,21 +74,42 @@ public class ItemUIController : MonoBehaviour
             item_sprite.sprite = _selectedItem.baseData.ui_image;
         }
 
-        // stat bars
-        foreach (GameObject bar in StatBars)
+        // deactivate any active stat bars
+        for (int i = ActiveStatBars.Count-1; i >= 0; i--)
         {
-            bar.SetActive(false);
+            (GameObject, StackBarUI) bar = ActiveStatBars[i];
+            bar.Item2.gameObject.SetActive(false);
+            _unusedStatBars[bar.Item1].Enqueue(bar.Item2);
+            ActiveStatBars.RemoveAt(i);
         }
         for(int i = 0; i < _selectedItem.stackCounters.Length; i++)
         {
-            if (StatBars.Count < i+1)
+            if (!_selectedItem.stackCounters[i].HasUI)
+                continue;
+            
+            GameObject uiType = _selectedItem.stackCounters[i].UISetting.LoadUI();
+            StackBarUI newUI = null;
+            if (!_unusedStatBars.ContainsKey(uiType))
             {
-                StatBars.Add(Instantiate(StatBarPrefab, UIBarGroup));
+                _unusedStatBars[uiType] = new Queue<StackBarUI>();
             }
-            StatBars[i].SetActive(true);
-            StatBars[i].GetComponent<StackBarUI>().StackCounter = _selectedItem.stackCounters[i];
+            if (_unusedStatBars[uiType].Count == 0)
+            {
+                newUI = Instantiate(uiType, UIBarGroup).GetComponent<StackBarUI>();
+                _unusedStatBars[uiType].Enqueue(newUI);
+                
+            }
+            else
+            {
+                newUI = _unusedStatBars[uiType].Dequeue();
+            }
+            ActiveStatBars.Add((uiType, newUI));
+
+            newUI.gameObject.SetActive(true);
+            newUI.StackCounter = _selectedItem.stackCounters[i];
+            PlaceStatBar(_selectedItem.stackCounters[i],newUI);
         }
-        UIBarGroup.sizeDelta = new Vector2(UIBarGroup.sizeDelta.x, StatBars.Count * (StatBarHeight + StatBarSpacing));
+        UIBarGroup.sizeDelta = new Vector2(UIBarGroup.sizeDelta.x, ActiveStatBars.Count * (StatBarHeight + StatBarSpacing));
 
         // switch (active_character.main_item.func_module)
         // {
@@ -97,6 +123,27 @@ public class ItemUIController : MonoBehaviour
         //     case Conduit:
         //         break;
         // }
+    }
+
+    // used by SetUI to place a StatBar in the proper area
+    private void PlaceStatBar(StackCounter counter, StackBarUI ui)
+    {
+        switch (counter.UISetting.PlacementDirection)
+        {
+            case UIPlacement.Reticle_Left:
+                ui.transform.SetParent(Reticle.GetChild(0), false);
+                break;
+            case UIPlacement.Reticle_Right:
+                ui.transform.SetParent(Reticle.GetChild(1), false);
+                break;
+            case UIPlacement.Reticle_Up:
+                ui.transform.SetParent(Reticle.GetChild(2), false);
+                break;
+            case UIPlacement.Reticle_Down:
+                ui.transform.SetParent(Reticle.GetChild(3), false);
+                break;
+        }
+        ui.transform.position = Vector3.zero;
     }
 
     #region Gun Update UI

@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 2249396249718359196}
   - component: {fileID: 7470311785850949753}
   m_Layer: 5
-  m_Name: StatBar
+  m_Name: HorizontalStatBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,10 +110,10 @@ RectTransform:
   - {fileID: 7348518503714224642}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -900.1111, y: -530.8178}
-  m_SizeDelta: {x: -1845.5625, y: -1072.9375}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -916.4844, y: -535.375}
+  m_SizeDelta: {x: 87.0313, y: 9.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6723702866607346087
 CanvasRenderer:

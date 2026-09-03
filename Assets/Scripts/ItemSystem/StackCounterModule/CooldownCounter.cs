@@ -26,6 +26,9 @@ public class CooldownCounter : StackCounter
         cooldownTime = copied.cooldownTime;
         StartCooldownEvent = new InputEventSelector(copied.StartCooldownEvent.InputEvent);
         ResetCooldownEvent = new InputEventSelector(copied.ResetCooldownEvent.InputEvent);
+
+        UISetting = copied.UISetting;
+        HasUI = copied.HasUI;
     }
     // creates a deepy copy of this class.
     public override StackCounter GetCopy()

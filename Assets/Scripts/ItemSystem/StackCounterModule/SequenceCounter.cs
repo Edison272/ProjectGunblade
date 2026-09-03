@@ -31,6 +31,8 @@ public class SequenceCounter : StackCounter
         MaxIndex = copied.MaxIndex;
         IterateSequenceEvent = copied.IterateSequenceEvent;
         ResetSequenceEvent = copied.ResetSequenceEvent;
+        UISetting = copied.UISetting;
+        HasUI = copied.HasUI;
     }
     public override StackCounter GetCopy()
     {

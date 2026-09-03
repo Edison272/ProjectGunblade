@@ -35,10 +35,10 @@ MonoBehaviour:
       data:
         instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
         atk_stats:
-          damage: 1
+          damage: 10
           pierce: 0
           bounce: 0
-          knockback_amt: 0
+          knockback_amt: 2.6
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
@@ -53,6 +53,11 @@ MonoBehaviour:
     - rid: 267928573218914422
       type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
       data:
+        HasUI: 1
+        UISetting:
+          ImageFillType: 0
+          PlacementDirection: 1
+          DisplayTest: 0
         <stackCounterType>k__BackingField: 2
         cooldownTime: 0.1
         StartCooldownEvent:
@@ -98,12 +103,6 @@ MonoBehaviour:
           AnimParameterType: 9
           <_animParamValue>k__BackingField: 0
           AnimSpeed: 1
-        InputEvent:
-          InputEventType: 2
-          _globalInput: 0
-          _interfaceInput: 0
-          _characterInput: 2
-          _usableInput: 0
         OutputEvent:
           InputEventType: 2
           _globalInput: 0
@@ -118,6 +117,11 @@ MonoBehaviour:
     - rid: 6178397772526125197
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
+        HasUI: 1
+        UISetting:
+          ImageFillType: 0
+          PlacementDirection: 3
+          DisplayTest: 0
         <stackCounterType>k__BackingField: 1
         basicAmmoStats:
           maxAmmo: 30

@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VectorGraphics;
 using UnityEngine;
+
 public enum StackCountType 
 {
     Simple, 
@@ -19,6 +21,11 @@ public enum StackCountType
 [Serializable]
 public abstract class StackCounter
 {
+    [Header("UI Element")]
+    public bool HasUI = true;
+    [ShowIf("HasUI")] public StackCounterUISetting UISetting;
+    
+
     [field: SerializeField] public StackCountType stackCounterType {get; protected set;} = StackCountType.Simple;
     protected InputEventRelay inputRelay; // reference to another input relay. used to control when stack interactions happen
 
@@ -26,6 +33,7 @@ public abstract class StackCounter
     public StackCounter() {}
     // creates a deepy copy of this class.
     public abstract StackCounter GetCopy();
+    
     #endregion
 
     #region Functionality

@@ -24,6 +24,9 @@ public class SimpleCounter : StackCounter
     {
         default_stacks = copied.default_stacks;
         curr_stacks = default_stacks;
+
+        HasUI = copied.HasUI;
+        UISetting = copied.UISetting;
     }
     public override StackCounter GetCopy()
     {

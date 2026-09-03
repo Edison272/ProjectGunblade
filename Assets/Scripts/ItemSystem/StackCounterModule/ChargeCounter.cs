@@ -32,6 +32,9 @@ public class ChargeCounter : StackCounter
         StartChargeEvent = copied.StartChargeEvent;
         StopChargeEvent = copied.StopChargeEvent;
         ResetChargeEvent = copied.ResetChargeEvent;
+
+        HasUI = copied.HasUI;
+        UISetting = copied.UISetting;
     }
     public override StackCounter GetCopy()
     {

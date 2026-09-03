@@ -74,6 +74,11 @@ MonoBehaviour:
     - rid: 6178397772526125271
       type: {class: ChargeCounter, ns: , asm: Assembly-CSharp}
       data:
+        HasUI: 1
+        UISetting:
+          ImageFillType: 0
+          PlacementDirection: 0
+          DisplayTest: 0
         <stackCounterType>k__BackingField: 3
         MaxChargeTime: 1
         MinChargeTime: 0
@@ -102,16 +107,16 @@ MonoBehaviour:
         atk_stats:
           damage: 10
           pierce: 0
-          bounce: 1
+          bounce: 0
           knockback_amt: 3.2
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          projectile_speed: 40
-          homing_radius: 10
-          HomingSpdScale: 0.1
+          projectile_speed: 59
+          homing_radius: 0
+          HomingSpdScale: 0
           projectile_count: 10
           projectile_spread: 90
           even_spread: 0
