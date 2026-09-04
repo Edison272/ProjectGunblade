@@ -140,15 +140,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <baseData>k__BackingField: {fileID: 11400000, guid: 1848e84891918844684352c2f2d8d3bc, type: 2}
   user: {fileID: 0}
-  itemEffects: []
+  _itemOutputs: []
+  <stackCounters>k__BackingField: []
   _rotScale: 1
+  targetPos: {x: 0, y: 0}
   itemobject: {fileID: 0}
   rotatorObject: {fileID: 3945769674920731087}
   itemTip: {fileID: 7037610556534379554}
-  animator: {fileID: 8606916593666797745}
+  fireSFX:
+  - {fileID: 8300000, guid: 29758ab0b3cbe564f97ff412d134cd58, type: 3}
+  - {fileID: 8300000, guid: 64ec3d31f84856e44a62eca14368950a, type: 3}
   use_spd_scale: 1
   equip_spd_scale: 1
   resetSpdScale: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!95 &8606916593666797745
 Animator:
   serializedVersion: 7

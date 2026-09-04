@@ -67,8 +67,6 @@ public class GunOutput : ItemOutput
             _baseItem.NeedsReset = NeedsReset();
         }
         
-        
-        
     }
 }
 

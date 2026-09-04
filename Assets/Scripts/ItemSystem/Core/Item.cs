@@ -48,6 +48,10 @@ public class Item : MonoBehaviour
     private InputEventRelay _externalInputRelay; // reference to another input relay which controls the item
     public InputEventRelay ItemInputRelay {get; private set;} // a locally defined input relay
 
+
+    [Header("SFX")]
+    public AudioClip[] fireSFX = new AudioClip[0];
+
     [field: Header("Modifiers")]
     public float use_spd_scale = 1f;
     public float equip_spd_scale = 1f;
@@ -280,6 +284,7 @@ public class Item : MonoBehaviour
         baseData.AttackObjects[attackIndex].Attack(get_atk_targ);
         animRequest.Animate(animator);
         ItemInputRelay.Invoke(UsableEvent.Used);
+        SFXManager.PlaySFXClip(fireSFX, transform.position, 1f);
 
         if (readinessScore > -1)
             ReadinessScore = readinessScore;

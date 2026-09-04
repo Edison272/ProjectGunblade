@@ -57,7 +57,7 @@ MonoBehaviour:
         UISetting:
           ImageFillType: 0
           CounterDesign: 0
-          PlacementDirection: 0
+          PlacementDirection: 5
           DisplayTest: 0
         <stackCounterType>k__BackingField: 2
         cooldownTime: 0.1

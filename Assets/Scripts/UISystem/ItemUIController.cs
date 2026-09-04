@@ -11,8 +11,6 @@ public class ItemUIController : MonoBehaviour
     public Image item_sprite;
     public TMP_Text item_counter;
     public RectTransform reset_bar;
-    [Header("UI - Recoil Circle")]
-    [SerializeField] int circle_step = 100;
 
 
     [Header("UI StatUI")]
@@ -50,7 +48,7 @@ public class ItemUIController : MonoBehaviour
             Reticle.position = active_character.TargetAimPos;
             
             DrawRecoilCircle(MainReticle, active_character.TargetAimPos, 0.1f, 20);
-            DrawRecoilCircle(OffsetReticle, active_character.AimPosition, active_character.OffsetVec.magnitude * (active_character.AimPosition - active_character.Position).magnitude + 0.2f, 100);
+            DrawRecoilCircle(OffsetReticle, active_character.AimPosition + active_character.OffsetVec, 0.2f, 100);
             
             // // change how ui looks when weapons are switched
             if (_inventorySlot != active_character.Inventory.CurrentSlot)
