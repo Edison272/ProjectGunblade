@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using AttackSystem;
+using GameAI.Factions;
 
 public class LinecastBehavior : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class LinecastBehavior : MonoBehaviour
 
 
     [field: Header("Ownership")]
-    string object_tag = "Untagged";
+    int _factionTag = FactionManager.NoFactionLayer;
     Character owner;
 
     void GenerateLinecast()
@@ -46,7 +47,7 @@ public class LinecastBehavior : MonoBehaviour
             {
                 if (contact.transform.gameObject.TryGetComponent<Character>(out Character character))
                 {
-                    if (character.FactionTag == object_tag)
+                    if (character.FactionID == _factionTag)
                     {
                         return;
                     }
@@ -107,7 +108,7 @@ public class LinecastBehavior : MonoBehaviour
         owner = atk_targ.owner;
         if (owner)
         {
-            object_tag = owner.gameObject.tag;
+            _factionTag = owner.FactionID;
         }
         // generate the physics linecast (this also sets a new end_pos based on where the linecast hits)
         GenerateLinecast();

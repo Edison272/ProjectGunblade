@@ -20,7 +20,7 @@ public class AttackObjectTester : MonoBehaviour
     }
     public void Attack()
     {
-        TargetData target_data = new TargetData(source_transform.position, target_transform.position, output_transform.position, vfx_offset);
+        TargetData target_data = new TargetData(source_transform.position, target_transform.position, output_transform.position, vfx_offset, 0);
         attackObject.Attack(target_data);
     }
     

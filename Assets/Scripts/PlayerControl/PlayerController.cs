@@ -144,10 +144,10 @@ public class PlayerController : MonoBehaviour
         SetPlayerCharacter(active_character);
 
         // setup faction control
-        _playerFaction = FactionManager.Instance.RegisterFaction(active_character.FactionTag);
+        _playerFaction = FactionManager.Instance.RegisterFaction(FactionManager.PlayerFactionID);
+        FactionInspector.SetFaction(_playerFaction);
         FactionInspector.SetSquadSelection(_squadSelector);
         // setup UI components
-        FactionInspector.SetFaction(_playerFaction);
         SetCommandMode(false);  
 
 
@@ -164,6 +164,7 @@ public class PlayerController : MonoBehaviour
     {
         //active_character?.ConnectPlayer(this);
         set_character?.LinkController(CharacterInputRelay);
+        set_character.SetFaction(FactionManager.PlayerFactionID);
         // set camera target
         main_cinema_cam.Target.TrackingTarget = set_character.transform;
         CanvasController.Instance.PlayerHUD.GetComponent<ItemUIController>().active_character = active_character;

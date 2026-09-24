@@ -34,6 +34,7 @@ MonoBehaviour:
       type: {class: Projectile, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        targetFaction: 0
         atk_stats:
           damage: 10
           pierce: 0
@@ -77,6 +78,7 @@ MonoBehaviour:
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        targetFaction: 0
         atk_stats:
           damage: 0
           pierce: 0

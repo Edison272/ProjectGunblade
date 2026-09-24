@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using AttackSystem;
+using GameAI.Factions;
 
 public class ProjectileBehavior : MonoBehaviour
 {
@@ -27,14 +28,14 @@ public class ProjectileBehavior : MonoBehaviour
 
     [field: Header("Ownership")]
     Character _owner = null;
-    string object_tag = "Untagged";
+    int _factionTag = FactionManager.NoFactionLayer;
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag != "NoHit" && (!_owner || collider.gameObject != _owner.gameObject))
+        if (!_owner || collider.gameObject != _owner.gameObject)
         {
             bool destroyObject = false;
-            if (collider.gameObject.layer == 6)
+            if (collider.gameObject.layer == 6) // ricochet on contact with TerrainWalls layer
             {
                 if (atk_stats.bounce > 0)
                 {                    
@@ -66,7 +67,7 @@ public class ProjectileBehavior : MonoBehaviour
             if (collider.gameObject.TryGetComponent<Character>(out Character character))
             {
                 
-                if (character.FactionTag == object_tag)
+                if (character.FactionID == _factionTag)
                 {
                     return;
                 }
@@ -118,12 +119,14 @@ public class ProjectileBehavior : MonoBehaviour
         atk_stats = proj_data.atk_stats;
         speed = proj_data.typeData.projectile_speed;
         HomingSpdScale = proj_data.typeData.HomingSpdScale;
+        proj_rb.includeLayers = atk_targ.targetMask;
+        proj_rb.excludeLayers = ~proj_rb.includeLayers;
 
         _targetData = atk_targ; 
         if (_targetData.owner)
         {
             _owner = _targetData.owner;
-            object_tag = _targetData.owner.gameObject.tag;
+            _factionTag = _targetData.owner.FactionID;
         }
 
         // adjust vfx rotation

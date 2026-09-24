@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace GameAI.Factions
@@ -13,12 +14,21 @@ namespace GameAI.Factions
     public class FactionManager : MonoBehaviour
     {
         public static FactionManager Instance { get; private set; }
-
-        public readonly Dictionary<string, FactionData> Factions = new Dictionary<string, FactionData>();
+        public readonly List<FactionData> Factions = new List<FactionData>();
 
         [Header("Factions to create at startup")]
         // [Tooltip("Just the names — set up relations in code via SetRelation, or extend this with a ScriptableObject config if you want it designer-editable.")]
         public List<FactionInitializer> initialFactions = new List<FactionInitializer>();
+
+        // Builtin Factions. Only three factions get their own physics layer
+        public const int PlayerFactionID = 0;
+        public const int PlayerFactionLayer = 29;
+        public const int EnemyFactionID = 1;
+        public const int EnemyFactionLayer = 30;
+        public const int NoFactionID = -1;
+        public const int NoFactionLayer = 31;
+        public const int FactionLayers = 1 << NoFactionLayer | 1 << EnemyFactionLayer | 1 << PlayerFactionLayer; // the factions that can be targetted (31 = NoFaction, 30 = Enemy Faction, 29 = Player Faction)
+        
 
         private void Awake()
         {
@@ -28,38 +38,35 @@ namespace GameAI.Factions
                 return;
             }
             Instance = this;
-            DontDestroyOnLoad(gameObject);
 
+            
+            Factions.Add(new FactionData(PlayerFactionID, "Player", PlayerFactionLayer));
+            Factions.Add(new FactionData(EnemyFactionID, "The Bad Guys", EnemyFactionLayer));
+            // Add extra factions if they exist
             foreach (FactionInitializer faction in initialFactions)
             {
-                Factions[faction.FactionName] = new FactionData(faction);
+                Factions.Add(new FactionData(Factions.Count));
             }
         }
 
         /// <summary>Creates a new faction if one with this name doesn't already exist. Safe to call multiple times.</summary>
-        public FactionData RegisterFaction(string factionName)
+        public FactionData RegisterFaction(int FactionID, string FactionName = "Nameless")
         {
-            if (Factions.TryGetValue(factionName, out var existing))
-                return existing;
-            var faction = new FactionData(factionName);
-            Factions[factionName] = faction;
+            FactionData faction = null;
+            if (TryGetFaction(FactionID, out faction))
+                return faction;
+            
+            faction = new FactionData(Factions.Count, FactionName, NoFactionLayer); // any factions are considered to be factionless
+            Debug.Log(FactionID);
+            Factions.Add(faction);
             return faction;
         }
-
-        public FactionData GetFaction(string factionName)
+        public bool TryGetFaction(int FactionID, out FactionData faction)
         {
-            if (Factions.TryGetValue(factionName, out var faction))
-                return faction;
-
-            Debug.LogWarning($"FactionManager: no faction registered with name '{factionName}'.");
-            return null;
+            faction = null;
+            if (FactionID >= 0 && FactionID < Factions.Count)
+                faction = Factions[FactionID];
+            return faction != null;
         }
-
-        public bool TryGetFaction(string factionName, out FactionData faction)
-        {
-            return Factions.TryGetValue(factionName, out faction);
-        }
-
-        public IReadOnlyCollection<string> AllFactionNames => Factions.Keys;
     }
 }

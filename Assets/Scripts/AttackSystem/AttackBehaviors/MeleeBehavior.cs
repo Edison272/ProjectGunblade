@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using AttackSystem;
+using GameAI.Factions;
 
 public class MeleeBehavior : MonoBehaviour
 {
@@ -29,26 +30,29 @@ public class MeleeBehavior : MonoBehaviour
 
     [field: Header("Physics")]
     RaycastHit2D[] contacts;
+    Rigidbody2D melee_rb;
 
 
 
     [field: Header("Ownership")]
-    string object_tag = "Untagged";
+    int _factionTag = FactionManager.NoFactionLayer;
     Character owner;
 
+    public void Awake()
+    {
+        melee_rb = GetComponent<Rigidbody2D>();
+    }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag != object_tag && collision.gameObject.tag != "NoHit")
+
+        if (collision.gameObject.TryGetComponent<Character>(out Character character))
         {
-            if (collision.gameObject.TryGetComponent<Character>(out Character character))
+            if (character.FactionID == _factionTag)
             {
-                if (character.FactionTag == object_tag)
-                {
-                    return;
-                }
+                return;
             }
-            atk_stats.ApplyData(sourcePos, collision.gameObject);
         }
+        atk_stats.ApplyData(sourcePos, collision.gameObject);
     }
 
     // Update is called once per frame
@@ -72,6 +76,8 @@ public class MeleeBehavior : MonoBehaviour
         atk_stats = mele_data.atk_stats;
         render_duration = mele_data.typeData.melee_duration;
         curr_duration = render_duration;
+        melee_rb.includeLayers = 0 | atk_targ.targetMask;
+        melee_rb.excludeLayers = ~melee_rb.includeLayers;
         sourcePos = atk_targ.sourcePos;
         targetPos = atk_targ.targetPos;
         end_pos = targetPos;
@@ -79,7 +85,7 @@ public class MeleeBehavior : MonoBehaviour
         owner = atk_targ.owner;
         if (owner)
         {
-            object_tag = owner.gameObject.tag;
+            _factionTag = owner.FactionID;
         }
         // adjust size & position based on new size
         main_body.transform.localScale = main_body.transform.localScale * Mathf.Abs(mele_data.typeData.melee_size);

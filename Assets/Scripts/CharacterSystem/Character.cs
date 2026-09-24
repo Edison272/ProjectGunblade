@@ -61,7 +61,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public float close_range => base_data.close_range;
 
     // [field: Header("AI")]
-    public string FactionTag = "None"; // string tags. be careful
+    public int FactionID {get; private set;} = FactionManager.NoFactionID; // string tags. be careful
     [SerializeField] protected bool isAIActive = true;
     [SerializeField] public BehaviorController _behaviorController;   
     public FactionData CharacterFaction => _behaviorController.FactionData;
@@ -115,7 +115,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     }
     void Start()
     {
-        SetFaction();
+        SetFaction(FactionID);
         
         GetReady();
     }
@@ -391,28 +391,23 @@ public class Character : MonoBehaviour, IMovement, IHealth
     #endregion
 
     #region  AI Stuff
-    public void SetFaction()
+    public void SetFaction(int NewFactionID)
     {
         // will join or create their own factions automatically if one is listed.
-        FactionData faction = FactionManager.Instance.RegisterFaction(FactionTag);
+        // having the "Factionless" ID will cause a new faction with a different ID, hence why we set the faction id to the new faction
+        FactionData faction = FactionManager.Instance.RegisterFaction(NewFactionID);
         Squad factionSquad = faction.AddMember(this);
+        FactionID = faction.FactionID;
+        gameObject.layer = faction.FactionLayer;
         _behaviorController.SetSquad(factionSquad);
-        Debug.Log($"{faction.FactionName}, {factionSquad.Members.Count}");
-    }
-
-    // used when setting the affiliation of a chacter
-    public void SetFactionTag(string newTag)
-    {
-        FactionTag = newTag;
     }
     #endregion
 
     #region AI
-    public void SetFaction(string newTag) {FactionTag = newTag;}
 
     public TargetData GetTargetData(TargetDataRequest targetDataRequest)
     {
-        TargetData newTargData = new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero).SetOwner(this);
+        TargetData newTargData = new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero, CharacterFaction.GetTargetMask(targetDataRequest.TargetFaction)).SetOwner(this);
 
         if (targetDataRequest.HomingRadius > 0) 
         {

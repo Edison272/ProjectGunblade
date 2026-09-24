@@ -1,20 +1,20 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using Unity.Collections.LowLevel.Unsafe;
 
 namespace GameAI.Factions
 {    /// <summary>
     /// This is intentionally a plain C# class, not a MonoBehaviour or ScriptableObject —
     /// its data changes constantly at runtime and is owned/managed by FactionManager.
     /// </summary>
-    
-
-
     public enum TargetType {Closest, Furthest, MostHP, LeastHP}
     [Serializable]
     public class FactionData
     {
         public readonly string FactionName;
+        public readonly int FactionID; // The integer value used to find the integer-index of the faction in the Manager
+        public readonly int FactionLayer; // Player and Enemy factions will get a reserved physics layer
 
         /// <summary>Shared memory for this faction. 
         /// Each Character under this faction shares and updates the same blackboard with info
@@ -23,9 +23,11 @@ namespace GameAI.Factions
         /// <summary> Members are assigned to squads
         public readonly List<Squad> Squads = new List<Squad>();
 
-        public FactionData(string factionName)
+        public FactionData(int setID, string setName = "Nameless", int setLayer = FactionManager.NoFactionLayer)
         {
-            FactionName = factionName;
+            FactionID = setID;
+            FactionName = setName;
+            FactionLayer = setLayer;
         }
 
         public FactionData(FactionInitializer factionInitializer)
@@ -46,7 +48,6 @@ namespace GameAI.Factions
                 squad = AssignSquad(member);
             
             squad.AddMember(member);
-            member.FactionTag = FactionName;
             return squad;
         }
         public void RemoveMember(Character member, Squad squad)
@@ -82,5 +83,27 @@ namespace GameAI.Factions
             return nearestSquad;
         }
         #endregion
+
+        // characters belonging to this faction can use this function to get a layermask to find who they can target for attacks/abilities
+        public LayerMask GetTargetMask(TargetFaction targets)
+        {
+            LayerMask curr_mask = 1 << 6; // terrain wall by default
+            switch (targets)
+            {
+                case TargetFaction.Allies:
+                    curr_mask |= 1 << FactionLayer;
+                    break;
+                case TargetFaction.Enemies:
+                    if (FactionLayer == FactionManager.NoFactionLayer) // "factionless factions" are independent, and can attack each other
+                        curr_mask |= FactionManager.FactionLayers;
+                    else
+                        curr_mask |= FactionManager.FactionLayers & ~(1<<FactionLayer);
+                    break;
+                case TargetFaction.Both:
+                    curr_mask |= FactionManager.FactionLayers;
+                    break;
+            }
+            return curr_mask;
+        }
     }
 }

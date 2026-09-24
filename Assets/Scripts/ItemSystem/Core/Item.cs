@@ -270,7 +270,7 @@ public class Item : MonoBehaviour
     #endregion
     public void UseItem(int attackIndex, AnimationRequest animRequest, float readinessScore = -1)
     {
-        // request targetting data from user
+        // request targetting data from attack type
         TargetDataRequest targetDataReq = baseData.AttackObjects[attackIndex].GetTargetDataReq();
         targetDataReq.TargetPos = targetPos;
         

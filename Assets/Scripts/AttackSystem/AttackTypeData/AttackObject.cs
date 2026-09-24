@@ -13,6 +13,7 @@ public abstract class AttackObject
 {
     protected Character user;
     [SerializeField] public GameObject instance;
+    [SerializeField] public TargetFaction targetFaction;
     [ShowIf("instance")] public AttackStats atk_stats;
     #region Initializers
     public AttackObject(GameObject instance = null)
@@ -22,6 +23,7 @@ public abstract class AttackObject
     public virtual TargetDataRequest GetTargetDataReq()
     {
         TargetDataRequest targetDataRequest = new TargetDataRequest();
+        targetDataRequest.TargetFaction = targetFaction;
         return targetDataRequest;
     }
     #endregion
@@ -104,7 +106,7 @@ public class Projectile : AttackObject
     }
     public override TargetDataRequest GetTargetDataReq()
     {
-        TargetDataRequest targetDataRequest = new TargetDataRequest();
+        TargetDataRequest targetDataRequest = base.GetTargetDataReq();
         targetDataRequest.HomingRadius = typeData.homing_radius;
         return targetDataRequest;
     }

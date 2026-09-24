@@ -39,8 +39,7 @@ namespace GameAI.Factions
                 Leader = newMembers[0];
                 foreach(Character member in newMembers)
                 {
-                    Members.Add(member);
-                    member.SetFactionTag(Faction.FactionName);
+                    member.SetFaction(Faction.FactionID);
                 }
             }
         }
@@ -51,7 +50,6 @@ namespace GameAI.Factions
             {
                 if (!Leader) Leader = member;
                 Members.Add(member);
-                member.SetFactionTag(Faction.FactionName);
             }
         }
         public void RemoveMember(Character member)
@@ -105,12 +103,10 @@ namespace GameAI.Factions
         {
             float highScore = -Mathf.Infinity;
             Character primeTarget = null;
-            foreach(FactionData faction in FactionManager.Instance.Factions.Values)
+            foreach(FactionData faction in FactionManager.Instance.Factions)
             {
                 if (faction == Faction)
-                {
                     continue;
-                }
                 foreach(Squad squad in faction.Squads)
                 {
                     foreach(Character character in squad.Members)

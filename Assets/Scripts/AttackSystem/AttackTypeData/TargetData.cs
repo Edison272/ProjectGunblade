@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
+[System.Serializable]
+public enum TargetFaction {Enemies, Allies, Both}
+
 /// used to determine where an attack goes, and who it's from
 [System.Serializable]
 public struct TargetData
@@ -17,15 +20,17 @@ public struct TargetData
     public Vector2 vfxTargetOffset;
     
     // Entity Data
+    public LayerMask targetMask;
     public Character owner;
     public Transform objectTarget;
 
-    public TargetData(Vector2 src_pos, Vector2 targ_pos, Vector2 vfxSrcPos, Vector2 vfxTargPos)
+    public TargetData(Vector2 src_pos, Vector2 targ_pos, Vector2 vfxSrcPos, Vector2 vfxTargPos, int targMask = 0)
     {
         sourcePos = src_pos;
         targetPos = targ_pos;
         vfxSourcePos = vfxSrcPos;
         vfxTargetOffset = vfxTargPos;
+        targetMask = targMask;
         owner = null;
         objectTarget = null;
     }
@@ -60,5 +65,6 @@ public struct TargetData
 public struct TargetDataRequest
 {
     public Vector2 TargetPos;
+    public TargetFaction TargetFaction;
     public float HomingRadius; 
 }

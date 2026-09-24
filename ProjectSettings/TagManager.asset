@@ -36,9 +36,9 @@ TagManager:
   - 
   - 
   - 
-  - Faction B
-  - Faction A
+  - 
   - Player Faction
+  - Enemy Faction
   - Factionless
   m_SortingLayers:
   - name: Default

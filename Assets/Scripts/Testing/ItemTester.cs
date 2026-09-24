@@ -87,7 +87,7 @@ public class ItemTester : MonoBehaviour
     }
     public TargetData GetTargetData(TargetDataRequest targetDataRequest)
     {
-        return new TargetData(item.transform.position, Vector2.zero, Vector2.zero, Vector2.zero);
+        return new TargetData(item.transform.position, Vector2.zero, Vector2.zero, Vector2.zero, 0);
     }
     public void ToggleEquip(bool is_equipped)
     {

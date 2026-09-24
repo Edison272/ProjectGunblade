@@ -42,7 +42,6 @@ public class FactionInspector : MonoBehaviour
         }
 
         Instance._factionData = newFaction;
-        Debug.LogWarning(Instance._factionData.Squads.Count);
         for (int i = 0; i < Instance._factionData.Squads.Count; i++)
         {
             Debug.LogWarning("hai");
