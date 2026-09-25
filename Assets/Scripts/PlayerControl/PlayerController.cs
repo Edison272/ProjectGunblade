@@ -165,9 +165,14 @@ public class PlayerController : MonoBehaviour
         //active_character?.ConnectPlayer(this);
         set_character?.LinkController(CharacterInputRelay);
         set_character.SetFaction(FactionManager.PlayerFactionID);
+        set_character.isAIActive = false;
         // set camera target
         main_cinema_cam.Target.TrackingTarget = set_character.transform;
-        CanvasController.Instance.PlayerHUD.GetComponent<ItemUIController>().active_character = active_character;
+        if (CanvasController.Instance)
+        {
+            CanvasController.Instance.PlayerHUD.GetComponent<ItemUIController>().active_character = active_character;
+        }
+        
     }
 
     void Update()

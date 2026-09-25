@@ -24,7 +24,7 @@ public class FactionInspector : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         
-        GameObject squadDataUI = Resources.Load<GameObject>("SquadDataUI");
+        GameObject squadDataUI = Resources.Load<GameObject>("Prefabs/UI/Components/Overview/SquadDataUI");
         Debug.Log(squadDataUI)
 ;        for (int i = 0; i < 16; i++)
         {
@@ -69,6 +69,7 @@ public class FactionInspector : MonoBehaviour
         if (!Instance)
         {
             Debug.LogError("Singleton Instance of FactionInspector NOT FOUND");
+            return;
         }
         Instance.InternalCycleSquadSelection(index);
     }

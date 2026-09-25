@@ -83,7 +83,7 @@ public class StackCounterUISetting
         // save the loaded object to prevent calling again
         if (_resourceObject == null)
         {
-            _resourceObject = Resources.Load<GameObject>("StackBars/" + placement + design);
+            _resourceObject = Resources.Load<GameObject>("Prefabs/UI/Components/StackBars/" + placement + design);
         }
         return _resourceObject;
     }

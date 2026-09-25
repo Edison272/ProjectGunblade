@@ -1,14 +1,20 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using GameAI.Factions;
 
 
 // will spawn everything in the SpawnCharacters Array. 
 // distributes spawning locations to children locations or self
 public class CharacterSpawner : MonoBehaviour
 {
+    public int FactionID = FactionManager.EnemyFactionID;
     public Character[] SpawnCharacters;
 
+    public void Start()
+    {
+        StartSpawn();
+    }
     public Character[] StartSpawn()
     {
         Transform[] spawnLocations = null;
@@ -29,7 +35,7 @@ public class CharacterSpawner : MonoBehaviour
         for (int i = 0; i < SpawnCharacters.Length; i++)
         {
             int locIndex = spawnLocations.Length * i/SpawnCharacters.Length;
-            newSpawns[i] = SpawnCharacters[i].Clone(spawnLocations[locIndex].position);
+            newSpawns[i] = SpawnCharacters[i].Instantiate(spawnLocations[locIndex].position, FactionID);
         }
         return newSpawns;
     }

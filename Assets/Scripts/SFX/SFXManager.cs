@@ -7,7 +7,25 @@ using Random = UnityEngine.Random;
 
 public class SFXManager : MonoBehaviour
 {
-    public static SFXManager Instance { get; private set; }
+    const string PrefabPath = "Assets/Prefabs/Managers/SFXManager.prefab";
+    private static SFXManager _instance;
+    public static SFXManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<SFXManager>();
+                if (_instance != null)
+                    return _instance;
+                SFXManager prefab = Resources.Load<SFXManager>("Prefabs/Managers/SFXManager");
+                _instance = Instantiate(prefab.gameObject).GetComponent<SFXManager>();
+                DontDestroyOnLoad(_instance);
+            }
+            return _instance;
+        }
+        private set { _instance = value; }
+    }
     [SerializeField] private AudioSource _audioSourcePrefab;
     private static Queue<AudioSource> _audioSourcePool = new Queue<AudioSource>();
     public void Awake()

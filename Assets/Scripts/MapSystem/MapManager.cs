@@ -10,7 +10,28 @@ using System.IO; // LEAVE ME ALONE DAMNIT
 
 public class MapManager : MonoBehaviour
 {
-    public static MapManager Instance { get; private set; }
+        const string PrefabPath = "Assets/Prefabs/Managers/FactionManager.prefab";
+        private static MapManager _instance;
+        public static MapManager Instance { 
+            get
+            {
+                if (_instance == null)
+                {
+                    // Check for an existing scene instance first
+                    _instance = FindFirstObjectByType<MapManager>();
+                    if (_instance != null)
+                        return _instance;
+                    MapManager prefab = Resources.Load<MapManager>("Prefabs/Managers/MapManager");
+                    _instance = Instantiate(prefab.gameObject).GetComponent<MapManager>();
+                    DontDestroyOnLoad(_instance);
+                }
+                return _instance;
+            }
+            private set
+            {
+                _instance = value;
+            }
+        }
     [field: SerializeField] public Tilemap Floor { get; private set; }
     [field: SerializeField] public Tilemap Wall { get; private set; }
     public static Vector2 TILE_CENTER_OFFSET = new Vector2(0.5f, 0.5f);
@@ -23,6 +44,9 @@ public class MapManager : MonoBehaviour
     public static Vector2Int VecIdxOffset => -(Vector2Int)Instance.Floor.cellBounds.min; 
     public static Vector2Int VecArrayMax => (Vector2Int)Instance.Floor.cellBounds.max - (Vector2Int)Instance.Floor.cellBounds.min;
     public static TileProperties[,] AllTiles;
+
+    // location data
+    public Vector2Int SpawnTile;
 
     private void Awake()
     {

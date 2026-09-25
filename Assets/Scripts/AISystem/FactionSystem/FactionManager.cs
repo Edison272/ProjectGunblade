@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEditor;
 
 namespace GameAI.Factions
 {
@@ -13,7 +14,28 @@ namespace GameAI.Factions
     /// </summary>
     public class FactionManager : MonoBehaviour
     {
-        public static FactionManager Instance { get; private set; }
+        const string PrefabPath = "Assets/Prefabs/Managers/FactionManager.prefab";
+        private static FactionManager _instance;
+        public static FactionManager Instance { 
+            get
+            {
+                if (_instance == null)
+                {
+                    // Check for an existing scene instance first
+                    _instance = FindFirstObjectByType<FactionManager>();
+                    if (_instance != null)
+                        return _instance;
+                    FactionManager prefab = Resources.Load<FactionManager>("Prefabs/Managers/FactionManager");
+                    _instance = Instantiate(prefab.gameObject).GetComponent<FactionManager>();
+                    DontDestroyOnLoad(_instance);
+                }
+                return _instance;
+            }
+            private set
+            {
+                _instance = value;
+            }
+        }
         public readonly List<FactionData> Factions = new List<FactionData>();
 
         [Header("Factions to create at startup")]

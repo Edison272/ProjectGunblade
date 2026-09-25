@@ -11,17 +11,12 @@ public class Character : MonoBehaviour, IMovement, IHealth
 {
     [SerializeField] private CharacterSO base_data;
     public string character_name => base_data.character_name;
-
     [field: SerializeField] public AnatomyComponent Anatomy {get; private set;}
     public Animator animator;
-
 
     [field: Header("Movement")]
     [field: SerializeField] public MovementComponent Movement {get; private set;}
     public float move_speed => Movement.MoveSpeed; //maximum speed an operator can move at
-    public Vector2 MovePos => Movement.MovePos;
-    public bool DestinationReached => Movement.DestinationReached;
-    public Vector2 LastMoveDir => Movement.LastMoveDir;
     public Rigidbody2D entity_rb => Movement.EntityRB;
     public Vector2 Position => entity_rb.position; // a more compact way of accessing player position
     public Vector2Int TilePosition => Vector2Int.FloorToInt(Position);
@@ -29,10 +24,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
     [field: Header("Health Stuff")]
     [field: SerializeField] public HealthComponent Health {get; private set;}
-    public int CurrHealth => Health.CurrHealth;
-    public int MaxHealth => Health.MaxHealth;
-    public int shield => Health.shield;
-    public float health_ratio => Health.health_ratio;
     public bool is_alive => Health.is_alive;
 
     [field: Header("Health UI")]
@@ -62,7 +53,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
     // [field: Header("AI")]
     public int FactionID {get; private set;} = FactionManager.NoFactionID; // string tags. be careful
-    [SerializeField] protected bool isAIActive = true;
+    [SerializeField] public bool isAIActive = true;
     [SerializeField] public BehaviorController _behaviorController;   
     public FactionData CharacterFaction => _behaviorController.FactionData;
     public Squad CharacterSquad => _behaviorController.FactionSquad;
@@ -134,9 +125,11 @@ public class Character : MonoBehaviour, IMovement, IHealth
     }
 
     // used to instantiate the character for the first time or during runtime
-    public Character Clone(Vector3 position)
+    public Character Instantiate(Vector3 position, int FactionID)
     {
-        return Instantiate(this.gameObject, position, quaternion.identity).GetComponent<Character>();
+        Character new_char = Instantiate(this.gameObject, position, quaternion.identity).GetComponent<Character>();
+        new_char.FactionID = FactionID;
+        return new_char;
     }
 
     #endregion
