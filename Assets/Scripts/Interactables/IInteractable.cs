@@ -3,8 +3,8 @@ using UnityEngine;
 
 public interface IInteractable
 {       
-    public static readonly LayerMask find_interactable_mask = (1 << 3);
-    public void Interact(Character character);
+    const int InteractableMask = (1 << 3);
+    public void Interact(Character character); // characters can call the interact function when near an interactable
     public void ToggleInteractPrompt(bool enable);
     public string GetPromptText();
 }

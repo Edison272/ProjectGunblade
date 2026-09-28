@@ -10,28 +10,26 @@ using System.IO; // LEAVE ME ALONE DAMNIT
 
 public class MapManager : MonoBehaviour
 {
-        const string PrefabPath = "Assets/Prefabs/Managers/FactionManager.prefab";
-        private static MapManager _instance;
-        public static MapManager Instance { 
-            get
+    private static MapManager _instance;
+    public static MapManager Instance { 
+        get
+        {
+            if (_instance == null)
             {
-                if (_instance == null)
-                {
-                    // Check for an existing scene instance first
-                    _instance = FindFirstObjectByType<MapManager>();
-                    if (_instance != null)
-                        return _instance;
-                    MapManager prefab = Resources.Load<MapManager>("Prefabs/Managers/MapManager");
-                    _instance = Instantiate(prefab.gameObject).GetComponent<MapManager>();
-                    DontDestroyOnLoad(_instance);
-                }
-                return _instance;
+                // Check for an existing scene instance first
+                _instance = FindFirstObjectByType<MapManager>();
+                if (_instance != null)
+                    return _instance;
+                MapManager prefab = Resources.Load<MapManager>("Prefabs/Managers/MapManager");
+                _instance = Instantiate(prefab.gameObject).GetComponent<MapManager>();
             }
-            private set
-            {
-                _instance = value;
-            }
+            return _instance;
         }
+        private set
+        {
+            _instance = value;
+        }
+    }
     [field: SerializeField] public Tilemap Floor { get; private set; }
     [field: SerializeField] public Tilemap Wall { get; private set; }
     public static Vector2 TILE_CENTER_OFFSET = new Vector2(0.5f, 0.5f);
@@ -56,7 +54,6 @@ public class MapManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         Floor.CompressBounds();
         Wall.CompressBounds();

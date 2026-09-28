@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 
 public class SFXManager : MonoBehaviour
 {
-    const string PrefabPath = "Assets/Prefabs/Managers/SFXManager.prefab";
     private static SFXManager _instance;
     public static SFXManager Instance
     {

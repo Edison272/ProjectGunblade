@@ -328,7 +328,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     public IInteractable FindInteractables()
     {
         ContactFilter2D interactEventable_filter = new ContactFilter2D();
-        interactEventable_filter.SetLayerMask(IInteractable.find_interactable_mask);
+        interactEventable_filter.SetLayerMask(IInteractable.InteractableMask);
         interactEventable_filter.useLayerMask = true; // Actively use the mask
         interactEventable_filter.useTriggers = true;
         Physics2D.OverlapCircle(GetPosition(), interactEvention_range, interactEventable_filter, interactEventables_in_range);
