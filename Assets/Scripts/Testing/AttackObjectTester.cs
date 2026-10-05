@@ -12,7 +12,7 @@ public class AttackObjectTester : MonoBehaviour
 
 
     [Header("Attack Type")]
-    [SerializeReference] AttackObject attackObject = new Projectile();
+    [SerializeReference] AttackObject attackObject;
     void Awake()
     {
         if (!source_transform) {source_transform = this.transform;}

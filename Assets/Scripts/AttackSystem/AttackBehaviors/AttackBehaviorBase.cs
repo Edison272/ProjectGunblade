@@ -42,7 +42,7 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     protected void ApplyHit(GameObject target)
     {
         atk_stats.ApplyData(targetData.sourcePos, target);
-        if (atkObject.typeData.OnHitAttack != null)
+        if (atkObject.TypeData.OnHitAttack != null)
         {
             TargetData newTargData = targetData.WithSourcePos(transform.position);
             atkObject.Attack(targetData);

@@ -1,16 +1,16 @@
 using UnityEngine;
 using System;
 
-
+[Serializable]
 public class AttackTypeData
 {
     public int Count = 1; // how many shots?
     public float Angle = 0; // the angular spread
     public bool Even = false; // true = even fan, false = scattered
-    [SerializeReference] public AttackObject OnHitAttack = new Projectile(); // Additional attack effect when an attack successfully lands
-    [SerializeReference] public AttackObject OnDestroyAttack = new Projectile(); // A default attack effect when the attack expires 
+    [SerializeReference] public AttackObject OnHitAttack = null; // Additional attack effect when an attack successfully lands
+    [SerializeReference] public AttackObject OnDestroyAttack = null; // A default attack effect when the attack expires 
 }
-[System.Serializable]
+[Serializable]
 public class ProjectileTypeData : AttackTypeData
 {
     public float projectile_speed = 10;
@@ -24,13 +24,13 @@ public class LinecastTypeData : AttackTypeData
     public float render_duration = 0.1f; // was projectile_speed
 }
 
-[System.Serializable]
+[Serializable]
 public class MeleeTypeData : AttackTypeData
 {
     public float melee_duration = 0.5f;
     public float melee_size = 1;
 }
-[System.Serializable]
+[Serializable]
 public class AreaEffectTypeData : AttackTypeData
 {
     public float AreaDuration = 0.5f; // 0 for instant

@@ -1,6 +1,10 @@
-using UnityEngine;
 using AttackSystem;
 using Unity.VisualScripting;
+using System;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum AttackEnum { Projectile, Linecast, MeleeAttack }
 
@@ -13,7 +17,7 @@ public abstract class AttackObject
     [SerializeField, HideInInspector] private AttackBehaviorBase _instance; // the actual instance field which will be set if the instance is accepted
     [SerializeField] public TargetFaction targetFaction;
     [ShowIf("_instance")] public AttackStats atk_stats;
-    [ShowIf("_instance")] public AttackTypeData typeData;
+    public abstract AttackTypeData TypeData {get;}
 
     public AttackObject(AttackBehaviorBase instance = null)
     {
@@ -42,9 +46,9 @@ public abstract class AttackObject
         Vector2 toTarget = atk_targ.targetPos - atk_targ.sourcePos;
         float baseAngle = Mathf.Atan2(toTarget.y, toTarget.x) * Mathf.Rad2Deg;
 
-        for (int i = 0; i < typeData.Count; i++)
+        for (int i = 0; i < TypeData.Count; i++)
         {
-            Vector2 target = ShotTarget(atk_targ, toTarget.magnitude, baseAngle, i, typeData, out float miss);
+            Vector2 target = ShotTarget(atk_targ, toTarget.magnitude, baseAngle, i, TypeData, out float miss);
             TargetData shot = atk_targ.WithTargetPos(target);
             Launch(Spawn(shot.sourcePos), shot, miss);
         }
@@ -82,16 +86,16 @@ public abstract class AttackObject
         if (instance == null) { _instance = null; return false; }
 
         // update nested serialization rq
-        if(typeData != null) {
-            // AttackObject other_atk_obj = null;
-            // if (typeData.OnHitAttack.instance) { // AttackObjects are ALWAYS preinitialized
-            //     typeData.OnHitAttack.UpdateSerialization(out other_atk_obj);
-            //     typeData.OnHitAttack = (Projectile)other_atk_obj;
-            // }
-            // if (typeData.OnDestroyAttack.instance) {
-            //     typeData.OnDestroyAttack.UpdateSerialization(out other_atk_obj);
-            //     typeData.OnDestroyAttack = (Projectile)other_atk_obj;
-            // }
+        if(TypeData != null) {
+            AttackObject other_atk_obj = null;
+            if (TypeData.OnHitAttack != null && TypeData.OnHitAttack.instance) { // AttackObjects are ALWAYS preinitialized
+                TypeData.OnHitAttack.UpdateSerialization(out other_atk_obj);
+                TypeData.OnHitAttack = (Projectile)other_atk_obj;
+            }
+            if (TypeData.OnDestroyAttack != null && TypeData.OnDestroyAttack.instance) {
+                TypeData.OnDestroyAttack.UpdateSerialization(out other_atk_obj);
+                TypeData.OnDestroyAttack = (Projectile)other_atk_obj;
+            }
         }
 
         if (!instance.TryGetComponent(out AttackBehaviorBase behavior))
@@ -120,15 +124,80 @@ public abstract class AttackObject
         return true;
     }
     #endregion
+    #region Custom Drawer
+    [CustomPropertyDrawer(typeof(AttackObject), true)]
+    public class AttackObjectDrawer : PropertyDrawer
+    {
+        static float Line => EditorGUIUtility.singleLineHeight;
 
-    public virtual bool Hasinstance() => _instance;
+        public override float GetPropertyHeight(SerializedProperty p, GUIContent l)
+        {
+            float h = Line;
+            if (p.propertyType != SerializedPropertyType.ManagedReference
+                || p.managedReferenceValue == null || !p.isExpanded) return h;
+
+            var it = p.Copy(); var end = p.GetEndProperty();
+            it.NextVisible(true);
+            do { h += EditorGUI.GetPropertyHeight(it, true) + 2; }
+            while (it.NextVisible(false) && !SerializedProperty.EqualContents(it, end));
+            return h;
+        }
+
+        public override void OnGUI(Rect r, SerializedProperty p, GUIContent l)
+        {
+            var line = new Rect(r.x, r.y, r.width, Line);
+            bool isNull = p.managedReferenceValue == null;
+            string typeName = isNull ? "None" : p.managedReferenceValue.GetType().Name;
+
+            var labelRect = new Rect(line.x, line.y, EditorGUIUtility.labelWidth, Line);
+            var btnRect = new Rect(line.x + EditorGUIUtility.labelWidth, line.y,
+                                line.width - EditorGUIUtility.labelWidth, Line);
+
+            if (!isNull) p.isExpanded = EditorGUI.Foldout(labelRect, p.isExpanded, l, true);
+            else EditorGUI.LabelField(labelRect, l);
+
+            if (EditorGUI.DropdownButton(btnRect, new GUIContent(typeName), FocusType.Keyboard))
+            {
+                var menu = new GenericMenu();
+                menu.AddItem(new GUIContent("None"), isNull, () =>
+                { p.managedReferenceValue = null; p.serializedObject.ApplyModifiedProperties(); });
+                foreach (var t in TypeCache.GetTypesDerivedFrom<AttackObject>().Where(t => !t.IsAbstract))
+                {
+                    var type = t;
+                    menu.AddItem(new GUIContent(type.Name), false, () =>
+                    {
+                        p.managedReferenceValue = Activator.CreateInstance(type, (object)null);
+                        p.isExpanded = true;
+                        p.serializedObject.ApplyModifiedProperties();
+                    });
+                }
+                menu.DropDown(btnRect);
+            }
+
+            if (isNull || !p.isExpanded) return;
+
+            EditorGUI.indentLevel++;
+            float y = r.y + Line + 2;
+            var it = p.Copy(); var end = p.GetEndProperty();
+            it.NextVisible(true);
+            do
+            {
+                float h = EditorGUI.GetPropertyHeight(it, true);
+                EditorGUI.PropertyField(new Rect(r.x, y, r.width, h), it, true);
+                y += h + 2;
+            } while (it.NextVisible(false) && !SerializedProperty.EqualContents(it, end));
+            EditorGUI.indentLevel--;
+        }
+    }
+    #endregion
 }
 
 #region Projectile
 [System.Serializable]
 public class Projectile : AttackObject
 {
-    [ShowIf("_instance")] public new ProjectileTypeData typeData;
+    [ShowIf("_instance")] public ProjectileTypeData typeData;
+    public override AttackTypeData TypeData => typeData;
 
     public Projectile(AttackBehaviorBase instance = null) : base(instance) { }
     public Projectile(AttackBehaviorBase instance, AttackStats atk_stats, ProjectileTypeData typeData) : base(instance)
@@ -154,7 +223,8 @@ public class Projectile : AttackObject
 [System.Serializable]
 public class Linecast : AttackObject
 {
-    [ShowIf("_instance")] public new LinecastTypeData typeData;
+    [ShowIf("_instance")] public LinecastTypeData typeData;
+    public override AttackTypeData TypeData => typeData;
 
     public Linecast(AttackBehaviorBase instance = null) : base(instance) { }
     public Linecast(AttackBehaviorBase instance, AttackStats atk_stats, LinecastTypeData typeData) : base(instance)
@@ -171,7 +241,8 @@ public class Linecast : AttackObject
 [System.Serializable]
 public class MeleeAttack : AttackObject
 {
-    [ShowIf("_instance")] public new MeleeTypeData typeData;
+    [ShowIf("_instance")] public MeleeTypeData typeData;
+    public override AttackTypeData TypeData => typeData;
 
     public MeleeAttack(AttackBehaviorBase instance = null) : base(instance) { }
     public MeleeAttack(AttackBehaviorBase instance, AttackStats atk_stats, MeleeTypeData typeData) : base(instance)
@@ -188,8 +259,8 @@ public class MeleeAttack : AttackObject
 [System.Serializable]
 public class AreaEffect : AttackObject
 {
-    [ShowIf("_instance")] public new AreaEffectTypeData typeData;
-
+    [ShowIf("_instance")] public AreaEffectTypeData typeData;
+    public override AttackTypeData TypeData => typeData;
     public AreaEffect(AttackBehaviorBase instance = null) : base(instance) { }
     public AreaEffect(AttackBehaviorBase instance, AttackStats atk_stats, AreaEffectTypeData typeData) : base(instance)
     {

@@ -25,7 +25,7 @@ public class ItemSO : ScriptableObject
     [field: SerializeField] public float ResetTime {get; private set;} = 1f;
 
     [field: SerializeReference] public ItemOutput[] ItemOutputs {get; private set;} = new ItemOutput[] {}; // determines the attacks available in this item
-    [SerializeReference] public AttackObject[] AttackObjects = new Projectile[] {}; // a collection of attack types
+    [SerializeReference] public AttackObject[] AttackObjects = new AttackObject[] {}; // a collection of attack types
     [SerializeReference] public StackCounter[] StackCounters = new StackCounter[] {}; // control when different item effects trigger
 
     [field: Header("Aiming")]
