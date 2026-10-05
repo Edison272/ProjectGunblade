@@ -21,6 +21,7 @@ MonoBehaviour:
   AttackObjects:
   - rid: 6178397772526125269
   - rid: 6178397772526125360
+  - rid: 7800869064156381260
   StackCounters:
   - rid: 6178397772526125271
   dynamic_aim: 1
@@ -55,21 +56,21 @@ MonoBehaviour:
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        _instance: {fileID: 4857281296658957558, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        targetFaction: 0
         atk_stats:
           damage: 10
           pierce: 0
-          bounce: 0
+          bounce: 5
           knockback_amt: 0
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          projectile_speed: 0.1
-          homing_radius: 0
-          HomingSpdScale: 1
-          projectile_count: 1
-          projectile_spread: 0
+          render_duration: 0.1
+          linecast_count: 1
+          linecast_spread: 0
           even_spread: 0
     - rid: 6178397772526125271
       type: {class: ChargeCounter, ns: , asm: Assembly-CSharp}
@@ -77,6 +78,7 @@ MonoBehaviour:
         HasUI: 1
         UISetting:
           ImageFillType: 0
+          CounterDesign: 0
           PlacementDirection: 0
           DisplayTest: 0
         <stackCounterType>k__BackingField: 3
@@ -104,6 +106,8 @@ MonoBehaviour:
       type: {class: Projectile, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        targetFaction: 0
         atk_stats:
           damage: 10
           pierce: 0
@@ -119,4 +123,26 @@ MonoBehaviour:
           HomingSpdScale: 0
           projectile_count: 10
           projectile_spread: 90
+          even_spread: 0
+    - rid: 7800869064156381260
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        targetFaction: 0
+        atk_stats:
+          damage: 0
+          pierce: 0
+          bounce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          projectile_speed: 10
+          homing_radius: 0
+          HomingSpdScale: 1
+          projectile_count: 1
+          projectile_spread: 0
           even_spread: 0

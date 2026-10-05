@@ -42,12 +42,7 @@ public class AttackObjectTester : MonoBehaviour
         {
             attackObject = new Projectile();
         }
-        if (attackObject.instance != null)
-        {
-            if (attackObject.GetSpecificAttackObject() != attackObject.GetType())
-            {
-                attackObject = attackObject.SmartRecast();
-            }
-        }
+        if (attackObject.UpdateSerialization(out var updated))
+            attackObject = updated;
     }
 }

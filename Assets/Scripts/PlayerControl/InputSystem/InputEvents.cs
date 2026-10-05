@@ -35,6 +35,7 @@ public enum CharacterEvent
     LookPos,
     Interact,
     InventorySelect,
+    DamageTaken,
 }
 
 public enum UsableEvent

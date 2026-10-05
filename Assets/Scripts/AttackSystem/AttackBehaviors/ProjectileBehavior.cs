@@ -1,161 +1,130 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using AttackSystem;
-using GameAI.Factions;
 
-public class ProjectileBehavior : MonoBehaviour
+public class ProjectileBehavior : AttackBehaviorBase
 {
-    [field: Header("Target")]
-    TargetData _targetData;
-
-    [field: Header("VFX")]
+    [Header("VFX")]
     public GameObject main_body;
     public Transform vfx_body;
     //public ImpactEffect impact_effect;
 
-    float stick_duration; // stick to a target for a set duration
-
-    [field: Header("Projectile Data")]
-    AttackStats atk_stats;
+    [Header("Projectile Data")]
     public float speed;
     public float HomingSpdScale;
 
-    [field: Header("Physics")]
-    public Rigidbody2D proj_rb;
+    [Header("Physics")]
+    public Rigidbody2D ProjRB;
+    public Collider2D ProjCollider;
     float travel_time;
     float curr_travel_time = 0;
 
-    [field: Header("Ownership")]
-    Character _owner = null;
-    int _factionTag = FactionManager.NoFactionLayer;
-
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (!_owner || collider.gameObject != _owner.gameObject)
+        GameObject other = collider.gameObject;
+        if (IsOwner(other) || IsFriendly(other)) return;
+
+        bool destroyObject = false;
+        bool isTerrain = (terrainMask & (1 << other.layer)) != 0;
+
+        if (isTerrain)
         {
-            bool destroyObject = false;
-            if (collider.gameObject.layer == 6) // ricochet on contact with TerrainWalls layer
+            if (atk_stats.bounce > 0)
             {
-                if (atk_stats.bounce > 0)
-                {                    
-                    RaycastHit2D hit = Physics2D.Raycast(proj_rb.position - proj_rb.linearVelocity * Time.fixedDeltaTime, proj_rb.linearVelocity.normalized, speed, (1 << 6));
-                    if (hit.collider != null)
-                    {
-                        proj_rb.position = hit.point;
-                        proj_rb.linearVelocity = Vector2.Reflect(proj_rb.linearVelocity, hit.normal);
-
-                        RotateToVelocity();
-                    }
-                    
-                    // Vector2 directionToOther = (collider.ClosestPoint(transform.position) - proj_rb.position - proj_rb.linearVelocity*Time.fixedDeltaTime).normalized;
-                    // proj_rb.linearVelocity = Vector2.Reflect(proj_rb.linearVelocity.normalized, -directionToOther) * speed;
-                    // Debug.Log(proj_rb.linearVelocity.normalized);
-                    // Debug.DrawLine(proj_rb.position, proj_rb.position + directionToOther * 3, Color.aquamarine, 3);
-                    // Debug.DrawLine(collider.ClosestPoint(transform.position), collider.ClosestPoint(transform.position) + Vector2.up, Color.red, 3);
-                    
-                    travel_time += 1;
-                    atk_stats.bounce--;
-                    
-                }
-                else
+                ColliderDistance2D col_dist = collider.Distance(ProjCollider); // projCollider = this projectile's Collider2D
+                if (col_dist.isOverlapped)
                 {
-                    destroyObject = true;
+                    // normal points from the wall toward the projectile
+                    Vector2 normmal = col_dist.normal;
+                    Debug.DrawLine(ProjRB.position, ProjRB.position + normmal * (-col_dist.distance + 0.01f), Color.red, 1);
+                    ProjRB.position += normmal * (-col_dist.distance + 0.1f); // push out of wall
+                    ProjRB.linearVelocity = Vector2.Reflect(ProjRB.linearVelocity, normmal);
+                    Debug.DrawLine(ProjRB.position, ProjRB.position + ProjRB.linearVelocity, Color.green, 1);
+                    RotateToVelocity();
                 }
+                travel_time += 1;
+                atk_stats.bounce--;
             }
-            
-            if (collider.gameObject.TryGetComponent<Character>(out Character character))
+            else
             {
-                
-                if (character.FactionID == _factionTag)
-                {
-                    return;
-                }
-
-                atk_stats.pierce--;
-                if (atk_stats.pierce <= 0)
-                {
-                    destroyObject = true;
-                }
+                destroyObject = true;
             }
-
-            atk_stats.ApplyData(_targetData.sourcePos, collider.gameObject);
-            ProjectileEffects(collider.ClosestPoint(transform.position), destroyObject);
         }
+        else if (other.TryGetComponent<Character>(out _))
+        {
+            atk_stats.pierce--;
+            if (atk_stats.pierce <= 0) destroyObject = true;
+        }
+
+        ApplyHit(other);
+        ProjectileEffects(collider.ClosestPoint(transform.position), destroyObject);
     }
-    // Update is called once per frame
+
+    void Update()
+    {
+        // set vfx
+        vfx_body.position = Vector2.MoveTowards(vfx_body.position, ProjRB.position + targetData.vfxTargetPos, travel_time * Time.fixedDeltaTime * 2);
+    }
+
     void FixedUpdate()
     {
+        if (!attackEnabled) {return;}
         // constantly readjust velocity for homing projectiles
-        if (_targetData.objectTarget) {
-            Vector2 targetDir = ((Vector2)_targetData.objectTarget.position - proj_rb.position).normalized;
-            proj_rb.linearVelocity = Vector2.Lerp(proj_rb.linearVelocity.normalized, targetDir, speed * HomingSpdScale * Time.fixedDeltaTime) * speed;
-
+        if (targetData.objectTarget)
+        {
+            Vector2 targetDir = ((Vector2)targetData.objectTarget.position - ProjRB.position).normalized;
+            ProjRB.linearVelocity = Vector2.Lerp(ProjRB.linearVelocity.normalized, targetDir, speed * HomingSpdScale * Time.fixedDeltaTime) * speed;
             RotateToVelocity();
         }
 
-        // check if destination has been reached?
+        // terminate when lifetime is up
         curr_travel_time += Time.fixedDeltaTime;
         if (curr_travel_time >= travel_time)
         {
             ProjectileEffects(transform.position, true);
         }
-
-        // set vfx
-        vfx_body.position = Vector2.MoveTowards(vfx_body.position, proj_rb.position + _targetData.vfxTargetOffset, travel_time * Time.fixedDeltaTime * 2);
-
     }
 
-    // causes the projectile to rotate in the direction it is flying
+    // rotate the vfx in the direction of flight
     private void RotateToVelocity()
     {
-        Vector2 target_dir = proj_rb.linearVelocity.normalized;
-        float angle = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
+        Vector2 dir = ProjRB.linearVelocity.normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         vfx_body.rotation = Quaternion.Euler(0, 0, angle);
     }
 
-    public void StartProjectile(Projectile proj_data, TargetData atk_targ) // straight shot variant
+    public void StartProjectile(Projectile proj_data, TargetData atk_targ, float speedScale = 1f)
     {
-        atk_stats = proj_data.atk_stats;
-        speed = proj_data.typeData.projectile_speed;
+        Initialize(proj_data.atk_stats, atk_targ);
+        main_body.transform.position = atk_targ.sourcePos;
+
+        speed = proj_data.typeData.projectile_speed * speedScale;
         HomingSpdScale = proj_data.typeData.HomingSpdScale;
-        proj_rb.includeLayers = atk_targ.targetMask;
-        proj_rb.excludeLayers = ~proj_rb.includeLayers;
+        ProjRB.includeLayers = atk_targ.targetMask;
+        ProjRB.excludeLayers = ~ProjRB.includeLayers;
 
-        _targetData = atk_targ; 
-        if (_targetData.owner)
-        {
-            _owner = _targetData.owner;
-            _factionTag = _targetData.owner.FactionID;
-        }
-
-        // adjust vfx rotation
-        Vector2 target_dir = _targetData.GetDir().normalized;
-        float angle = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
+        // vfx rotation & height
+        Vector2 dir = targetData.GetDir().normalized;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         vfx_body.rotation = Quaternion.Euler(0, 0, angle);
-
-        // adjust vfx height from vfx body
         vfx_body.position = atk_targ.vfxSourcePos;
 
-        // move this thing
-        proj_rb.linearVelocity = target_dir * speed;
+        ProjRB.linearVelocity = dir * speed;
 
-        // set travel time to know when to terminate the projectile
-        float distance = _targetData.GetDir().magnitude;
+        // lifetime
+        float distance = targetData.GetDir().magnitude;
         travel_time = distance / speed * 3;
-    } 
+    }
 
     private void ProjectileEffects(Vector2 effect_position, bool terminate = false)
     {
-        //ImpactEffect.StartImpact(impact_effect, effect_position, vfxTargetOffset, targetPos - sourcePos, main_body.transform.localScale.x);
-        if (terminate)
-        {
-            EndProjectile();
-        }
+        //ImpactEffect.StartImpact(impact_effect, effect_position, ...);
+        if (terminate) EndAttack();
     }
 
-    private void EndProjectile()
+    public override void SetAttackActive(bool is_active)
     {
-        Destroy(this.gameObject);
+        base.SetAttackActive(is_active);
+        ProjRB.simulated = is_active;
+        main_body.gameObject.SetActive(is_active);
+        vfx_body.gameObject.SetActive(is_active);
     }
 }

@@ -275,10 +275,7 @@ public class Item : MonoBehaviour
         targetDataReq.TargetPos = targetPos;
         
         // fill in the empty values
-        TargetData get_atk_targ = GetTargetData(targetDataReq);
-        get_atk_targ.targetPos = targetPos;
-        get_atk_targ.vfxSourcePos = itemTip.transform.position;
-        get_atk_targ.vfxTargetOffset = new Vector2(0, item_y_offset + user_y_offset);
+        TargetData get_atk_targ = GetTargetData(targetDataReq).WithTargetPos(targetPos).WithVFXPos(itemTip.transform.position, new Vector2(0, item_y_offset + user_y_offset));
         
         
         baseData.AttackObjects[attackIndex].Attack(get_atk_targ);

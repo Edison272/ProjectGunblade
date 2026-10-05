@@ -90,6 +90,8 @@ public class Character : MonoBehaviour, IMovement, IHealth
                 (CharacterEvent.LookPos, typeof(Action<Vector2>)), 
                 (CharacterEvent.Interact, typeof(Action)), 
                 (UsableEvent.ResetStart, typeof(Action)), 
+
+                (CharacterEvent.DamageTaken, typeof(Action<int>)), 
             }
         );
         // setup movement
@@ -400,14 +402,14 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
     public TargetData GetTargetData(TargetDataRequest targetDataRequest)
     {
-        TargetData newTargData = new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero, CharacterFaction.GetTargetMask(targetDataRequest.TargetFaction)).SetOwner(this);
+        TargetData newTargData = new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero, CharacterFaction.GetTargetMask(targetDataRequest.TargetFaction)).WithOwner(this);
 
         if (targetDataRequest.HomingRadius > 0) 
         {
             Transform targetObject = FindClosestTargetInRange(targetDataRequest.TargetPos, targetDataRequest.HomingRadius);
             if (targetObject)
             {
-                newTargData.SetObjectTarget(targetObject);
+                newTargData.WithObjectTarget(targetObject);
             }
         }
 

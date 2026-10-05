@@ -1,70 +1,65 @@
-
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 [System.Serializable]
-public enum TargetFaction {Enemies, Allies, Both}
+public enum TargetFaction { Enemies, Allies, Both }
 
-/// used to determine where an attack goes, and who it's from
-[System.Serializable]
-public struct TargetData
+/// Immutable description of where an attack goes and who it's from.
+/// Use the With...() methods to derive modified copies.
+public readonly struct TargetData
 {
     // True position data
-    public Vector2 sourcePos;
-    public Vector2 targetPos;
+    public readonly Vector2 sourcePos;
+    public readonly Vector2 targetPos;
 
-    // VFX Data
-    public Vector2 vfxSourcePos;
-    public Vector2 vfxTargetOffset;
-    
-    // Entity Data
-    public LayerMask targetMask;
-    public Character owner;
-    public Transform objectTarget;
+    // VFX data (both absolute world positions)
+    public readonly Vector2 vfxSourcePos;
+    public readonly Vector2 vfxTargetPos; // renamed from vfxTargetOffset; swap in your own name if different
 
-    public TargetData(Vector2 src_pos, Vector2 targ_pos, Vector2 vfxSrcPos, Vector2 vfxTargPos, int targMask = 0)
+    // Entity data
+    public readonly LayerMask targetMask;
+    public readonly Character owner;
+    public readonly Transform objectTarget;
+
+    public TargetData(Vector2 sourcePos, Vector2 targetPos, Vector2 vfxSourcePos, Vector2 vfxTargetPos,
+                      LayerMask targetMask = default, Character owner = null, Transform objectTarget = null)
     {
-        sourcePos = src_pos;
-        targetPos = targ_pos;
-        vfxSourcePos = vfxSrcPos;
-        vfxTargetOffset = vfxTargPos;
-        targetMask = targMask;
-        owner = null;
-        objectTarget = null;
-    }
-
-    public TargetData SetOwner(Character owner)
-    {
+        this.sourcePos = sourcePos;
+        this.targetPos = targetPos;
+        this.vfxSourcePos = vfxSourcePos;
+        this.vfxTargetPos = vfxTargetPos;
+        this.targetMask = targetMask;
         this.owner = owner;
-        return this;
-    }
-    public TargetData SetObjectTarget(Transform objectTarget, Transform objectTargetVFX = null)
-    {
         this.objectTarget = objectTarget;
-        targetPos = objectTarget.transform.position;
-        vfxTargetOffset = objectTargetVFX ? objectTargetVFX.position : objectTarget.position;
-        return this;
     }
+
+    #region Derivation
+    // dervie a version of the target data with an owner
+    public TargetData WithTargetPos(Vector2 newTargetPos) =>
+        new TargetData(sourcePos, newTargetPos, vfxSourcePos, vfxTargetPos, targetMask, owner, objectTarget);
+
+    public TargetData WithVFXPos(Vector2 vfxSourcePos, Vector2 vfxTargetPos) =>
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetPos, targetMask, owner, objectTarget);
+
+    public TargetData WithOwner(Character newOwner) =>
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetPos, targetMask, newOwner, objectTarget);
+
+    /// Targets a transform: sets objectTarget and snaps targetPos / vfxTargetPos to it
+    public TargetData WithObjectTarget(Transform newObjectTarget, Transform objectTargetVFX = null) =>
+        new TargetData(sourcePos, newObjectTarget.position, vfxSourcePos,
+                       objectTargetVFX ? objectTargetVFX.position : newObjectTarget.position,
+                       targetMask, owner, newObjectTarget);
+    #endregion
 
     #region Helpers
-    public Vector2 GetDir()
-    {
-        return targetPos - sourcePos;
-    }
-    public Vector2 GetVFXDir()
-    {
-        return vfxTargetOffset - vfxSourcePos;
-    }
+    public Vector2 GetDir() => targetPos - sourcePos;
+    public Vector2 GetVFXDir() => vfxTargetPos - vfxSourcePos;
     #endregion
 }
 
-
-// used to request target data, with specific reqests for the type of targetting
+// used to request target data, with specific requests for the type of targeting
 public struct TargetDataRequest
 {
     public Vector2 TargetPos;
     public TargetFaction TargetFaction;
-    public float HomingRadius; 
+    public float HomingRadius;
 }

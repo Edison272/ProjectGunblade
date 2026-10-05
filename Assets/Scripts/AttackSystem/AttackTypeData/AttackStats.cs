@@ -30,7 +30,7 @@ namespace AttackSystem{
             IMovement targ_move = target.GetComponent<IMovement>();
             if (knockback_amt > 0)
             {
-                targ_move?.ForceMove((target.transform.position - sourcePos).normalized, knockback_amt * 10);
+                targ_move?.ForceMove((target.transform.position - sourcePos).normalized, knockback_amt);
             }
             
             if (effect_time > 0)

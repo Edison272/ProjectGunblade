@@ -1,269 +1,200 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using AttackSystem;
 
-using Random = UnityEngine.Random;
-using JetBrains.Annotations;
-
 public enum AttackEnum { Projectile, Linecast, MeleeAttack }
-[Serializable]
+
+/// Serialized attack config. Spawns instances of its prefab and hands each to its behavior script.
+/// Subclasses only declare their spread settings and how to launch their behavior.
+[System.Serializable]
 public abstract class AttackObject
 {
-    protected Character user;
-    [SerializeField] public GameObject instance;
+    [SerializeField] public GameObject instance; // The outward-facing property to set the instance in code
+    [SerializeField, HideInInspector] private AttackBehaviorBase _instance; // the actual instance field which will be set if the instance is accepted
     [SerializeField] public TargetFaction targetFaction;
-    [ShowIf("instance")] public AttackStats atk_stats;
-    #region Initializers
-    public AttackObject(GameObject instance = null)
+    [ShowIf("_instance")] public AttackStats atk_stats;
+
+    public AttackObject(AttackBehaviorBase instance = null)
     {
-        this.instance = instance;
+        this._instance = instance;
     }
+
+    #region Subclass Hooks
+    protected readonly struct SpreadSettings
+    {
+        public readonly int Count;
+        public readonly float Angle; // degrees
+        public readonly bool Even;   // true = fan evenly across Angle, false = random scatter
+
+        public SpreadSettings(int count, float angle, bool even)
+        {
+            Count = count;
+            Angle = angle;
+            Even = even;
+        }
+    }
+
+    protected abstract SpreadSettings Spread { get; }
+
+    /// Initialize the spawned instance's behavior.
+    /// miss = 0..1, how far a randomly scattered shot strayed from the aim (always 0 for even spread)
+    protected abstract void Launch(GameObject spawned, TargetData shot, float miss);
+
+    /// Override to pool instead of instantiate
+    protected virtual GameObject Spawn(Vector2 position)
+    {
+        return AttackBehaviorPool.GetAttack(_instance, position).gameObject;
+    }
+    #endregion
+
+    public float GetAtkSpread() => Spread.Angle;
+
     public virtual TargetDataRequest GetTargetDataReq()
     {
-        TargetDataRequest targetDataRequest = new TargetDataRequest();
-        targetDataRequest.TargetFaction = targetFaction;
-        return targetDataRequest;
+        TargetDataRequest req = new TargetDataRequest();
+        req.TargetFaction = targetFaction;
+        return req;
+    }
+
+    #region Attack
+    public virtual void Attack(TargetData atk_targ)
+    {
+        SpreadSettings spread = Spread;
+        Vector2 toTarget = atk_targ.targetPos - atk_targ.sourcePos;
+        float baseAngle = Mathf.Atan2(toTarget.y, toTarget.x) * Mathf.Rad2Deg;
+
+        for (int i = 0; i < spread.Count; i++)
+        {
+            Vector2 target = ShotTarget(atk_targ, toTarget.magnitude, baseAngle, i, spread, out float miss);
+            TargetData shot = atk_targ.WithTargetPos(target);
+            Launch(Spawn(shot.sourcePos), shot, miss);
+        }
+    }
+
+    private static Vector2 ShotTarget(TargetData data, float dist, float baseAngle, int index, SpreadSettings spread, out float miss)
+    {
+        if (spread.Even)
+        {
+            miss = 0f;
+            // fan spans the full angle; a single shot goes straight
+            float offset = spread.Count > 1
+                ? -spread.Angle / 2f + spread.Angle / (spread.Count - 1) * index
+                : 0f;
+            float rad = (baseAngle + offset) * Mathf.Deg2Rad;
+            return data.sourcePos + new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * dist;
+        }
+
+        Vector2 scatter = Random.insideUnitCircle * (spread.Angle / 360f); // fraction of dist
+        miss = scatter.magnitude;
+        return data.targetPos + scatter * dist;
     }
     #endregion
-    public abstract void Attack(TargetData atk_targ);
-    public abstract float GetAtkSpread();
 
     #region Recasting
-    /// Basic AttackObject can be recast into its inheritor scripts
-    public virtual Projectile RecastToProjectileType()
-    {
-        return new Projectile(instance, atk_stats, new ProjectileTypeData());
-    }
-    public virtual Linecast RecastToLinecastType()
-    {
-        return new Linecast(instance, atk_stats, new ProjectileTypeData());
-    }
-    public virtual MeleeAttack RecastToMeleeType()
-    {
-        return new MeleeAttack(instance, atk_stats, new MeleeTypeData());
-    }
-    // Will automatically recast its type based on the instance it's holding
-    public virtual AttackObject SmartRecast()
-    {
-        AttackObject new_type = null;
-        switch(instance.GetComponent<MonoBehaviour>())
-        {
-            case ProjectileBehavior:
-                new_type = RecastToProjectileType();
-                break;
-            case LinecastBehavior:
-                new_type = RecastToLinecastType();
-                break; 
-           case MeleeBehavior:
-                new_type = RecastToMeleeType();
-                break;
-        }
-        return new_type;
-    }
+    public virtual Projectile RecastToProjectileType() => new Projectile(_instance, atk_stats, new ProjectileTypeData());
+    public virtual Linecast RecastToLinecastType() => new Linecast(_instance, atk_stats, new LinecastTypeData());
+    public virtual MeleeAttack RecastToMeleeType() => new MeleeAttack(_instance, atk_stats, new MeleeTypeData());
 
-    /// Returns either Projectile, Linecast, or MeleeAttack, but in the form of a AttackObject
-    /// Used by ItemSO to check if the attack's instance type matches with the attack data
-    public virtual Type GetSpecificAttackObject()
+    public bool UpdateSerialization(out AttackObject result)
     {
-        if (instance == null)
+        result = this;
+
+        if (instance == null) { _instance = null; return false; }
+
+        if (!instance.TryGetComponent(out AttackBehaviorBase behavior))
         {
-            return typeof(AttackObject);
+            Debug.LogWarning($"'{instance.name}' has no AttackBehaviorBase. Rejected.");
+            instance = null;
+            _instance = null;
+            return false;
         }
-        switch(instance.GetComponent<MonoBehaviour>())
+
+        _instance = behavior; // also resyncs after domain reload
+
+        AttackObject recast = behavior switch
         {
-            case ProjectileBehavior:
-                return typeof(Projectile);
-            case LinecastBehavior:
-                return typeof(Linecast);
-            case MeleeBehavior:
-                return typeof(MeleeAttack);
-            default:
-                return typeof(Projectile);
-        }
+            ProjectileBehavior when this is not Projectile => RecastToProjectileType(),
+            LinecastBehavior   when this is not Linecast   => RecastToLinecastType(),
+            MeleeBehavior      when this is not MeleeAttack => RecastToMeleeType(),
+            _ => null
+        };
+
+        if (recast == null) return false;
+
+        recast.instance = instance; // recast constructors only set _instance
+        result = recast;
+        return true;
     }
     #endregion
 
-    public virtual bool Hasinstance()
-    {
-        return instance;
-    }
-
+    public virtual bool Hasinstance() => _instance;
 }
+
 #region Projectile
 [System.Serializable]
 public class Projectile : AttackObject
 {
-    [ShowIf("instance")] public ProjectileTypeData typeData;
-    
-    #region Initializers
-    public Projectile(GameObject instance = null) : base(instance) {}
-    public Projectile(GameObject instance, AttackStats atk_stats, ProjectileTypeData typeData) : base(instance)
+    [ShowIf("_instance")] public ProjectileTypeData typeData;
+
+    public Projectile(AttackBehaviorBase instance = null) : base(instance) { }
+    public Projectile(AttackBehaviorBase instance, AttackStats atk_stats, ProjectileTypeData typeData) : base(instance)
     {
         this.atk_stats = atk_stats;
         this.typeData = typeData;
     }
+
     public override TargetDataRequest GetTargetDataReq()
     {
-        TargetDataRequest targetDataRequest = base.GetTargetDataReq();
-        targetDataRequest.HomingRadius = typeData.homing_radius;
-        return targetDataRequest;
-    }
-    #endregion
-
-    public override void Attack(TargetData atk_targ)
-    {
-        Vector2 targetPos_og = atk_targ.targetPos;
-        Vector2 sourcePos_og = atk_targ.sourcePos;
-        
-        // declare info that doesn't need to be in a loop
-        float target_dist = (targetPos_og - sourcePos_og).magnitude;
-        float og_speed = typeData.projectile_speed;
-        Vector2 target_dir = (targetPos_og - sourcePos_og).normalized;
-        float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
-        for (int i = 0; i < typeData.projectile_count; i++)
-        {
-            TargetData atk_targ_copy = atk_targ;
-            Vector2 sourcePos = atk_targ_copy.sourcePos;
-            
-            GameObject projectile = GameObject.Instantiate(instance, sourcePos, Quaternion.identity);
-            ProjectileBehavior projectile_data = projectile.GetComponent<ProjectileBehavior>();
-
-            // add the inherent inaccuracy value of projectile
-            if (typeData.even_spread)
-            {
-                float angle_inc = typeData.projectile_spread / typeData.projectile_count;
-                float offset_ang = (-typeData.projectile_spread / 2f) + (angle_inc * i);
-                float final_ang = target_ang + offset_ang;
-
-                Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
-                
-                atk_targ_copy.targetPos = sourcePos + dir * target_dist;
-            }
-            else
-            {
-                Vector2 og_targ_pos = atk_targ_copy.targetPos;
-                atk_targ_copy.targetPos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
-                
-                typeData.projectile_speed *= Mathf.Clamp(1 - (atk_targ_copy.targetPos - og_targ_pos).magnitude / target_dist, 0.5f, 1);
-            }
-            // new projectile! 
-            projectile_data.StartProjectile(this, atk_targ_copy);
-            typeData.projectile_speed = og_speed;
-        }
+        TargetDataRequest req = base.GetTargetDataReq();
+        req.HomingRadius = typeData.homing_radius;
+        return req;
     }
 
-    public override float GetAtkSpread() {return typeData.projectile_spread;}
+    protected override SpreadSettings Spread =>
+        new SpreadSettings(typeData.projectile_count, typeData.projectile_spread, typeData.even_spread);
+
+    // scattered shots lose speed the further they miss (clamped to 50%)
+    protected override void Launch(GameObject spawned, TargetData shot, float miss) =>
+        spawned.GetComponent<ProjectileBehavior>().StartProjectile(this, shot, Mathf.Clamp(1f - miss, 0.5f, 1f));
 }
 #endregion
-
 #region Linecast
-// linecasts occur once a projectile has exceeded a certain speed
+
 [System.Serializable]
-public class Linecast : Projectile
+public class Linecast : AttackObject
 {
-    #region Initializers
-    // empty constructor
-    public Linecast(GameObject instance = null) : base(instance) {}
-    public Linecast(GameObject instance, AttackStats atk_stats, ProjectileTypeData typeData)
-     : base(instance, atk_stats, typeData){}
-    #endregion
+    [ShowIf("_instance")] public LinecastTypeData typeData;
 
-    public override void Attack(TargetData atk_targ)
+    public Linecast(AttackBehaviorBase instance = null) : base(instance) { }
+    public Linecast(AttackBehaviorBase instance, AttackStats atk_stats, LinecastTypeData typeData) : base(instance)
     {
-        Vector2 targetPos_og = atk_targ.targetPos;
-        Vector2 sourcePos_og = atk_targ.sourcePos;
-        
-        // declare info that doesn't need to be in a loop
-        float target_dist = (targetPos_og - sourcePos_og).magnitude;
-        Vector2 target_dir = (targetPos_og - sourcePos_og).normalized;
-        float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
-        for (int i = 0; i < typeData.projectile_count; i++)
-        {
-            TargetData atk_targ_copy = atk_targ;
-            Vector2 sourcePos = atk_targ_copy.sourcePos;
-            
-            GameObject linecast = GameObject.Instantiate(instance, sourcePos, Quaternion.identity);
-            LinecastBehavior linecast_data = linecast.GetComponent<LinecastBehavior>();
-
-            // add the inherent inaccuracy value of projectile
-            if (typeData.even_spread)
-            {
-                float angle_inc = typeData.projectile_spread / typeData.projectile_count;
-                float offset_ang = (-typeData.projectile_spread / 2f) + (angle_inc * i);
-                float final_ang = target_ang + offset_ang;
-
-                Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
-                
-                atk_targ_copy.targetPos = sourcePos + dir * target_dist;
-            }
-            else
-            {
-                atk_targ_copy.targetPos += Random.insideUnitCircle * target_dist * typeData.projectile_spread/360;
-            }
-            // new linecast! 
-            linecast_data.StartLinecast(this, atk_targ_copy);
-        }
+        this.atk_stats = atk_stats;
+        this.typeData = typeData;
     }
 
-    public override float GetAtkSpread() {return typeData.projectile_spread;}
+    protected override SpreadSettings Spread =>
+        new SpreadSettings(typeData.linecast_count, typeData.linecast_spread, typeData.even_spread);
+
+    protected override void Launch(GameObject spawned, TargetData shot, float miss) =>
+        spawned.GetComponent<LinecastBehavior>().StartLinecast(this, shot);
 }
 #endregion
-#region Melee Attack
+#region MeleeAttack
 [System.Serializable]
 public class MeleeAttack : AttackObject
 {
-    [ShowIf("instance")] public MeleeTypeData typeData;
+    [ShowIf("_instance")] public MeleeTypeData typeData;
 
-    #region Initializers
-    // empty constructor
-    public MeleeAttack(GameObject instance = null) : base(instance) {}
-    
-    public MeleeAttack(GameObject instance, AttackStats atk_stats, MeleeTypeData typeData) : base(instance)
+    public MeleeAttack(AttackBehaviorBase instance = null) : base(instance) { }
+    public MeleeAttack(AttackBehaviorBase instance, AttackStats atk_stats, MeleeTypeData typeData) : base(instance)
     {
         this.atk_stats = atk_stats;
         this.typeData = typeData;
     }
-    #endregion
 
-    public override void Attack(TargetData atk_targ)
-    {
-        Vector2 targetPos_og = atk_targ.targetPos;
-        Vector2 sourcePos_og = atk_targ.sourcePos;   
-    
-        // declare info that doesn't need to be in a loop
-        float target_dist = (targetPos_og - sourcePos_og).magnitude;
-        Vector2 target_dir = (targetPos_og - sourcePos_og).normalized;
-        float target_ang = Mathf.Atan2(target_dir.y, target_dir.x) * Mathf.Rad2Deg;
-        for (int i = 0; i < typeData.melee_count; i++)
-        {
-            TargetData atk_targ_copy = atk_targ;
-            Vector2 sourcePos = atk_targ_copy.sourcePos;
-            
-            GameObject melee_ins = GameObject.Instantiate(instance, sourcePos, Quaternion.identity);
-            MeleeBehavior melee_data = melee_ins.GetComponent<MeleeBehavior>();
+    protected override SpreadSettings Spread =>
+        new SpreadSettings(typeData.melee_count, typeData.melee_spread, typeData.even_spread);
 
-            // add the inherent inaccuracy value of projectile
-            if (typeData.even_spread)
-            {
-                float angle_inc = typeData.melee_spread / (typeData.melee_count - 1);
-                float offset_ang = (-typeData.melee_spread / 2f) + (angle_inc * i);
-                float final_ang = target_ang + offset_ang;
-
-                Vector2 dir = new Vector2(Mathf.Cos(final_ang * Mathf.Deg2Rad),Mathf.Sin(final_ang * Mathf.Deg2Rad));
-                
-                atk_targ_copy.targetPos = sourcePos + dir * target_dist;
-            }
-            else
-            {
-                atk_targ_copy.targetPos += Random.insideUnitCircle * target_dist * typeData.melee_spread/360;
-            }
-            // new projectile! 
-            melee_data.StartMelee(this, atk_targ_copy);
-        }
-    }
-
-    public override float GetAtkSpread() {return typeData.melee_spread;}
+    protected override void Launch(GameObject spawned, TargetData shot, float miss) =>
+        spawned.GetComponent<MeleeBehavior>().StartMelee(this, shot);
 }
 #endregion

@@ -144,7 +144,8 @@ MonoBehaviour:
   vfx_body: {fileID: 5742305452182208195}
   speed: 0
   HomingSpdScale: 0
-  proj_rb: {fileID: 2975825828065940168}
+  ProjRB: {fileID: 2975825828065940168}
+  ProjCollider: {fileID: 2373095120152600609}
 --- !u!212 &2854522527693372646
 SpriteRenderer:
   serializedVersion: 2
@@ -240,7 +241,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4

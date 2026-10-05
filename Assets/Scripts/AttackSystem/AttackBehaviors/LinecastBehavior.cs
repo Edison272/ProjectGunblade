@@ -1,72 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using AttackSystem;
-using GameAI.Factions;
 
-public class LinecastBehavior : MonoBehaviour
+public class LinecastBehavior : AttackBehaviorBase
 {
-    Vector2 sourcePos;
-    Transform target_char;
-    Vector2 targetPos;
-    Vector2 end_pos; // if the linecast stops at whatever it hits (or the last thing it hits if it can pierce)
-    Vector2 vfxTargetOffset;
+    Vector2 end_pos; // where the linecast stops (last thing it pierces, or the target pos)
 
-    [field: Header("VFX")]
-    public LineRenderer main_line_render; // show where the actual linecast is going
-    float main_lr_alpha; // used when setting the alpha color in FixedUpdate()
-    public LineRenderer vfx_line_render; // show where the vfx linecast is going
+    [Header("VFX")]
+    public LineRenderer main_line_render; // shows where the actual linecast goes
+    public LineRenderer vfx_line_render;  // shows where the vfx linecast goes
     //public ImpactEffect impact_effect;
+    float main_lr_alpha; // base alpha for fade
     float render_duration;
     float curr_duration;
 
-    float stick_duration; // stick to a target for a set duration
-
-    [field: Header("Line Data")]
-    AttackStats atk_stats;
-
-
-    [field: Header("Physics")]
-    RaycastHit2D[] contacts;
-
-
-
-    [field: Header("Ownership")]
-    int _factionTag = FactionManager.NoFactionLayer;
-    Character owner;
-
     void GenerateLinecast()
     {
-        // get all targets hit in linecast
-        contacts = Physics2D.LinecastAll(sourcePos, targetPos);
-        int curr_pierce = atk_stats.pierce+1;
-        foreach(RaycastHit2D contact in contacts)
+        main_lr_alpha = main_line_render.startColor.a;
+
+        RaycastHit2D[] contacts = Physics2D.LinecastAll(targetData.sourcePos, targetData.targetPos);
+        int curr_pierce = atk_stats.pierce + 1;
+        foreach (RaycastHit2D contact in contacts)
         {
-            if (contact.transform.gameObject.tag != "NoHit")
-            {
-                if (contact.transform.gameObject.TryGetComponent<Character>(out Character character))
-                {
-                    if (character.FactionID == _factionTag)
-                    {
-                        return;
-                    }
-                }
-                atk_stats.ApplyData(sourcePos, contact.transform.gameObject);
-                LinecastEffects(contact.point);
-                curr_pierce--;
-            }
+            GameObject other = contact.transform.gameObject;
+            if (other.CompareTag("NoHit") || IsOwner(other) || IsFriendly(other)) continue;
+
+            ApplyHit(other);
+            LinecastEffects(contact.point);
+            curr_pierce--;
             if (curr_pierce == 0)
             {
                 end_pos = contact.point;
                 break;
             }
         }
-
-        // change linerender vfx accordingly\
-        main_lr_alpha = main_line_render.startColor.a;
-        
-
     }
 
     void SetLRPositions(int index, Vector2 main_position, Vector2 vfx_position)
@@ -75,57 +40,54 @@ public class LinecastBehavior : MonoBehaviour
         vfx_line_render.SetPosition(index, vfx_position);
     }
 
-    // Update is called once per frame
+    void Update()
+    {
+        // fade out main linerender after being shot
+        float alpha = main_lr_alpha * curr_duration / render_duration;
+        Color start = main_line_render.startColor;
+        Color end = main_line_render.endColor;
+        main_line_render.startColor = new Color(start.r, start.g, start.b, alpha);
+        main_line_render.endColor = new Color(end.r, end.g, end.b, alpha);
+
+        // set line render length (temporary rendering method)
+        Vector2 render_pos = Vector2.Lerp(vfx_line_render.GetPosition(0), end_pos + targetData.vfxTargetPos, 1 - curr_duration / render_duration);
+        SetLRPositions(1, end_pos, render_pos);
+    }
+
     void FixedUpdate()
     {
         curr_duration -= Time.fixedDeltaTime;
 
-        // fade out main linderender after being shot
-        float alpha = main_lr_alpha * curr_duration/render_duration;
-        main_line_render.startColor = new Color(main_line_render.startColor.r,main_line_render.startColor.g,main_line_render.startColor.b, alpha);
-        main_line_render.endColor = new Color(main_line_render.endColor.r,main_line_render.endColor.g,main_line_render.endColor.b, alpha);
-
-        // set line render length (temporary rendering method)
-        Vector2 render_pos = Vector2.Lerp(vfx_line_render.GetPosition(0), end_pos + vfxTargetOffset, 1-curr_duration/render_duration);
-        SetLRPositions(1, end_pos, render_pos);
         if (curr_duration <= 0)
         {
-            if (end_pos == targetPos) {LinecastEffects(targetPos);}
-            EndLinecast();
-        } 
+            if (end_pos == targetData.targetPos) LinecastEffects(targetData.targetPos);
+            EndAttack();
+        }
     }
 
-    public void StartLinecast(Linecast line_data, TargetData atk_targ) // straight shot variant
+    public void StartLinecast(Linecast line_data, TargetData atk_targ)
     {
-        // set data
-        atk_stats = line_data.atk_stats;
-        render_duration = line_data.typeData.projectile_speed;
+        Initialize(line_data.atk_stats, atk_targ);
+
+        render_duration = line_data.typeData.render_duration; // used as fade duration
         curr_duration = render_duration;
-        sourcePos = atk_targ.sourcePos;
-        targetPos = atk_targ.targetPos;
-        end_pos = targetPos;
-        vfxTargetOffset = atk_targ.vfxTargetOffset;
-        owner = atk_targ.owner;
-        if (owner)
-        {
-            _factionTag = owner.FactionID;
-        }
-        // generate the physics linecast (this also sets a new end_pos based on where the linecast hits)
+        end_pos = targetData.targetPos;
+
+        // generate the physics linecast (may shorten end_pos)
         GenerateLinecast();
 
-        // set origin position of "main" line render
+        // origin of line renders
         SetLRPositions(0, atk_targ.sourcePos, atk_targ.vfxSourcePos);
         SetLRPositions(1, atk_targ.sourcePos, atk_targ.vfxSourcePos);
-
     }
 
     private void LinecastEffects(Vector2 effect_position)
     {
-        //ImpactEffect.StartImpact(impact_effect, effect_position, vfxTargetOffset, targetPos - sourcePos, vfx_line_render.widthMultiplier * 4);
+        //ImpactEffect.StartImpact(impact_effect, effect_position, ...);
     }
 
-    private void EndLinecast()
+    public override void SetAttackActive(bool is_active)
     {
-        Destroy(this.gameObject);
+        base.SetAttackActive(is_active);
     }
 }

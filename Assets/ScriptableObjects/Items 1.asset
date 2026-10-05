@@ -21,6 +21,7 @@ MonoBehaviour:
   AttackObjects:
   - rid: 267928573218914418
   - rid: 267928573218914452
+  - rid: 7800869064156381312
   StackCounters:
   - rid: 267928573218914422
   - rid: 6178397772526125197
@@ -34,18 +35,19 @@ MonoBehaviour:
       type: {class: Projectile, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
         targetFaction: 0
         atk_stats:
           damage: 10
           pierce: 0
-          bounce: 0
+          bounce: 3
           knockback_amt: 2.6
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          projectile_speed: 30
+          projectile_speed: 60
           homing_radius: 0
           HomingSpdScale: 1
           projectile_count: 1
@@ -78,6 +80,7 @@ MonoBehaviour:
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        _instance: {fileID: 4857281296658957558, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
         targetFaction: 0
         atk_stats:
           damage: 0
@@ -89,11 +92,9 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          projectile_speed: 0.3
-          homing_radius: 0
-          HomingSpdScale: 1
-          projectile_count: 10
-          projectile_spread: 15
+          render_duration: 0.1
+          linecast_count: 1
+          linecast_spread: 0
           even_spread: 0
     - rid: 6178397756706783337
       type: {class: GunOutput, ns: , asm: Assembly-CSharp}
@@ -114,7 +115,7 @@ MonoBehaviour:
           _usableInput: 0
         AmmoCounterRef: 1
         AmmoUse: 0
-        recoil_increment: 0.1
+        recoil_increment: 0
         recoil_multiplier: 0.5
         recoil_max: 0.5
     - rid: 6178397772526125197
@@ -145,3 +146,23 @@ MonoBehaviour:
             _usableInput: 4
         regenAmmo: 0
         roundsReload: 0
+    - rid: 7800869064156381312
+      type: {class: Linecast, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        _instance: {fileID: 4857281296658957558, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        targetFaction: 0
+        atk_stats:
+          damage: 0
+          pierce: 0
+          bounce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          render_duration: 0.1
+          linecast_count: 1
+          linecast_spread: 0
+          even_spread: 0

@@ -82,14 +82,8 @@ public class ItemSO : ScriptableObject
                 AttackObjects[i] = new Projectile();
                 attackType = AttackObjects[i];
             }
-            if (attackType.instance != null)
-            {
-                if (attackType.GetSpecificAttackObject() != attackType.GetType())
-                {
-                    AttackObjects[i] = attackType.SmartRecast();
-                    attackType = AttackObjects[i];
-                }
-            }
+            if (AttackObjects[i].UpdateSerialization(out var updated))
+                AttackObjects[i] = updated;
         }
         for(int i = 0; i < StackCounters.Length; i++)
         {

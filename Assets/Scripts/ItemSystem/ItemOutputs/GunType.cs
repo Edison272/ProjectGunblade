@@ -97,33 +97,6 @@ public class MeleeOutput : ItemOutput
     }
 }
 
-public class ShieldOutput : ItemOutput
-{
-    public int ShieldDurability;
-    public ShieldOutput()
-    {
-        itemOutputType = ItemOutputType.Shield;
-    }
-    public ShieldOutput(ItemOutput copiedOutput, Item baseItem) : base(copiedOutput, baseItem)
-    {
-        itemOutputType = ItemOutputType.Shield;
-    }
-    public override ItemOutput GetCopy(Item baseItem)
-    {
-        return new ShieldOutput(this, baseItem);
-    }
-
-    public override bool NeedsReset()
-    {
-        throw new NotImplementedException();
-    }
-
-    protected override void InternalActivateEffect(float stackCounterVal, int attackRefIndex)
-    {
-
-    }
-}
-
 public class CasterOutput : ItemOutput
 {
     public float EffectRadius;

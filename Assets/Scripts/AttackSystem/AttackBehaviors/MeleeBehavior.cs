@@ -1,18 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using AttackSystem;
-using GameAI.Factions;
 
-public class MeleeBehavior : MonoBehaviour
+public class MeleeBehavior : AttackBehaviorBase
 {
-    Vector2 sourcePos;
-    Transform target_char;
-    Vector2 targetPos;
-    Vector2 end_pos; // if the Melee stops at whatever it hits (or the last thing it hits if it can pierce)
-    Vector2 vfxTargetOffset;
-
-    [field: Header("VFX")]
+    [Header("VFX")]
     public GameObject main_body;
     public Transform VfxBody;
     public SpriteRenderer sprt_rendr;
@@ -21,102 +11,69 @@ public class MeleeBehavior : MonoBehaviour
     float curr_duration;
     static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90); // RotateTowards() is stupid so we need to offset it
 
-
-    float stick_duration; // stick to a target for a set duration
-
-    [field: Header("Line Data")]
-    AttackStats atk_stats;
-
-
-    [field: Header("Physics")]
-    RaycastHit2D[] contacts;
+    [Header("Physics")]
     Rigidbody2D melee_rb;
 
-
-
-    [field: Header("Ownership")]
-    int _factionTag = FactionManager.NoFactionLayer;
-    Character owner;
-
-    public void Awake()
+    void Awake()
     {
         melee_rb = GetComponent<Rigidbody2D>();
     }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
-
-        if (collision.gameObject.TryGetComponent<Character>(out Character character))
-        {
-            if (character.FactionID == _factionTag)
-            {
-                return;
-            }
-        }
-        atk_stats.ApplyData(sourcePos, collision.gameObject);
+        GameObject other = collision.gameObject;
+        if (IsOwner(other) || IsFriendly(other)) return;
+        ApplyHit(other);
     }
 
-    // Update is called once per frame
+    void Update()
+    {
+        // play sprites forward over the duration; clamp so the first tick can't index past the end
+        float progress = 1f - curr_duration / render_duration;
+        int next_sprite = Mathf.Min((int)(melee_sprites.Length * progress), melee_sprites.Length - 1);
+        sprt_rendr.sprite = melee_sprites[next_sprite];
+    }
+
     void FixedUpdate()
     {
         curr_duration -= Time.fixedDeltaTime;
         if (curr_duration <= 0)
         {
-            EndMelee();
-        }
-        else
-        {
-            int next_sprite = (int)(melee_sprites.Length * (curr_duration / render_duration));
-            sprt_rendr.sprite = melee_sprites[next_sprite];
+            EndAttack();
+            return;
         }
     }
 
-    public void StartMelee(MeleeAttack mele_data, TargetData atk_targ) // straight shot variant
+    public void StartMelee(MeleeAttack mele_data, TargetData atk_targ)
     {
-        // set data
-        atk_stats = mele_data.atk_stats;
+        Initialize(mele_data.atk_stats, atk_targ);
+
         render_duration = mele_data.typeData.melee_duration;
         curr_duration = render_duration;
-        melee_rb.includeLayers = 0 | atk_targ.targetMask;
+        melee_rb.includeLayers = atk_targ.targetMask;
         melee_rb.excludeLayers = ~melee_rb.includeLayers;
-        sourcePos = atk_targ.sourcePos;
-        targetPos = atk_targ.targetPos;
-        end_pos = targetPos;
-        vfxTargetOffset = atk_targ.vfxTargetOffset;
-        owner = atk_targ.owner;
-        if (owner)
-        {
-            _factionTag = owner.FactionID;
-        }
+
+        Vector2 sourcePos = targetData.sourcePos;
+        Vector2 targetPos = targetData.targetPos;
+        float size = mele_data.typeData.melee_size;
+
         // adjust size & position based on new size
-        main_body.transform.localScale = main_body.transform.localScale * Mathf.Abs(mele_data.typeData.melee_size);
-        VfxBody.transform.localScale = new Vector3(VfxBody.transform.localScale.x, VfxBody.transform.localScale.y * Mathf.Sign(mele_data.typeData.melee_size), 1);
-        main_body.transform.position = sourcePos + (targetPos - sourcePos).normalized * Mathf.Abs(mele_data.typeData.melee_size) * 0.25f;
+        main_body.transform.localScale = main_body.transform.localScale * Mathf.Abs(size);
+        VfxBody.localScale = new Vector3(VfxBody.localScale.x, VfxBody.localScale.y * Mathf.Sign(size), 1);
+        main_body.transform.position = sourcePos + (targetPos - sourcePos).normalized * Mathf.Abs(size) * 0.25f;
 
         // adjust vfx height from vfx body
         VfxBody.position = atk_targ.vfxSourcePos;
 
-        // adjust vfx rotation
-        Vector3 vfx_og_pos = VfxBody.transform.position;  // save original position for later
-        Quaternion targ_rot = Quaternion.LookRotation(Vector3.forward, targetPos - sourcePos) * ROTATION_OFFSET;
-        main_body.transform.rotation = targ_rot;
-        VfxBody.transform.position = vfx_og_pos;  // return VfxBody to original position after offset from rotation
+        // adjust rotation, then restore VfxBody's offset from the rotation
+        Vector3 vfx_og_pos = VfxBody.position;
+        main_body.transform.rotation = Quaternion.LookRotation(Vector3.forward, targetPos - sourcePos) * ROTATION_OFFSET;
+        VfxBody.position = vfx_og_pos;
         VfxBody.localPosition = new Vector3(0, VfxBody.localPosition.y, 0);
-
-
     }
 
-    public void StartMelee(Transform target_char) // homing vairant
+    public override void SetAttackActive(bool is_active)
     {
-        this.target_char = target_char;
-    }
-
-    private void MeleeEffects()
-    {
-        EndMelee();
-    }
-
-    private void EndMelee()
-    {
-        Destroy(this.gameObject);
+        base.SetAttackActive(is_active);
     }
 }

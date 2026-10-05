@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 
+
 [System.Serializable]
 public class ProjectileTypeData
 {
@@ -10,6 +11,15 @@ public class ProjectileTypeData
     public int projectile_count = 1;
     public float projectile_spread;
     public bool even_spread;
+}
+
+[Serializable]
+public class LinecastTypeData
+{
+    public float render_duration = 0.1f; // was projectile_speed
+    public int linecast_count  = 1;
+    public float linecast_spread;
+    public bool  even_spread;
 }
 
 [System.Serializable]
