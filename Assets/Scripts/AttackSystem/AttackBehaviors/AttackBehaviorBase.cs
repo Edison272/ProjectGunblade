@@ -7,6 +7,7 @@ public abstract class AttackBehaviorBase : MonoBehaviour
 {
     protected AttackStats atk_stats;
     protected TargetData targetData;
+    protected AttackObject atkObject;
     protected Character owner;
     protected int factionTag = FactionManager.NoFactionLayer;
     protected AttackBehaviorBase _poolKey = null;
@@ -15,10 +16,11 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     protected bool attackEnabled = true;
 
     /// Call first in every StartX(). Copies stats/target data and resolves owner faction.
-    protected void Initialize(AttackStats stats, TargetData data)
+    protected void Initialize(AttackObject atkObj, TargetData data)
     {
         SetAttackActive(true);
-        atk_stats = stats;
+        atkObject = atkObj;
+        atk_stats = atkObj.atk_stats;
         targetData = data;
         owner = data.owner;
         factionTag = owner ? owner.FactionID : FactionManager.NoFactionLayer;
@@ -40,6 +42,11 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     protected void ApplyHit(GameObject target)
     {
         atk_stats.ApplyData(targetData.sourcePos, target);
+        if (atkObject.typeData.OnHitAttack != null)
+        {
+            TargetData newTargData = targetData.WithSourcePos(transform.position);
+            atkObject.Attack(targetData);
+        }
     }
 
     protected void EndAttack()

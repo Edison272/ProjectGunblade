@@ -93,7 +93,7 @@ public class ProjectileBehavior : AttackBehaviorBase
 
     public void StartProjectile(Projectile proj_data, TargetData atk_targ, float speedScale = 1f)
     {
-        Initialize(proj_data.atk_stats, atk_targ);
+        Initialize(proj_data, atk_targ);
         main_body.transform.position = atk_targ.sourcePos;
 
         speed = proj_data.typeData.projectile_speed * speedScale;

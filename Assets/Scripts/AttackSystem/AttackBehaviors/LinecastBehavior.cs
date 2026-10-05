@@ -67,7 +67,7 @@ public class LinecastBehavior : AttackBehaviorBase
 
     public void StartLinecast(Linecast line_data, TargetData atk_targ)
     {
-        Initialize(line_data.atk_stats, atk_targ);
+        Initialize(line_data, atk_targ);
 
         render_duration = line_data.typeData.render_duration; // used as fade duration
         curr_duration = render_duration;

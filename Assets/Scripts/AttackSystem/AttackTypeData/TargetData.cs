@@ -34,6 +34,8 @@ public readonly struct TargetData
 
     #region Derivation
     // dervie a version of the target data with an owner
+    public TargetData WithSourcePos(Vector2 newSourcePos) =>
+        new TargetData(newSourcePos, targetPos, vfxSourcePos, vfxTargetPos, targetMask, owner, objectTarget);
     public TargetData WithTargetPos(Vector2 newTargetPos) =>
         new TargetData(sourcePos, newTargetPos, vfxSourcePos, vfxTargetPos, targetMask, owner, objectTarget);
 

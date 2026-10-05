@@ -46,7 +46,7 @@ public class MeleeBehavior : AttackBehaviorBase
 
     public void StartMelee(MeleeAttack mele_data, TargetData atk_targ)
     {
-        Initialize(mele_data.atk_stats, atk_targ);
+        Initialize(mele_data, atk_targ);
 
         render_duration = mele_data.typeData.melee_duration;
         curr_duration = render_duration;

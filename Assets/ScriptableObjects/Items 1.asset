@@ -21,7 +21,7 @@ MonoBehaviour:
   AttackObjects:
   - rid: 267928573218914418
   - rid: 267928573218914452
-  - rid: 7800869064156381312
+  - rid: 7800869092166991951
   StackCounters:
   - rid: 267928573218914422
   - rid: 6178397772526125197
@@ -47,12 +47,12 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
+          Count: 1
+          Angle: 0
+          Even: 0
           projectile_speed: 60
           homing_radius: 0
           HomingSpdScale: 1
-          projectile_count: 1
-          projectile_spread: 0
-          even_spread: 0
     - rid: 267928573218914422
       type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -92,10 +92,10 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
+          Count: 1
+          Angle: 1
+          Even: 0
           render_duration: 0.1
-          linecast_count: 1
-          linecast_spread: 0
-          even_spread: 0
     - rid: 6178397756706783337
       type: {class: GunOutput, ns: , asm: Assembly-CSharp}
       data:
@@ -146,11 +146,11 @@ MonoBehaviour:
             _usableInput: 4
         regenAmmo: 0
         roundsReload: 0
-    - rid: 7800869064156381312
-      type: {class: Linecast, ns: , asm: Assembly-CSharp}
+    - rid: 7800869092166991951
+      type: {class: AreaEffect, ns: , asm: Assembly-CSharp}
       data:
-        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
-        _instance: {fileID: 4857281296658957558, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        instance: {fileID: 2200225733305399034, guid: eecf20f89cb081a4ebd2885839ee77fe, type: 3}
+        _instance: {fileID: 2654992479864682832, guid: eecf20f89cb081a4ebd2885839ee77fe, type: 3}
         targetFaction: 0
         atk_stats:
           damage: 0
@@ -162,7 +162,8 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          render_duration: 0.1
-          linecast_count: 1
-          linecast_spread: 0
-          even_spread: 0
+          Count: 1
+          Angle: 1
+          Even: 0
+          AreaDuration: 0.5
+          ApplicationAmt: 1
