@@ -18,10 +18,11 @@ MonoBehaviour:
   <ResetTime>k__BackingField: 1
   <ItemOutputs>k__BackingField:
   - rid: 6178397756706783337
-  AttackObjects:
-  - rid: 7800869105243783254
-  - rid: 7800869105243783277
-  - rid: 7800869105243783279
+  AttackObjectController:
+    hu: 0
+    _mainAttack:
+    - rid: 7800869110435545224
+    _onHitAttack: []
   StackCounters:
   - rid: 267928573218914422
   - rid: 6178397772526125197
@@ -31,8 +32,6 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 267928573218914422
       type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -106,7 +105,7 @@ MonoBehaviour:
             _usableInput: 4
         regenAmmo: 0
         roundsReload: 0
-    - rid: 7800869105243783254
+    - rid: 7800869110435545224
       type: {class: Projectile, ns: , asm: Assembly-CSharp}
       data:
         instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
@@ -125,88 +124,6 @@ MonoBehaviour:
           Count: 1
           Angle: 0
           Even: 0
-          OnHitAttack:
-            rid: 7800869105243783280
-          OnDestroyAttack:
-            rid: -2
-          projectile_speed: 10
-          homing_radius: 0
-          HomingSpdScale: 1
-    - rid: 7800869105243783277
-      type: {class: Projectile, ns: , asm: Assembly-CSharp}
-      data:
-        instance: {fileID: 0}
-        _instance: {fileID: 0}
-        targetFaction: 0
-        atk_stats:
-          damage: 0
-          pierce: 0
-          bounce: 0
-          knockback_amt: 0
-          effect_time: 0
-          slow_amt: 0
-          total_dot_damage: 0
-          total_dot_ticks: 0
-        typeData:
-          Count: 1
-          Angle: 0
-          Even: 0
-          OnHitAttack:
-            rid: -2
-          OnDestroyAttack:
-            rid: -2
-          projectile_speed: 10
-          homing_radius: 0
-          HomingSpdScale: 1
-    - rid: 7800869105243783279
-      type: {class: Projectile, ns: , asm: Assembly-CSharp}
-      data:
-        instance: {fileID: 0}
-        _instance: {fileID: 0}
-        targetFaction: 0
-        atk_stats:
-          damage: 0
-          pierce: 0
-          bounce: 0
-          knockback_amt: 0
-          effect_time: 0
-          slow_amt: 0
-          total_dot_damage: 0
-          total_dot_ticks: 0
-        typeData:
-          Count: 1
-          Angle: 0
-          Even: 0
-          OnHitAttack:
-            rid: -2
-          OnDestroyAttack:
-            rid: -2
-          projectile_speed: 10
-          homing_radius: 0
-          HomingSpdScale: 1
-    - rid: 7800869105243783280
-      type: {class: Projectile, ns: , asm: Assembly-CSharp}
-      data:
-        instance: {fileID: 0}
-        _instance: {fileID: 0}
-        targetFaction: 0
-        atk_stats:
-          damage: 0
-          pierce: 0
-          bounce: 0
-          knockback_amt: 0
-          effect_time: 0
-          slow_amt: 0
-          total_dot_damage: 0
-          total_dot_ticks: 0
-        typeData:
-          Count: 1
-          Angle: 0
-          Even: 0
-          OnHitAttack:
-            rid: -2
-          OnDestroyAttack:
-            rid: -2
           projectile_speed: 10
           homing_radius: 0
           HomingSpdScale: 1

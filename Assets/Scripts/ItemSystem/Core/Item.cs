@@ -259,7 +259,6 @@ public class Item : MonoBehaviour
     {
         //unsubscribe from old user if they exist
         if (_externalInputRelay != null) {
-            Debug.Log("unlinking");
             ItemInputRelay.UnlinkRelay(_externalInputRelay);
         }
         // subscribe to old user events
@@ -268,17 +267,21 @@ public class Item : MonoBehaviour
             ItemInputRelay.LinkRelay(_externalInputRelay);
     }
     #endregion
+    #region USE THE ITEM
     public void UseItem(int attackIndex, AnimationRequest animRequest, float readinessScore = -1)
     {
+        AttackObject atk_obj =  baseData.AttackObjectController.GetAttack(attackIndex);
+        if (atk_obj == null)
+            return;
+        
         // request targetting data from attack type
-        TargetDataRequest targetDataReq = baseData.AttackObjects[attackIndex].GetTargetDataReq();
+        TargetDataRequest targetDataReq = atk_obj.GetTargetDataReq();
         targetDataReq.TargetPos = targetPos;
         
         // fill in the empty values
         TargetData get_atk_targ = GetTargetData(targetDataReq).WithTargetPos(targetPos).WithVFXPos(itemTip.transform.position, new Vector2(0, item_y_offset + user_y_offset));
         
-        
-        baseData.AttackObjects[attackIndex].Attack(get_atk_targ);
+        baseData.AttackObjectController.StartAttack(attackIndex, get_atk_targ);
         animRequest.Animate(animator);
         ItemInputRelay.Invoke(UsableEvent.Used);
         SFXManager.PlaySFXClip(fireSFX, transform.position, 1f);
@@ -286,7 +289,7 @@ public class Item : MonoBehaviour
         if (readinessScore > -1)
             ReadinessScore = readinessScore;
     }
-
+    #endregion
 
     #region Reset Item / Data
 

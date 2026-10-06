@@ -3657,7 +3657,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5274262720743981671, guid: 72823a3baad24b44c8123bf0ba1b64a8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8434768883464494250, guid: 72823a3baad24b44c8123bf0ba1b64a8, type: 3}
       propertyPath: FactionID
@@ -4609,7 +4609,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5274262720743981671, guid: 72823a3baad24b44c8123bf0ba1b64a8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8434768883464494250, guid: 72823a3baad24b44c8123bf0ba1b64a8, type: 3}
       propertyPath: FactionID

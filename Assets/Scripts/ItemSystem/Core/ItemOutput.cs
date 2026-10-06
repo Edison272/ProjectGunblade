@@ -140,13 +140,6 @@ public abstract class ItemOutput
         else
             return null;
     }
-    protected virtual AttackObject GetAttackObject(int index)
-    {
-        if (index >= 0 && index < _baseItem.baseData.AttackObjects.Length)
-            return _baseItem.baseData.AttackObjects[index];
-        else
-            return null;
-    }
     #endregion
 
     #region GUI Helper

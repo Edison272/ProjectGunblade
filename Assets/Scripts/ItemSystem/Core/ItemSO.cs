@@ -25,7 +25,7 @@ public class ItemSO : ScriptableObject
     [field: SerializeField] public float ResetTime {get; private set;} = 1f;
 
     [field: SerializeReference] public ItemOutput[] ItemOutputs {get; private set;} = new ItemOutput[] {}; // determines the attacks available in this item
-    [SerializeReference] public AttackObject[] AttackObjects = new AttackObject[] {}; // a collection of attack types
+    public AttackObjectController AttackObjectController = new AttackObjectController();
     [SerializeReference] public StackCounter[] StackCounters = new StackCounter[] {}; // control when different item effects trigger
 
     [field: Header("Aiming")]
@@ -74,17 +74,7 @@ public class ItemSO : ScriptableObject
                 itemOutput = itemOutput.SmartRecast();
             ItemOutputs[i] = itemOutput;
         }
-        for(int i = 0; i < AttackObjects.Length; i++)
-        {
-            AttackObject attackType = AttackObjects[i];
-            if (attackType == null)
-            {
-                AttackObjects[i] = new Projectile();
-                attackType = AttackObjects[i];
-            }
-            if (AttackObjects[i].UpdateSerialization(out var updated))
-                AttackObjects[i] = updated;
-        }
+        AttackObjectController.UpdateSerialization();
         for(int i = 0; i < StackCounters.Length; i++)
         {
             StackCounter stackCounter = StackCounters[i];

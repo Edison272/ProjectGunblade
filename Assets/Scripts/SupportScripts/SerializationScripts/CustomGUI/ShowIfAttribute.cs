@@ -38,7 +38,7 @@ public class ShowIfDrawer : PropertyDrawer
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         ShowIfAttribute show_if = (ShowIfAttribute)attribute;
-        string condition_path = property.propertyPath.Replace(property.name, show_if.condition_field);
+        string condition_path = GetConditionPath(property, show_if.condition_field);
         SerializedProperty condition_prop = property.serializedObject.FindProperty(condition_path);
 
         if (condition_prop != null && IsConditionMet(condition_prop, show_if.condition_value)) {
@@ -67,7 +67,12 @@ public class ShowIfDrawer : PropertyDrawer
                 return false;
         }
     }
-
+    private static string GetConditionPath(SerializedProperty property, string conditionField)
+    {
+        string path = property.propertyPath;
+        int lastDot = path.LastIndexOf('.');
+        return lastDot < 0 ? conditionField : path.Substring(0, lastDot + 1) + conditionField;
+    }
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         ShowIfAttribute show_if = (ShowIfAttribute)attribute;
