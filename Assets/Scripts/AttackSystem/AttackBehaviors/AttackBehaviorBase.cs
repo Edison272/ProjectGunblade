@@ -1,6 +1,7 @@
 using UnityEngine;
 using AttackSystem;
 using GameAI.Factions;
+using System;
 
 /// Shared state and helpers for all spawned attack behaviors (projectile, linecast, melee).
 public abstract class AttackBehaviorBase : MonoBehaviour
@@ -14,6 +15,7 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     public AttackBehaviorBase PoolKey {get {return _poolKey;} set {if (!_poolKey) { _poolKey = value;}}} // used to access the objeect pool in AttackBehaviorPool.cs
     protected const int terrainMask = 1 << 6; // ricochet on contact with these layers
     protected bool attackEnabled = true;
+    public Action<int> AttackInteractionEvent;
 
     /// Call first in every StartX(). Copies stats/target data and resolves owner faction.
     protected void Initialize(AttackObject atkObj, TargetData data)
@@ -42,6 +44,7 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     protected void ApplyHit(GameObject target)
     {
         atk_stats.ApplyData(targetData.sourcePos, target);
+        AttackEventManager.OnHitEvent(this.gameObject, atkObject);
     }
 
     protected void EndAttack()

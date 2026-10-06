@@ -22,7 +22,11 @@ MonoBehaviour:
     hu: 0
     _mainAttack:
     - rid: 7800869110435545224
-    _onHitAttack: []
+    - rid: 7800869110435545296
+    _attackObjectMap:
+    - attackObjectIndex: 0
+      OnHitIndex: 1
+      is_subscribed: 1
   StackCounters:
   - rid: 267928573218914422
   - rid: 6178397772526125197
@@ -113,7 +117,7 @@ MonoBehaviour:
         targetFaction: 0
         atk_stats:
           damage: 0
-          pierce: 0
+          pierce: 1
           bounce: 0
           knockback_amt: 0
           effect_time: 0
@@ -123,6 +127,28 @@ MonoBehaviour:
         typeData:
           Count: 1
           Angle: 0
+          Even: 0
+          projectile_speed: 10
+          homing_radius: 0
+          HomingSpdScale: 1
+    - rid: 7800869110435545296
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        targetFaction: 0
+        atk_stats:
+          damage: 0
+          pierce: 0
+          bounce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          Count: 19
+          Angle: 360
           Even: 0
           projectile_speed: 10
           homing_radius: 0

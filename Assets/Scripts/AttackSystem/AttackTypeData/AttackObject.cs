@@ -24,6 +24,7 @@ public abstract class AttackObject
     }
     /// Initialize the spawned instance's behavior.
     /// miss = 0..1, how far a randomly scattered shot strayed from the aim (always 0 for even spread)
+    /// returns the newly-made instance
     protected abstract void Launch(GameObject spawned, TargetData shot, float miss);
 
     /// Override to pool instead of instantiate
@@ -49,7 +50,8 @@ public abstract class AttackObject
         {
             Vector2 target = ShotTarget(atk_targ, toTarget.magnitude, baseAngle, i, TypeData, out float miss);
             TargetData shot = atk_targ.WithTargetPos(target);
-            Launch(Spawn(shot.sourcePos), shot, miss);
+            GameObject new_instance = Spawn(shot.sourcePos);
+            Launch(new_instance, shot, miss);
         }
     }
 
@@ -83,7 +85,7 @@ public abstract class AttackObject
         result = this;
 
         if (instance == null) { _instance = null; return false; }
-        
+
         if (!instance.TryGetComponent(out AttackBehaviorBase behavior))
         {
             Debug.LogWarning($"'{instance.name}' has no AttackBehaviorBase. Rejected.");
