@@ -19,6 +19,10 @@ public abstract class AttackObject
     public AttackStats atk_stats;
     public abstract AttackTypeData TypeData {get;}
 
+    // base interactions. Configured by Attack Object Controller
+    [HideInInspector] public AttackObject[] OnHitEffects = new AttackObject[0];
+    [HideInInspector] public AttackObject[] OnDestroyEffects = new AttackObject[0];
+
     public AttackObject(AttackBehaviorBase instance = null)
     {
         this._instance = instance;
@@ -47,7 +51,6 @@ public abstract class AttackObject
     {
         Vector2 toTarget = atk_targ.targetPos - atk_targ.sourcePos;
         float baseAngle = Mathf.Atan2(toTarget.y, toTarget.x) * Mathf.Rad2Deg;
-
         for (int i = 0; i < TypeData.Count; i++)
         {
             Vector2 target = ShotTarget(atk_targ, toTarget.magnitude, baseAngle, i, TypeData);

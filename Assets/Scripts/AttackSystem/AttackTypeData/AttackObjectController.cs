@@ -30,25 +30,17 @@
                 
                 _attackObjIndexes[AttackObjects[i]] = i;
             }
-            // for(int i = 0; i < _attackObjectMap.Length; i++)
-            // {
-            //     AttackObjectMap attackType = _attackObjectMap[i];
-            //     if (attackType == null) return;
-            //     if (attackType.UpdateSerialization(out var updated))
-            //         AttackObjects[i] = updated;
-                
-            //     _attackObjIndexes[AttackObjects[i]] = i;
-            // }
+            for(int i = 0; i < _attackObjectMap.Length; i++)
+            {
+                AttackObjectMap objMap = _attackObjectMap[i];
+                if (objMap == null) return;
+                objMap.AssignInteractions(this);
+            }
         }
         public void StartAttack(int attackIndex, TargetData targData)
         {
             AttackObject atk_obj = GetAttack(attackIndex);
             atk_obj?.Attack(targData, _attackInstanceBuffer);
-            foreach(AttackBehaviorBase atk_instance in _attackInstanceBuffer)
-            {
-                if (atk_instance)
-                    _attackObjectMap[attackIndex].ApplyInteractions(this, atk_instance);
-            }
 
             _attackInstanceBuffer.Clear();
         }
@@ -90,6 +82,29 @@
             if (OnDestroyIndex != -1)
             {
                 instance.OnDestroyEffects.Add(controller.AttackObjects[OnDestroyIndex]);
+            }
+        }
+
+        public void AssignInteractions(AttackObjectController controller)
+        {
+            AttackObject atkObj = controller.AttackObjects[attackObjectIndex];
+            if (atkObj == null) return;
+            if (OnHitIndex != -1)
+            {
+                atkObj.OnHitEffects = new AttackObject[] {controller.AttackObjects[OnHitIndex]};
+            }
+            else
+            {
+                atkObj.OnHitEffects = new AttackObject[0];
+                Debug.Log(atkObj.OnHitEffects == null);
+            }
+            if (OnDestroyIndex != -1)
+            {
+                atkObj.OnDestroyEffects = new AttackObject[] {controller.AttackObjects[OnDestroyIndex]};
+            }
+            else
+            {
+                atkObj.OnDestroyEffects = new AttackObject[0];
             }
         }
     }

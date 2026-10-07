@@ -23,10 +23,14 @@ MonoBehaviour:
     AttackObjects:
     - rid: 7800869134905114714
     - rid: 7800869134905114715
+    - rid: 7800869134905114958
     _attackObjectMap:
     - attackObjectIndex: 0
       OnHitIndex: -1
-      OnDestroyIndex: 1
+      OnDestroyIndex: 2
+    - attackObjectIndex: 2
+      OnHitIndex: -1
+      OnDestroyIndex: 0
   StackCounters:
   - rid: 267928573218914422
   - rid: 6178397772526125197
@@ -126,10 +130,11 @@ MonoBehaviour:
           total_dot_ticks: 0
         typeData:
           Count: 1
-          Angle: 5
-          Even: 0
+          Angle: 15
+          Even: 1
           projectile_speed: 30
-          projectile_range: 15
+          speed_drift: 0
+          projectile_range: 5
           homing_radius: 0
           HomingSpdScale: 1
     - rid: 7800869134905114715
@@ -149,9 +154,34 @@ MonoBehaviour:
           total_dot_ticks: 0
         typeData:
           Count: 10
+          Angle: 30
+          Even: 0
+          projectile_speed: 40
+          speed_drift: 0
+          projectile_range: 5
+          homing_radius: 0
+          HomingSpdScale: 1
+    - rid: 7800869134905114958
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        targetFaction: 0
+        atk_stats:
+          damage: 0
+          pierce: 0
+          bounce: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        typeData:
+          Count: 5
           Angle: 360
           Even: 0
-          projectile_speed: 10
+          projectile_speed: 1
+          speed_drift: 0
           projectile_range: 5
           homing_radius: 0
           HomingSpdScale: 1

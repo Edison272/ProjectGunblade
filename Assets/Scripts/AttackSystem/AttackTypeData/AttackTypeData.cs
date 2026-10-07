@@ -14,6 +14,7 @@ public class ProjectileTypeData : AttackTypeData
 {
     [Header("Projectile Data")]
     public float projectile_speed = 10;
+    [Range(0f, 0.5f)] public float speed_drift = 0;
     public float projectile_range = 20;
     public float homing_radius;
     public float HomingSpdScale = 1;

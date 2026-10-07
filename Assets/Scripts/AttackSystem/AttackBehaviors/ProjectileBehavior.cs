@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ProjectileBehavior : AttackBehaviorBase
 {
@@ -41,6 +42,7 @@ public class ProjectileBehavior : AttackBehaviorBase
                     Debug.DrawLine(ProjRB.position, ProjRB.position + ProjRB.linearVelocity, Color.green, 1);
                     RotateToVelocity();
                 }
+                targetData = targetData.WithSourcePos(transform.position).WithTargetPos((Vector2)transform.position + ProjRB.linearVelocity);
                 travel_time *= 0.5f;
                 curr_travel_time = 0;
                 atk_stats.bounce--;
@@ -92,18 +94,18 @@ public class ProjectileBehavior : AttackBehaviorBase
         vfx_body.rotation = Quaternion.Euler(0, 0, angle);
     }
 
-    public void StartProjectile(Projectile proj_data, TargetData atk_targ, float speedScale = 1f)
+    public void StartProjectile(Projectile proj_data, TargetData atk_targ)
     {
-        Vector2 dir = atk_targ.GetDir().normalized;
-        
         Initialize(proj_data, atk_targ);
-        targetData = targetData.WithTargetPos(atk_targ.sourcePos * dir*speed);
-        main_body.transform.position = targetData.sourcePos;
 
-        speed = proj_data.typeData.projectile_speed * speedScale;
+        Vector2 dir = atk_targ.GetDir().normalized;
+        speed = proj_data.typeData.projectile_speed * (1 + Random.Range(proj_data.typeData.speed_drift, -proj_data.typeData.speed_drift));
         HomingSpdScale = proj_data.typeData.HomingSpdScale;
         ProjRB.includeLayers = targetData.targetMask;
         ProjRB.excludeLayers = ~ProjRB.includeLayers;
+
+        targetData = targetData.WithTargetPos(atk_targ.sourcePos * dir*speed);
+        main_body.transform.position = targetData.sourcePos;
 
         // vfx rotation & height
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;

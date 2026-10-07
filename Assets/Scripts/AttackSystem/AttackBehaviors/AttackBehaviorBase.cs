@@ -3,6 +3,7 @@ using AttackSystem;
 using GameAI.Factions;
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 /// Shared state and helpers for all spawned attack behaviors (projectile, linecast, melee).
 public abstract class AttackBehaviorBase : MonoBehaviour
@@ -29,6 +30,10 @@ public abstract class AttackBehaviorBase : MonoBehaviour
         targetData = data;
         owner = data.owner;
         factionTag = owner ? owner.FactionID : FactionManager.NoFactionLayer;
+
+        // set interactions
+        if (atkObject.OnHitEffects != null) OnHitEffects.AddRange(atkObject.OnHitEffects);
+        if (atkObject.OnDestroyEffects != null) OnDestroyEffects.AddRange(atkObject.OnDestroyEffects);
     }
 
     /// True if target is a Character on the attacker's faction
