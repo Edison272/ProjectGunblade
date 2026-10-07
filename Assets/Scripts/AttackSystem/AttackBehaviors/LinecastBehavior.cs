@@ -50,7 +50,7 @@ public class LinecastBehavior : AttackBehaviorBase
         main_line_render.endColor = new Color(end.r, end.g, end.b, alpha);
 
         // set line render length (temporary rendering method)
-        Vector2 render_pos = Vector2.Lerp(vfx_line_render.GetPosition(0), end_pos + targetData.vfxTargetPos, 1 - curr_duration / render_duration);
+        Vector2 render_pos = Vector2.Lerp(vfx_line_render.GetPosition(0), end_pos + targetData.vfxTargetOffset, 1 - curr_duration / render_duration);
         SetLRPositions(1, end_pos, render_pos);
     }
 

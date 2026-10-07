@@ -26,7 +26,7 @@ public abstract class AttackObject
     /// Initialize the spawned instance's behavior.
     /// miss = 0..1, how far a randomly scattered shot strayed from the aim (always 0 for even spread)
     /// returns the newly-made instance
-    protected abstract void Launch(GameObject spawned, TargetData shot, float miss);
+    protected abstract void Launch(GameObject spawned, TargetData shot);
 
     /// Override to pool instead of instantiate
     protected virtual AttackBehaviorBase Spawn(Vector2 position)
@@ -50,30 +50,32 @@ public abstract class AttackObject
 
         for (int i = 0; i < TypeData.Count; i++)
         {
-            Vector2 target = ShotTarget(atk_targ, toTarget.magnitude, baseAngle, i, TypeData, out float miss);
+            Vector2 target = ShotTarget(atk_targ, toTarget.magnitude, baseAngle, i, TypeData);
             TargetData shot = atk_targ.WithTargetPos(target);
             AttackBehaviorBase new_attack = Spawn(shot.sourcePos);
             new_attacks?.Add(new_attack);
-            Launch(new_attack.gameObject, shot, miss);
+            Launch(new_attack.gameObject, shot);
         }
     }
 
-    private static Vector2 ShotTarget(TargetData data, float dist, float baseAngle, int index, AttackTypeData atkTypeData, out float miss)
+    private static Vector2 ShotTarget(TargetData data, float dist, float baseAngle, int index, AttackTypeData atkTypeData)
     {
+        float offset;
         if (atkTypeData.Even)
         {
-            miss = 0f;
             // fan spans the full angle; a single shot goes straight
-            float offset = atkTypeData.Count > 1
+            offset = atkTypeData.Count > 1
                 ? -atkTypeData.Angle / 2f + atkTypeData.Angle / (atkTypeData.Count - 1) * index
                 : 0f;
-            float rad = (baseAngle + offset) * Mathf.Deg2Rad;
-            return data.sourcePos + new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * dist;
+        }
+        else
+        {
+            float half = atkTypeData.Angle / 2f;
+            offset = Random.Range(-half, half);
         }
 
-        Vector2 scatter = Random.insideUnitCircle * (atkTypeData.Angle / 360f); // fraction of dist
-        miss = scatter.magnitude;
-        return data.targetPos + scatter * dist;
+        float rad = (baseAngle + offset) * Mathf.Deg2Rad;
+        return data.sourcePos + new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * dist;
     }
     #endregion
 
@@ -204,8 +206,8 @@ public class Projectile : AttackObject
     }
 
     // scattered shots lose speed the further they miss (clamped to 50%)
-    protected override void Launch(GameObject spawned, TargetData shot, float miss) =>
-        spawned.GetComponent<ProjectileBehavior>().StartProjectile(this, shot, Mathf.Clamp(1f - miss, 0.5f, 1f));
+    protected override void Launch(GameObject spawned, TargetData shot) =>
+        spawned.GetComponent<ProjectileBehavior>().StartProjectile(this, shot);
 }
 #endregion
 #region Linecast
@@ -223,7 +225,7 @@ public class Linecast : AttackObject
         this.typeData = typeData;
     }
 
-    protected override void Launch(GameObject spawned, TargetData shot, float miss) =>
+    protected override void Launch(GameObject spawned, TargetData shot) =>
         spawned.GetComponent<LinecastBehavior>().StartLinecast(this, shot);
 }
 #endregion
@@ -241,7 +243,7 @@ public class MeleeAttack : AttackObject
         this.typeData = typeData;
     }
 
-    protected override void Launch(GameObject spawned, TargetData shot, float miss) =>
+    protected override void Launch(GameObject spawned, TargetData shot) =>
         spawned.GetComponent<MeleeBehavior>().StartMelee(this, shot);
 }
 #endregion
@@ -258,7 +260,7 @@ public class AreaEffect : AttackObject
         this.typeData = typeData;
     }
 
-    protected override void Launch(GameObject spawned, TargetData shot, float miss) =>
+    protected override void Launch(GameObject spawned, TargetData shot) =>
         spawned.GetComponent<AreaEffectBehavior>().StartAreaEffect(this, shot);
 }
 #endregion

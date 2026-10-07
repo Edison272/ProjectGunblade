@@ -18,6 +18,7 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     protected bool attackEnabled = true;
     // Interactions
     public List<AttackObject> OnHitEffects = new List<AttackObject>();
+    public List<AttackObject> OnDestroyEffects = new List<AttackObject>();
 
     /// Call first in every StartX(). Copies stats/target data and resolves owner faction.
     protected void Initialize(AttackObject atkObj, TargetData data)
@@ -52,10 +53,12 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     protected void EndAttack()
     {
         attackEnabled = false;
+        ActivateAttackList(OnDestroyEffects);
         SetAttackActive(attackEnabled);
 
         // reset any interactions
         OnHitEffects.Clear();
+        OnDestroyEffects.Clear();
     }
 
     public void ActivateAttackList(List<AttackObject> attackList)

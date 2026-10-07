@@ -11,44 +11,51 @@ public readonly struct TargetData
     public readonly Vector2 sourcePos;
     public readonly Vector2 targetPos;
 
-    // VFX data (both absolute world positions)
+    // VFX data (both local positions)
     public readonly Vector2 vfxSourcePos;
-    public readonly Vector2 vfxTargetPos; // renamed from vfxTargetOffset; swap in your own name if different
-    public float vfxTargetOffset => vfxSourcePos.y - targetPos.y;
+    public readonly Vector2 vfxTargetOffset;
 
     // Entity data
     public readonly LayerMask targetMask;
     public readonly Character owner;
     public readonly Transform objectTarget;
 
-    public TargetData(Vector2 sourcePos, Vector2 targetPos, Vector2 vfxSourcePos, Vector2 vfxTargetPos,
+    public TargetData(Vector2 sourcePos, Vector2 targetPos, Vector2 vfxSourcePos, Vector2 vfxTargetOffset,
                       LayerMask targetMask = default, Character owner = null, Transform objectTarget = null)
     {
         this.sourcePos = sourcePos;
         this.targetPos = targetPos;
         this.vfxSourcePos = vfxSourcePos;
-        this.vfxTargetPos = vfxTargetPos;
+        this.vfxTargetOffset = vfxTargetOffset;
         this.targetMask = targetMask;
         this.owner = owner;
         this.objectTarget = objectTarget;
     }
-    public TargetData CopyToNewPosition(Vector2 newSourcePos) =>
-        new TargetData(newSourcePos, GetDir(), vfxTargetPos, vfxTargetPos + GetDir(), targetMask, owner, objectTarget);
+    public TargetData CopyToNewPosition(Vector2 newSourcePos) {
+        return new TargetData(newSourcePos, newSourcePos + GetDir(),
+                            newSourcePos + vfxTargetOffset, vfxTargetOffset,
+                            targetMask, owner, objectTarget);
+    }
 
     #region Derivation
     // dervie a version of the target data with an owner
     public TargetData WithSourcePos(Vector2 newSourcePos) =>
-        new TargetData(newSourcePos, targetPos, vfxSourcePos, vfxTargetPos, targetMask, owner, objectTarget);
+        new TargetData(newSourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
     public TargetData WithTargetPos(Vector2 newTargetPos) =>
-        new TargetData(sourcePos, newTargetPos, vfxSourcePos, vfxTargetPos, targetMask, owner, objectTarget);
+        new TargetData(sourcePos, newTargetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
 
-    public TargetData WithVFXPos(Vector2 vfxSourcePos, Vector2 vfxTargetPos) =>
-        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetPos, targetMask, owner, objectTarget);
-
+    // Control VFX
+    public TargetData WithVFXOffset(Vector2 vfxSourcePos, Vector2 vfxTargetOffset) =>
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
+    public TargetData WithVFXSourcePos(Vector2 vfxSourcePos) =>
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
+    public TargetData WithVFXTargetOffset(Vector2 vfxTargetOffset) =>
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
+    // Homing Capabilities
     public TargetData WithOwner(Character newOwner) =>
-        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetPos, targetMask, newOwner, objectTarget);
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, newOwner, objectTarget);
 
-    /// Targets a transform: sets objectTarget and snaps targetPos / vfxTargetPos to it
+    /// Targets a transform: sets objectTarget and snaps targetPos / vfxTargetOffset to it
     public TargetData WithObjectTarget(Transform newObjectTarget, Transform objectTargetVFX = null) =>
         new TargetData(sourcePos, newObjectTarget.position, vfxSourcePos,
                        objectTargetVFX ? objectTargetVFX.position : newObjectTarget.position,
@@ -57,7 +64,7 @@ public readonly struct TargetData
 
     #region Helpers
     public Vector2 GetDir() => targetPos - sourcePos;
-    public Vector2 GetVFXDir() => vfxTargetPos - vfxSourcePos;
+    public Vector2 GetVFXDir() => vfxTargetOffset - vfxSourcePos;
     #endregion
 }
 

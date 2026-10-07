@@ -41,7 +41,8 @@ public class ProjectileBehavior : AttackBehaviorBase
                     Debug.DrawLine(ProjRB.position, ProjRB.position + ProjRB.linearVelocity, Color.green, 1);
                     RotateToVelocity();
                 }
-                travel_time += 1;
+                travel_time *= 0.5f;
+                curr_travel_time = 0;
                 atk_stats.bounce--;
             }
             else
@@ -62,9 +63,8 @@ public class ProjectileBehavior : AttackBehaviorBase
     void Update()
     {
         // set vfx
-        vfx_body.position = Vector2.MoveTowards(vfx_body.position, ProjRB.position + targetData.vfxTargetPos, travel_time * Time.fixedDeltaTime * 2);
+        vfx_body.position = Vector2.MoveTowards(vfx_body.position, ProjRB.position + targetData.vfxTargetOffset, travel_time * Time.fixedDeltaTime * 2);
     }
-
     void FixedUpdate()
     {
         if (!attackEnabled) {return;}
@@ -94,19 +94,21 @@ public class ProjectileBehavior : AttackBehaviorBase
 
     public void StartProjectile(Projectile proj_data, TargetData atk_targ, float speedScale = 1f)
     {
+        Vector2 dir = atk_targ.GetDir().normalized;
+        
         Initialize(proj_data, atk_targ);
-        main_body.transform.position = atk_targ.sourcePos;
+        targetData = targetData.WithTargetPos(atk_targ.sourcePos * dir*speed);
+        main_body.transform.position = targetData.sourcePos;
 
         speed = proj_data.typeData.projectile_speed * speedScale;
         HomingSpdScale = proj_data.typeData.HomingSpdScale;
-        ProjRB.includeLayers = atk_targ.targetMask;
+        ProjRB.includeLayers = targetData.targetMask;
         ProjRB.excludeLayers = ~ProjRB.includeLayers;
 
         // vfx rotation & height
-        Vector2 dir = targetData.GetDir().normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         vfx_body.rotation = Quaternion.Euler(0, 0, angle);
-        vfx_body.position = atk_targ.vfxSourcePos;
+        vfx_body.position = targetData.vfxSourcePos;
 
         ProjRB.linearVelocity = dir * speed;
 

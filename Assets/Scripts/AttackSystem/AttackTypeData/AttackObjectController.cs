@@ -79,12 +79,17 @@
         public int attackObjectIndex;
         [Header("Effect Indexes")]
         public int OnHitIndex = -1;
+        public int OnDestroyIndex = -1;
 
         public void ApplyInteractions(AttackObjectController controller, AttackBehaviorBase instance)
         {
             if (OnHitIndex != -1)
             {
                 instance.OnHitEffects.Add(controller.AttackObjects[OnHitIndex]);
+            }
+            if (OnDestroyIndex != -1)
+            {
+                instance.OnDestroyEffects.Add(controller.AttackObjects[OnDestroyIndex]);
             }
         }
     }

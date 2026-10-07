@@ -28,7 +28,6 @@ public class Item : MonoBehaviour
     public float _rotScale = 1f; // 0 for no rotation, 1 for instantaneous rotation
     Quaternion curr_rot; // save the current quaternion rotation
     public Vector2 aim_pos {get; private set;} // where the item is supposed to be aimed towards;
-    private Vector2 _sourcePos; // where bullets & attacks originate from
     public Vector2 targetPos; // where the item is actually aimed towards (based on _rotScale)
     bool freeze_aiming = false;     // stop this thing from aiming and updating target position
     public delegate void AimDelegate();
@@ -115,7 +114,6 @@ public class Item : MonoBehaviour
         // the ACTUAL aiming aspect (get target position from aim_dir)
         Quaternion aim_rot = Quaternion.LookRotation(Vector3.forward, aim_dir) * ROTATION_OFFSET;
         curr_rot = Quaternion.Lerp(curr_rot, aim_rot, _rotScale);
-        _sourcePos = transform.position + (curr_rot * Vector2.right);
         targetPos = transform.position + (curr_rot * Vector2.right * aim_dir.magnitude);
     }
     void StaticAim()
@@ -279,7 +277,7 @@ public class Item : MonoBehaviour
         targetDataReq.TargetPos = targetPos;
         
         // fill in the empty values
-        TargetData get_atk_targ = GetTargetData(targetDataReq).WithTargetPos(targetPos).WithVFXPos(itemTip.transform.position, new Vector2(0, item_y_offset + user_y_offset));
+        TargetData get_atk_targ = GetTargetData(targetDataReq).WithTargetPos(targetPos).WithVFXOffset(itemTip.transform.position, new Vector2(0, item_y_offset + user_y_offset));
         
         baseData.AttackObjectController.StartAttack(attackIndex, get_atk_targ);
         animRequest.Animate(animator);
