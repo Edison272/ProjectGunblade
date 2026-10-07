@@ -65,7 +65,8 @@ public class ProjectileBehavior : AttackBehaviorBase
     void Update()
     {
         // set vfx
-        vfx_body.position = Vector2.MoveTowards(vfx_body.position, ProjRB.position + targetData.vfxTargetOffset, travel_time * Time.fixedDeltaTime * 2);
+        vfx_body.position = Vector2.MoveTowards(vfx_body.position, ProjRB.position + targetData.vfxTargetOffset, travel_time * Time.deltaTime * speed);
+        
     }
     void FixedUpdate()
     {
@@ -113,6 +114,7 @@ public class ProjectileBehavior : AttackBehaviorBase
         vfx_body.position = targetData.vfxSourcePos;
 
         ProjRB.linearVelocity = dir * speed;
+        RotateToVelocity();
 
         // lifetime
         travel_time = proj_data.typeData.projectile_range / speed;

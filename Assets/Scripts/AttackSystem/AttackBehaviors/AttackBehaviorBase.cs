@@ -70,7 +70,7 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     {
         foreach(AttackObject atkObj in attackList)
         {
-            TargetData newTargData = targetData.CopyToNewPosition(transform.position);
+            TargetData newTargData = targetData.CopyToNewSourcePos(transform.position);
             atkObj.Attack(newTargData);
         }
     }

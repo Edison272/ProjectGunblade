@@ -31,7 +31,9 @@ public readonly struct TargetData
         this.owner = owner;
         this.objectTarget = objectTarget;
     }
-    public TargetData CopyToNewPosition(Vector2 newSourcePos) {
+    public TargetData CopyToNewPositions(Vector2 sourcePos, Vector2 targetPos, Vector2 vfxSourcePos, Vector2 vfxTargetOffset) =>
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
+    public TargetData CopyToNewSourcePos(Vector2 newSourcePos) {
         return new TargetData(newSourcePos, newSourcePos + GetDir(),
                             newSourcePos + vfxTargetOffset, vfxTargetOffset,
                             targetMask, owner, objectTarget);
@@ -60,6 +62,8 @@ public readonly struct TargetData
         new TargetData(sourcePos, newObjectTarget.position, vfxSourcePos,
                        objectTargetVFX ? objectTargetVFX.position : newObjectTarget.position,
                        targetMask, owner, newObjectTarget);
+    public TargetData WithTargetMask(LayerMask newMask) =>
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, newMask, owner, objectTarget);
     #endregion
 
     #region Helpers

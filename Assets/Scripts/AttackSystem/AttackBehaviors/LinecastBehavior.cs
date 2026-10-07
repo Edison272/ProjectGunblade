@@ -1,5 +1,6 @@
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LinecastBehavior : AttackBehaviorBase
 {
@@ -17,7 +18,7 @@ public class LinecastBehavior : AttackBehaviorBase
     {
         main_lr_alpha = main_line_render.startColor.a;
 
-        RaycastHit2D[] contacts = Physics2D.LinecastAll(targetData.sourcePos, targetData.targetPos);
+        RaycastHit2D[] contacts = Physics2D.LinecastAll(targetData.sourcePos, targetData.targetPos, targetData.targetMask);
         int curr_pierce = atk_stats.pierce + 1;
         foreach (RaycastHit2D contact in contacts)
         {
@@ -50,9 +51,16 @@ public class LinecastBehavior : AttackBehaviorBase
         main_line_render.startColor = new Color(start.r, start.g, start.b, alpha);
         main_line_render.endColor = new Color(end.r, end.g, end.b, alpha);
 
-        // set line render length (temporary rendering method)
-        Vector2 render_pos = Vector2.Lerp(vfx_line_render.GetPosition(0), end_pos + targetData.vfxTargetOffset, 1 - curr_duration / render_duration);
-        SetLRPositions(1, end_pos, render_pos);
+            // set line render length (temporary rendering method)
+        float p = 1 - curr_duration / render_duration;
+        float head_t = Mathf.Clamp01(p / 0.5f);
+        float tail_t = Mathf.Clamp01((p - 0.25f) / (1f - 0.25f));
+
+        Vector2 a = targetData.vfxSourcePos;
+        Vector2 b = end_pos + targetData.vfxTargetOffset;
+
+        SetLRPositions(0, targetData.sourcePos, Vector2.Lerp(a, b, tail_t));
+        SetLRPositions(1, end_pos, Vector2.Lerp(a, b, head_t));
     }
 
     void FixedUpdate()
@@ -70,8 +78,7 @@ public class LinecastBehavior : AttackBehaviorBase
     {
         Initialize(line_data, atk_targ);
 
-        render_duration = line_data.typeData.render_duration; // used as fade duration
-        curr_duration = render_duration;
+
         
         float range = line_data.typeData.linecast_range * (1 + Random.Range(line_data.typeData.range_drift, -line_data.typeData.range_drift));
         end_pos = targetData.sourcePos + (targetData.targetPos - targetData.sourcePos).normalized * range;
@@ -79,6 +86,11 @@ public class LinecastBehavior : AttackBehaviorBase
 
         // generate the physics linecast (may shorten end_pos)
         GenerateLinecast();
+
+        // same speed as a full-range shot: duration scales with actual distance
+        float actual_dist = Vector2.Distance(targetData.sourcePos, end_pos);
+        render_duration = Mathf.Max(line_data.typeData.render_duration * actual_dist / range, 0.0001f);
+        curr_duration = render_duration;
 
         // origin of line renders
         SetLRPositions(0, atk_targ.sourcePos, atk_targ.vfxSourcePos);

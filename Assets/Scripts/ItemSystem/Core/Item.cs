@@ -277,8 +277,14 @@ public class Item : MonoBehaviour
         targetDataReq.TargetPos = targetPos;
         
         // fill in the empty values
-        TargetData get_atk_targ = GetTargetData(targetDataReq).WithTargetPos(targetPos).WithVFXOffset(itemTip.transform.position, new Vector2(0, item_y_offset + user_y_offset));
-        
+        TargetData targ_req = GetTargetData(targetDataReq);
+        TargetData get_atk_targ = targ_req.CopyToNewPositions(
+            targ_req.sourcePos,
+            targetPos,
+            itemTip.transform.position,
+            new Vector2(0, item_y_offset + user_y_offset)
+        );
+
         baseData.AttackObjectController.StartAttack(attackIndex, get_atk_targ);
         animRequest.Animate(animator);
         ItemInputRelay.Invoke(UsableEvent.Used);
