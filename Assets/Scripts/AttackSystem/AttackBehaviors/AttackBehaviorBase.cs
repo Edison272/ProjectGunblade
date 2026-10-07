@@ -2,6 +2,7 @@ using UnityEngine;
 using AttackSystem;
 using GameAI.Factions;
 using System;
+using System.Collections.Generic;
 
 /// Shared state and helpers for all spawned attack behaviors (projectile, linecast, melee).
 public abstract class AttackBehaviorBase : MonoBehaviour
@@ -15,7 +16,8 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     public AttackBehaviorBase PoolKey {get {return _poolKey;} set {if (!_poolKey) { _poolKey = value;}}} // used to access the objeect pool in AttackBehaviorPool.cs
     protected const int terrainMask = 1 << 6; // ricochet on contact with these layers
     protected bool attackEnabled = true;
-    public Action<int> AttackInteractionEvent;
+    // Interactions
+    public List<AttackObject> OnHitEffects = new List<AttackObject>();
 
     /// Call first in every StartX(). Copies stats/target data and resolves owner faction.
     protected void Initialize(AttackObject atkObj, TargetData data)
@@ -44,14 +46,25 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     protected void ApplyHit(GameObject target)
     {
         atk_stats.ApplyData(targetData.sourcePos, target);
-        AttackEventManager.OnHitEvent(this.gameObject, atkObject);
+        ActivateAttackList(OnHitEffects);
     }
 
     protected void EndAttack()
     {
         attackEnabled = false;
         SetAttackActive(attackEnabled);
-        AttackBehaviorPool.RemoveAttack(this);
+
+        // reset any interactions
+        OnHitEffects.Clear();
+    }
+
+    public void ActivateAttackList(List<AttackObject> attackList)
+    {
+        foreach(AttackObject atkObj in attackList)
+        {
+            TargetData newTargData = targetData.CopyToNewPosition(transform.position);
+            atkObj.Attack(newTargData);
+        }
     }
 
     public virtual void SetAttackActive(bool is_active) {}

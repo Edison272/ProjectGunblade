@@ -26,7 +26,11 @@ public class SFXManager : MonoBehaviour
         private set { _instance = value; }
     }
     [SerializeField] private AudioSource _audioSourcePrefab;
-    private static Queue<AudioSource> _audioSourcePool = new Queue<AudioSource>();
+    private static Stack<AudioSource> _audioSourcePool = new Stack<AudioSource>();
+    static Transform root;
+
+    // Root is destroyed with its scene (or when leaving play mode), taking pooled objects with it.
+    // A destroyed root reads as null, so stale entries are dropped lazily; no scene hooks needed.
     public void Awake()
     {
         if (Instance != null && Instance != this)
@@ -35,6 +39,7 @@ public class SFXManager : MonoBehaviour
             return;
         }
         Instance = this;
+        root = new GameObject("SoundPool").transform;
         DontDestroyOnLoad(gameObject);
     }
 
@@ -52,10 +57,12 @@ public class SFXManager : MonoBehaviour
     {
         AudioSource newSource = null;
         if (_audioSourcePool.Count == 0)
-            newSource = Instantiate(_audioSourcePrefab, audioSource, quaternion.identity);
-        else
-            newSource = _audioSourcePool.Dequeue();
-
+            newSource = Instantiate(_audioSourcePrefab, root);
+        else {
+            newSource = _audioSourcePool.Pop();
+            
+        }
+        newSource.transform.position = audioSource;
         newSource.clip = audioClip;
         newSource.volume = volume;
         newSource.Play();
@@ -66,6 +73,6 @@ public class SFXManager : MonoBehaviour
     {
         yield return new WaitForSeconds(timeToRecycle);
         audioSource.Stop();
-        _audioSourcePool.Enqueue(audioSource);
+        _audioSourcePool.Push(audioSource);
     }
 }

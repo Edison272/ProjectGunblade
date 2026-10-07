@@ -1,5 +1,6 @@
 using AttackSystem;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -28,9 +29,9 @@ public abstract class AttackObject
     protected abstract void Launch(GameObject spawned, TargetData shot, float miss);
 
     /// Override to pool instead of instantiate
-    protected virtual GameObject Spawn(Vector2 position)
+    protected virtual AttackBehaviorBase Spawn(Vector2 position)
     {
-        return AttackBehaviorPool.GetAttack(_instance, position).gameObject;
+        return AttackBehaviorPool.GetAttack(_instance, position);
     }
 
     public virtual TargetDataRequest GetTargetDataReq()
@@ -41,7 +42,8 @@ public abstract class AttackObject
     }
 
     #region Attack
-    public virtual void Attack(TargetData atk_targ)
+    public virtual void Attack(TargetData atk_targ) => Attack(atk_targ, null);
+    public virtual void Attack(TargetData atk_targ, List<AttackBehaviorBase> new_attacks)
     {
         Vector2 toTarget = atk_targ.targetPos - atk_targ.sourcePos;
         float baseAngle = Mathf.Atan2(toTarget.y, toTarget.x) * Mathf.Rad2Deg;
@@ -50,8 +52,9 @@ public abstract class AttackObject
         {
             Vector2 target = ShotTarget(atk_targ, toTarget.magnitude, baseAngle, i, TypeData, out float miss);
             TargetData shot = atk_targ.WithTargetPos(target);
-            GameObject new_instance = Spawn(shot.sourcePos);
-            Launch(new_instance, shot, miss);
+            AttackBehaviorBase new_attack = Spawn(shot.sourcePos);
+            new_attacks?.Add(new_attack);
+            Launch(new_attack.gameObject, shot, miss);
         }
     }
 

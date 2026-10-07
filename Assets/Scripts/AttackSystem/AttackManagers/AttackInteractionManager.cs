@@ -10,6 +10,6 @@ public static class AttackEventManager
     
     public static void OnHitEvent(GameObject instance, AttackObject atkObj)
     {
-        OnHit.Invoke(atkObj);
+        OnHit?.Invoke(atkObj);
     }
 }

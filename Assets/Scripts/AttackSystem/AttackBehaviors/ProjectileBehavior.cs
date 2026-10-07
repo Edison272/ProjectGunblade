@@ -111,8 +111,7 @@ public class ProjectileBehavior : AttackBehaviorBase
         ProjRB.linearVelocity = dir * speed;
 
         // lifetime
-        float distance = targetData.GetDir().magnitude;
-        travel_time = distance / speed * 3;
+        travel_time = proj_data.typeData.projectile_range / speed;
     }
 
     private void ProjectileEffects(Vector2 effect_position, bool terminate = false)

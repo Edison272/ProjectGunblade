@@ -14,6 +14,7 @@ public readonly struct TargetData
     // VFX data (both absolute world positions)
     public readonly Vector2 vfxSourcePos;
     public readonly Vector2 vfxTargetPos; // renamed from vfxTargetOffset; swap in your own name if different
+    public float vfxTargetOffset => vfxSourcePos.y - targetPos.y;
 
     // Entity data
     public readonly LayerMask targetMask;
@@ -31,6 +32,8 @@ public readonly struct TargetData
         this.owner = owner;
         this.objectTarget = objectTarget;
     }
+    public TargetData CopyToNewPosition(Vector2 newSourcePos) =>
+        new TargetData(newSourcePos, GetDir(), vfxTargetPos, vfxTargetPos + GetDir(), targetMask, owner, objectTarget);
 
     #region Derivation
     // dervie a version of the target data with an owner
