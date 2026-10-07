@@ -22,15 +22,11 @@ MonoBehaviour:
     hu: 0
     AttackObjects:
     - rid: 7800869134905114714
-    - rid: 7800869134905114715
-    - rid: 7800869134905114958
+    - rid: 7800869140022952017
     _attackObjectMap:
     - attackObjectIndex: 0
       OnHitIndex: -1
-      OnDestroyIndex: 2
-    - attackObjectIndex: 2
-      OnHitIndex: -1
-      OnDestroyIndex: 0
+      OnDestroyIndex: -1
   StackCounters:
   - rid: 267928573218914422
   - rid: 6178397772526125197
@@ -129,43 +125,19 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          Count: 1
-          Angle: 15
+          Count: 2
+          Angle: 360
           Even: 1
           projectile_speed: 30
           speed_drift: 0
           projectile_range: 5
           homing_radius: 0
           HomingSpdScale: 1
-    - rid: 7800869134905114715
-      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+    - rid: 7800869140022952017
+      type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
-        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
-        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
-        targetFaction: 0
-        atk_stats:
-          damage: 0
-          pierce: 2
-          bounce: 0
-          knockback_amt: 0
-          effect_time: 0
-          slow_amt: 0
-          total_dot_damage: 0
-          total_dot_ticks: 0
-        typeData:
-          Count: 10
-          Angle: 30
-          Even: 0
-          projectile_speed: 40
-          speed_drift: 0
-          projectile_range: 5
-          homing_radius: 0
-          HomingSpdScale: 1
-    - rid: 7800869134905114958
-      type: {class: Projectile, ns: , asm: Assembly-CSharp}
-      data:
-        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
-        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        _instance: {fileID: 4857281296658957558, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
         targetFaction: 0
         atk_stats:
           damage: 0
@@ -177,11 +149,9 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          Count: 5
-          Angle: 360
-          Even: 0
-          projectile_speed: 1
-          speed_drift: 0
-          projectile_range: 5
-          homing_radius: 0
-          HomingSpdScale: 1
+          Count: 6
+          Angle: 350
+          Even: 1
+          linecast_range: 10
+          range_drift: 0
+          render_duration: 0.1

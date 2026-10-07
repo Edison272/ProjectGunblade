@@ -104,7 +104,7 @@ public class ProjectileBehavior : AttackBehaviorBase
         ProjRB.includeLayers = targetData.targetMask;
         ProjRB.excludeLayers = ~ProjRB.includeLayers;
 
-        targetData = targetData.WithTargetPos(atk_targ.sourcePos * dir*speed);
+        targetData = targetData.WithTargetPos(atk_targ.sourcePos + dir * speed);
         main_body.transform.position = targetData.sourcePos;
 
         // vfx rotation & height

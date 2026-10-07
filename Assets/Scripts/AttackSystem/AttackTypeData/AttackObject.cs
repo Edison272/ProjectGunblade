@@ -66,15 +66,23 @@ public abstract class AttackObject
         float offset;
         if (atkTypeData.Even)
         {
-            // fan spans the full angle; a single shot goes straight
-            offset = atkTypeData.Count > 1
-                ? -atkTypeData.Angle / 2f + atkTypeData.Angle / (atkTypeData.Count - 1) * index
-                : 0f;
+            if (atkTypeData.Count > 1)
+            {
+                float angle = atkTypeData.Angle;
+                // 360: first and last would overlap, so divide by Count
+                float step = angle / (angle >= 360f ? atkTypeData.Count : atkTypeData.Count - 1);
+
+                offset = (angle >= 360f ? 0: -angle / 2f) + step * index;
+
+                // even counts: shift by a quarter of the angle
+   
+            }
+            else
+                offset = 0;
         }
         else
         {
-            float half = atkTypeData.Angle / 2f;
-            offset = Random.Range(-half, half);
+            offset = Random.Range(-atkTypeData.Angle / 2f, atkTypeData.Angle / 2f);
         }
 
         float rad = (baseAngle + offset) * Mathf.Deg2Rad;

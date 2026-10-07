@@ -96,7 +96,6 @@
             else
             {
                 atkObj.OnHitEffects = new AttackObject[0];
-                Debug.Log(atkObj.OnHitEffects == null);
             }
             if (OnDestroyIndex != -1)
             {

@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LinecastBehavior : AttackBehaviorBase
@@ -71,7 +72,10 @@ public class LinecastBehavior : AttackBehaviorBase
 
         render_duration = line_data.typeData.render_duration; // used as fade duration
         curr_duration = render_duration;
-        end_pos = targetData.targetPos;
+        
+        float range = line_data.typeData.linecast_range * (1 + Random.Range(line_data.typeData.range_drift, -line_data.typeData.range_drift));
+        end_pos = targetData.sourcePos + (targetData.targetPos - targetData.sourcePos).normalized * range;
+        targetData = targetData.WithTargetPos(end_pos);
 
         // generate the physics linecast (may shorten end_pos)
         GenerateLinecast();
@@ -89,5 +93,7 @@ public class LinecastBehavior : AttackBehaviorBase
     public override void SetAttackActive(bool is_active)
     {
         base.SetAttackActive(is_active);
+        main_line_render.gameObject.SetActive(is_active);
+        vfx_line_render.gameObject.SetActive(is_active);
     }
 }
