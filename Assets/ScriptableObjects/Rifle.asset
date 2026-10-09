@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 401ed04a628f55e46808c6fa2347d8f7, type: 3}
-  m_Name: Items 1
+  m_Name: Rifle
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   item_prefab: {fileID: 3117911291600889211, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
   <EquipTime>k__BackingField: 1
@@ -22,10 +22,14 @@ MonoBehaviour:
     AttackObjects:
     - rid: 7800869134905114714
     - rid: 7800869140022952017
+    - rid: 7800869181359390877
     _attackObjectMap:
     - attackObjectIndex: 0
       OnHitIndex: -1
       OnDestroyIndex: 1
+    - attackObjectIndex: 1
+      OnHitIndex: -1
+      OnDestroyIndex: 2
   StackCounters:
   - rid: 267928573218914422
   - rid: 6178397772526125197
@@ -45,7 +49,7 @@ MonoBehaviour:
           PlacementDirection: 5
           DisplayTest: 0
         <stackCounterType>k__BackingField: 2
-        cooldownTime: 0.5
+        cooldownTime: 0.1
         StartCooldownEvent:
           InputEventType: 3
           _globalInput: 0
@@ -121,15 +125,16 @@ MonoBehaviour:
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
-        typeData:
-          Count: 5
-          Angle: 10
+        _typeData:
+          Count: 1
+          Angle: 30
           Even: 0
+          range: 10
+          size: 1
           projectile_speed: 40
           pierce: 0
           bounce: 0
-          speed_drift: 0.3199
-          projectile_range: 10
+          speed_drift: 0.2862
           homing_radius: 0
           HomingSpdScale: 1
     - rid: 7800869140022952017
@@ -145,12 +150,35 @@ MonoBehaviour:
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
-        typeData:
-          Count: 5
+        _typeData:
+          Count: 4
           Angle: 360
           Even: 0
-          linecast_range: 3
+          range: 3
+          size: 1
           pierce: 0
           bounce: 0
-          range_drift: 0.4006
-          render_duration: 0.2
+          range_drift: 0.5
+          render_duration: 0.1
+    - rid: 7800869181359390877
+      type: {class: AreaEffect, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 2200225733305399034, guid: eecf20f89cb081a4ebd2885839ee77fe, type: 3}
+        _instance: {fileID: 2654992479864682832, guid: eecf20f89cb081a4ebd2885839ee77fe, type: 3}
+        targetFaction: 0
+        atk_stats:
+          damage: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        _typeData:
+          Count: 1
+          Angle: 0
+          Even: 0
+          range: 20
+          size: 3
+          ActivationDelay: 0
+          AreaDuration: 10
+          ApplicationAmt: 5

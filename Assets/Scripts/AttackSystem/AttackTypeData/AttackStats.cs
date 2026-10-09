@@ -24,6 +24,9 @@ namespace AttackSystem{
 
         public void ApplyData(Vector3 sourcePos, GameObject target)
         {
+            if (!target)
+                return;
+            
             target.GetComponent<IHealth>()?.ChangeHealth(damage);
             IMovement targ_move = target.GetComponent<IMovement>();
             if (knockback_amt > 0)

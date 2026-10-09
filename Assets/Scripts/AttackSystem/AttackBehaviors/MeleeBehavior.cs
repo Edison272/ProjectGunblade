@@ -48,14 +48,14 @@ public class MeleeBehavior : AttackBehaviorBase
     {
         Initialize(mele_data, atk_targ);
 
-        render_duration = mele_data.typeData.melee_duration;
+        render_duration = mele_data.SpecTypeData.melee_duration;
         curr_duration = render_duration;
         _meleeCollider.includeLayers = atk_targ.targetMask;
         _meleeCollider.excludeLayers = ~_meleeCollider.includeLayers;
 
         Vector2 sourcePos = targetData.sourcePos;
         Vector2 targetPos = targetData.targetPos;
-        float size = mele_data.typeData.melee_size;
+        float size = mele_data.SpecTypeData.melee_size;
 
         // adjust size & position based on new size
         main_body.transform.localScale = Vector2.one * Mathf.Abs(size);

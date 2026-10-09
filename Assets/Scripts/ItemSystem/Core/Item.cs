@@ -15,7 +15,7 @@ The item class is the monobehaviour which manages core functionality- aiming, an
 */
 public class Item : MonoBehaviour
 {   
-    [field: SerializeField] public ItemSO baseData {get; private set;} // SO contains important base data
+    [field: SerializeField] public ItemSO ItemBaseData {get; private set;} // SO contains important base data
     public Character user;
     public Func<TargetDataRequest, TargetData> GetTargetData;
 
@@ -35,7 +35,6 @@ public class Item : MonoBehaviour
     static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90f); // RotateTowards() is stupid so we need to offset it
 
     [field: Header("VFX Body")]
-    public GameObject itemobject;
     public Transform rotatorObject; // rotate the object when aiming
     public Transform itemTip; // the "front" of an item which attack type vfx will align to
     public Animator animator => GetComponent<Animator>();
@@ -57,9 +56,9 @@ public class Item : MonoBehaviour
     public float resetSpdScale = 1f;
 
     // animation speed stats
-    public float EquipTime => baseData.EquipTime * equip_spd_scale;
-    public float UnequipTime => baseData.UnequipTime * equip_spd_scale;
-    public float ResetTime => baseData.ResetTime * resetSpdScale;
+    public float EquipTime => ItemBaseData.EquipTime * equip_spd_scale;
+    public float UnequipTime => ItemBaseData.UnequipTime * equip_spd_scale;
+    public float ResetTime => ItemBaseData.ResetTime * resetSpdScale;
 
     // internal state data
     public bool IsInputsActive {get; private set;} = false; // toggled off/on when equipped/unequipped, and the item toggles select events
@@ -86,19 +85,17 @@ public class Item : MonoBehaviour
     void Awake()
     {
         vfx_sorting.enabled = true;
-        if (baseData)
-        {
-            Setup(baseData);
-        }
+
         if (!itemTip)
-        {
             itemTip = this.transform;
-        }
         item_y_offset = itemTip.transform.position.y - transform.position.y;
+        if (!rotatorObject)
+            Debug.LogWarning($"Item: {this.name} is missing a rotatorObject");
     }
 
     public void Start()
     {
+        // if (ItemBaseData) Setup(ItemBaseData);
     }
     #endregion
     public void Update()
@@ -118,6 +115,8 @@ public class Item : MonoBehaviour
     }
     void StaticAim()
     {
+        if (!rotatorObject)
+            return;
         if((rotatorObject.transform.localScale.y >= 0) != (targetPos.x >= transform.position.x)) {
             Vector3 new_vec = rotatorObject.transform.localScale;
             new_vec.x *= -1;
@@ -126,6 +125,8 @@ public class Item : MonoBehaviour
     }
     void DynamicAim()
     {
+        if (!rotatorObject)
+            return;
         // set the item's rotation towards the target direction
         rotatorObject.transform.rotation = curr_rot;
         // make sure item scale is correct
@@ -142,6 +143,11 @@ public class Item : MonoBehaviour
     // Setup immutable item data when this object is made
     public void Setup(ItemSO baseData)
     {            
+        // already setup; do not continue
+        if (!baseData || ItemInputRelay != null)
+            return;
+        
+        ItemBaseData = baseData;
         // setup input relay stuff here
         ItemInputRelay = new InputEventRelay(
             new (Enum, Type)[] {
@@ -268,7 +274,7 @@ public class Item : MonoBehaviour
     #region USE THE ITEM
     public void UseItem(int attackIndex, AnimationRequest animRequest, float readinessScore = -1)
     {
-        AttackObject atk_obj =  baseData.AttackObjectController.GetAttack(attackIndex);
+        AttackObject atk_obj =  ItemBaseData.AttackObjectController.GetAttack(attackIndex);
         if (atk_obj == null)
             return;
         
@@ -285,7 +291,7 @@ public class Item : MonoBehaviour
             new Vector2(0, item_y_offset + user_y_offset)
         );
 
-        baseData.AttackObjectController.StartAttack(attackIndex, get_atk_targ);
+        ItemBaseData.AttackObjectController.StartAttack(attackIndex, get_atk_targ);
         animRequest.Animate(animator);
         ItemInputRelay.Invoke(UsableEvent.Used);
         SFXManager.PlaySFXClip(fireSFX, transform.position, 1f);

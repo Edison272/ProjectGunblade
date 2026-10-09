@@ -691,8 +691,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5274262720743981671, guid: 72823a3baad24b44c8123bf0ba1b64a8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8434768883464494250, guid: 72823a3baad24b44c8123bf0ba1b64a8, type: 3}
+      propertyPath: base_data
+      value: 
+      objectReference: {fileID: 11400000, guid: 755c3bf20f0f6c345b5c0111eb623be1, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1981,7 +1985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!58 &761514463
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2102,7 +2106,7 @@ Transform:
   m_GameObject: {fileID: 761514462}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.0625, y: 0.40625, z: 0}
+  m_LocalPosition: {x: 19.07, y: 13.96, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4786,7 +4790,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1877596781
 Transform:
   m_ObjectHideFlags: 0
@@ -4796,7 +4800,7 @@ Transform:
   m_GameObject: {fileID: 1877596779}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1875, y: -0.15625, z: 0}
+  m_LocalPosition: {x: 24.32, y: 13.3975, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

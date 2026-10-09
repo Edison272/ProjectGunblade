@@ -26,16 +26,19 @@ public class LinecastBehavior : AttackBehaviorBase
         foreach (RaycastHit2D contact in contacts)
         {
             GameObject other = contact.transform.gameObject;
-            if (other.CompareTag("NoHit") || IsOwner(other) || IsFriendly(other)) continue;
-
-            ApplyHit(other);
-            LinecastEffects(contact.point);
+            bool isTerrain = (terrainMask & (1 << other.layer)) != 0;
             pierce--;
-            if (pierce == 0)
+            if (isTerrain || pierce == 0)
             {
                 end_pos = contact.point;
                 break;
             }
+
+            if (IsOwner(other) || IsFriendly(other)) continue;
+
+            ApplyHit(other);
+            LinecastEffects(contact.point);
+
         }
     }
 
@@ -79,29 +82,30 @@ public class LinecastBehavior : AttackBehaviorBase
 
     public void StartLinecast(Linecast line_data, TargetData atk_targ)
     {
+        // float range = line_data.SpecTypeData.range * (1 + Random.Range(line_data.SpecTypeData.range_drift, -line_data.SpecTypeData.range_drift));
+
         Initialize(line_data, atk_targ);
+        end_pos = atk_targ.targetPos;
 
-
-        
-        float range = line_data.typeData.linecast_range * (1 + Random.Range(line_data.typeData.range_drift, -line_data.typeData.range_drift));
-        end_pos = targetData.sourcePos + (targetData.targetPos - targetData.sourcePos).normalized * range;
-        targetData = targetData.WithTargetPos(end_pos);
-        pierce = line_data.typeData.pierce;
-        bounce = line_data.typeData.bounce;
+        pierce = line_data.SpecTypeData.pierce;
+        bounce = line_data.SpecTypeData.bounce;
 
         // generate the physics linecast (may shorten end_pos)
         GenerateLinecast();
 
         // same speed as a full-range shot: duration scales with actual distance
         float actual_dist = Vector2.Distance(targetData.sourcePos, end_pos);
-        render_duration = Mathf.Max(line_data.typeData.render_duration * actual_dist / range, 0.0001f);
+        render_duration = Mathf.Max(line_data.SpecTypeData.render_duration * actual_dist / line_data.TypeData.range, 0.0001f);
         curr_duration = render_duration;
 
         // origin of line renders
         SetLRPositions(0, atk_targ.sourcePos, atk_targ.vfxSourcePos);
         SetLRPositions(1, atk_targ.sourcePos, atk_targ.vfxSourcePos);
     }
-
+    public override TargetData GetTarget()
+    {
+        return targetData.CopyToNewPositions(end_pos, end_pos + targetData.GetDir());
+    }
     private void LinecastEffects(Vector2 effect_position)
     {
         //ImpactEffect.StartImpact(impact_effect, effect_position, ...);

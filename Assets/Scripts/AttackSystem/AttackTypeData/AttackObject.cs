@@ -199,20 +199,21 @@ public abstract class AttackObject
 [System.Serializable]
 public class Projectile : AttackObject
 {
-    public ProjectileTypeData typeData;
-    public override AttackTypeData TypeData => typeData;
+    [SerializeField] private ProjectileTypeData _typeData;
+    public ProjectileTypeData SpecTypeData => _typeData;
+    public override AttackTypeData TypeData => _typeData;
 
     public Projectile(AttackBehaviorBase instance = null) : base(instance) { }
     public Projectile(AttackBehaviorBase instance, AttackStats atk_stats, ProjectileTypeData typeData) : base(instance)
     {
         this.atk_stats = atk_stats;
-        this.typeData = typeData;
+        this._typeData = typeData;
     }
 
     public override TargetDataRequest GetTargetDataReq()
     {
         TargetDataRequest req = base.GetTargetDataReq();
-        req.HomingRadius = typeData.homing_radius;
+        req.HomingRadius = _typeData.homing_radius;
         return req;
     }
 
@@ -226,32 +227,37 @@ public class Projectile : AttackObject
 [System.Serializable]
 public class Linecast : AttackObject
 {
-    public LinecastTypeData typeData;
-    public override AttackTypeData TypeData => typeData;
+    [SerializeField] private LinecastTypeData _typeData;
+    public LinecastTypeData SpecTypeData => _typeData;
+    public override AttackTypeData TypeData => _typeData;
 
     public Linecast(AttackBehaviorBase instance = null) : base(instance) { }
     public Linecast(AttackBehaviorBase instance, AttackStats atk_stats, LinecastTypeData typeData) : base(instance)
     {
         this.atk_stats = atk_stats;
-        this.typeData = typeData;
+        this._typeData = typeData;
     }
 
-    protected override void Launch(GameObject spawned, TargetData shot) =>
-        spawned.GetComponent<LinecastBehavior>().StartLinecast(this, shot);
+    protected override void Launch(GameObject spawned, TargetData shot) {
+        float range = _typeData.range * (1 + Random.Range(_typeData.range_drift, -_typeData.range_drift));
+        Vector2 targ_pos = shot.sourcePos + (shot.targetPos - shot.sourcePos).normalized * range;
+        spawned.GetComponent<LinecastBehavior>().StartLinecast(this, shot.WithTargetPos(targ_pos));
+    }
 }
 #endregion
 #region MeleeAttack
 [System.Serializable]
 public class MeleeAttack : AttackObject
 {
-    public MeleeTypeData typeData;
-    public override AttackTypeData TypeData => typeData;
+    [SerializeField] private MeleeTypeData _typeData;
+    public MeleeTypeData SpecTypeData => _typeData;
+    public override AttackTypeData TypeData => _typeData;
 
     public MeleeAttack(AttackBehaviorBase instance = null) : base(instance) { }
     public MeleeAttack(AttackBehaviorBase instance, AttackStats atk_stats, MeleeTypeData typeData) : base(instance)
     {
         this.atk_stats = atk_stats;
-        this.typeData = typeData;
+        this._typeData = typeData;
     }
 
     protected override void Launch(GameObject spawned, TargetData shot) =>
@@ -262,16 +268,18 @@ public class MeleeAttack : AttackObject
 [System.Serializable]
 public class AreaEffect : AttackObject
 {
-    public AreaEffectTypeData typeData;
-    public override AttackTypeData TypeData => typeData;
+    [SerializeField] private AreaEffectTypeData _typeData;
+    public AreaEffectTypeData SpecTypeData => _typeData;
+    public override AttackTypeData TypeData => _typeData;
     public AreaEffect(AttackBehaviorBase instance = null) : base(instance) { }
     public AreaEffect(AttackBehaviorBase instance, AttackStats atk_stats, AreaEffectTypeData typeData) : base(instance)
     {
         this.atk_stats = atk_stats;
-        this.typeData = typeData;
+        this._typeData = typeData;
     }
 
-    protected override void Launch(GameObject spawned, TargetData shot) =>
-        spawned.GetComponent<AreaEffectBehavior>().StartAreaEffect(this, shot);
+    protected override void Launch(GameObject spawned, TargetData shot) {
+        spawned.GetComponent<AreaEffectBehavior>().StartAreaEffect(this, shot.WithTargetPos(shot.sourcePos + Vector2.ClampMagnitude(shot.GetDir(), _typeData.range)));
+    }
 }
 #endregion

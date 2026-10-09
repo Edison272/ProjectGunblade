@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401ed04a628f55e46808c6fa2347d8f7, type: 3}
+  m_Name: FlameCaster
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSO
+  item_prefab: {fileID: 3117911291600889211, guid: a60dd8e29fa2b094d8e7b6146a278f45, type: 3}
+  <EquipTime>k__BackingField: 1
+  <UnequipTime>k__BackingField: 1
+  <ResetTime>k__BackingField: 1
+  <ItemOutputs>k__BackingField:
+  - rid: 6178397756706783337
+  AttackObjectController:
+    AttackObjects:
+    - rid: 7800869181359390807
+    _attackObjectMap:
+    - attackObjectIndex: 0
+      OnHitIndex: -1
+      OnDestroyIndex: -1
+  StackCounters:
+  - rid: 267928573218914422
+  - rid: 6178397772526125197
+  dynamic_aim: 1
+  rotation_scale: 0.9997
+  ui_image: {fileID: 5551988997571559228, guid: dfb7e5f38c934564fab025a79b7ea96e, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 267928573218914422
+      type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
+      data:
+        HasUI: 1
+        UISetting:
+          ImageFillType: 0
+          CounterDesign: 0
+          PlacementDirection: 5
+          DisplayTest: 0
+        <stackCounterType>k__BackingField: 2
+        cooldownTime: 0.25
+        StartCooldownEvent:
+          InputEventType: 3
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 0
+          _usableInput: 2
+        ResetCooldownEvent:
+          InputEventType: 3
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 0
+          _usableInput: 3
+    - rid: 6178397756706783337
+      type: {class: GunOutput, ns: , asm: Assembly-CSharp}
+      data:
+        itemOutputType: 0
+        attackObjectRefs: 00000000
+        stackCounterRefs: 0000000001000000
+        _animationRequest:
+          AnimParameterName: Use
+          AnimParameterType: 9
+          <_animParamValue>k__BackingField: 0
+          AnimSpeed: 1
+        OutputEvent:
+          InputEventType: 2
+          _globalInput: 0
+          _interfaceInput: 0
+          _characterInput: 3
+          _usableInput: 0
+        AmmoCounterRef: 1
+        AmmoUse: 0
+        recoil_increment: 0
+        recoil_multiplier: 0.5
+        recoil_max: 0.5
+    - rid: 6178397772526125197
+      type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
+      data:
+        HasUI: 1
+        UISetting:
+          ImageFillType: 0
+          CounterDesign: 1
+          PlacementDirection: 5
+          DisplayTest: 0
+        <stackCounterType>k__BackingField: 1
+        basicAmmoStats:
+          maxAmmo: 8
+          currAmmo: 8
+          reloadSpeed: 1
+          UseAmmoEvent:
+            InputEventType: 3
+            _globalInput: 0
+            _interfaceInput: 0
+            _characterInput: 0
+            _usableInput: 2
+          ReloadEvent:
+            InputEventType: 3
+            _globalInput: 0
+            _interfaceInput: 0
+            _characterInput: 0
+            _usableInput: 4
+        regenAmmo: 0
+        roundsReload: 0
+    - rid: 7800869181359390807
+      type: {class: AreaEffect, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 2200225733305399034, guid: eecf20f89cb081a4ebd2885839ee77fe, type: 3}
+        _instance: {fileID: 2654992479864682832, guid: eecf20f89cb081a4ebd2885839ee77fe, type: 3}
+        targetFaction: 0
+        atk_stats:
+          damage: 1
+          knockback_amt: 42.4
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        _typeData:
+          Count: 1
+          Angle: 0
+          Even: 0
+          range: 20
+          size: 3
+          ActivationDelay: 0
+          AreaDuration: 4
+          ApplicationAmt: 1

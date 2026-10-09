@@ -43,7 +43,7 @@ public class ItemPickup : MonoBehaviour, IInteractable
         if (used_item)
         {        
             this_sprite.enabled = true;
-            this_sprite.sprite = used_item.baseData.ui_image;
+            this_sprite.sprite = used_item.ItemBaseData.ui_image;
 
             used_item.transform.SetParent(transform, false);
         }

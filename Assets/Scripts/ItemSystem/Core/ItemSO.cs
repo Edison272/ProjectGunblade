@@ -48,12 +48,14 @@ public class ItemSO : ScriptableObject
     {
         GameObject item_object = MonoBehaviour.Instantiate(item_prefab, pos, rotation);
         Item new_item = item_object.GetComponent<Item>();
+        new_item.Setup(this);
         return new_item;
     }
     public Item GenerateItem(Transform holder) // summon an item on a holder
     {
         GameObject item_object = MonoBehaviour.Instantiate(item_prefab, holder);
         Item new_item = item_object.GetComponent<Item>();
+        new_item.Setup(this);
         return new_item;
     }
 

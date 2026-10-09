@@ -44,7 +44,6 @@ public class ProjectileBehavior : AttackBehaviorBase
                     Debug.DrawLine(ProjRB.position, ProjRB.position + ProjRB.linearVelocity, Color.green, 1);
                     RotateToVelocity();
                 }
-                targetData = targetData.WithSourcePos(transform.position).WithTargetPos((Vector2)transform.position + ProjRB.linearVelocity);
                 //travel_time *= 1.25f; // slightly increase travel time after bounce
                 bounce--;
             }
@@ -101,10 +100,10 @@ public class ProjectileBehavior : AttackBehaviorBase
         Initialize(proj_data, atk_targ);
 
         Vector2 dir = atk_targ.GetDir().normalized;
-        speed = proj_data.typeData.projectile_speed * (1 + Random.Range(proj_data.typeData.speed_drift, -proj_data.typeData.speed_drift));
-        pierce = proj_data.typeData.pierce;
-        bounce = proj_data.typeData.bounce;
-        HomingSpdScale = proj_data.typeData.HomingSpdScale;
+        speed = proj_data.SpecTypeData.projectile_speed * (1 + Random.Range(proj_data.SpecTypeData.speed_drift, -proj_data.SpecTypeData.speed_drift));
+        pierce = proj_data.SpecTypeData.pierce;
+        bounce = proj_data.SpecTypeData.bounce;
+        HomingSpdScale = proj_data.SpecTypeData.HomingSpdScale;
         ProjRB.includeLayers = targetData.targetMask;
         ProjRB.excludeLayers = ~ProjRB.includeLayers;
 
@@ -120,10 +119,14 @@ public class ProjectileBehavior : AttackBehaviorBase
         RotateToVelocity();
 
         // lifetime
-        travel_time = proj_data.typeData.projectile_range / speed;
+        travel_time = proj_data.SpecTypeData.range / speed;
         curr_travel_time = 0;
     }
 
+    public override TargetData GetTarget()
+    {
+        return targetData.CopyToNewPositions(transform.position, (Vector2)transform.position + ProjRB.linearVelocity);
+    }
     private void ProjectileEffects(Vector2 effect_position, bool terminate = false)
     {
         //ImpactEffect.StartImpact(impact_effect, effect_position, ...);

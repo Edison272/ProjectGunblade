@@ -49,10 +49,15 @@ public abstract class AttackBehaviorBase : MonoBehaviour
         return owner && target == owner.gameObject;
     }
 
-    protected void ApplyHit(GameObject target)
+    protected void ApplyHit(GameObject target, bool activateInteraction = true)
     {
         atk_stats.ApplyData(targetData.sourcePos, target);
-        ActivateAttackList(OnHitEffects);
+        if (activateInteraction)
+            ActivateAttackList(OnHitEffects);
+    }
+    public virtual TargetData GetTarget()
+    {
+        return targetData.CopyToNewSourcePos(transform.position);
     }
 
     protected void EndAttack()
@@ -70,8 +75,7 @@ public abstract class AttackBehaviorBase : MonoBehaviour
     {
         foreach(AttackObject atkObj in attackList)
         {
-            TargetData newTargData = targetData.CopyToNewSourcePos(transform.position);
-            atkObj.Attack(newTargData);
+            atkObj.Attack(GetTarget());
         }
     }
 

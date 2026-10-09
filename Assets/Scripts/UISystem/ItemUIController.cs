@@ -67,9 +67,9 @@ public class ItemUIController : MonoBehaviour
     private void SetUI()
     {
         _selectedItem = active_character.Inventory.GetCurrentSlotItem();
-        if (_selectedItem.baseData.ui_image)
+        if (_selectedItem.ItemBaseData.ui_image)
         {
-            item_sprite.sprite = _selectedItem.baseData.ui_image;
+            item_sprite.sprite = _selectedItem.ItemBaseData.ui_image;
         }
 
         // deactivate any active stat bars

@@ -38,6 +38,11 @@ public readonly struct TargetData
                             newSourcePos + vfxTargetOffset, vfxTargetOffset,
                             targetMask, owner, objectTarget);
     }
+    public TargetData CopyToNewPositions(Vector2 sourcePos, Vector2 targetPos) {
+        return new TargetData(sourcePos, targetPos,
+                            sourcePos + vfxTargetOffset, vfxTargetOffset,
+                            targetMask, owner, objectTarget);
+    }
 
     #region Derivation
     // dervie a version of the target data with an owner

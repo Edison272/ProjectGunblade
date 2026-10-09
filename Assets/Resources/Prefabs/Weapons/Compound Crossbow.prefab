@@ -100,6 +100,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3945769674920731087}
+  - component: {fileID: 8808523809184952967}
+  - component: {fileID: 8277802969104995805}
   - component: {fileID: 8606916593666797745}
   m_Layer: 0
   m_Name: Compound Crossbow
@@ -125,6 +127,47 @@ Transform:
   - {fileID: 2603260826784355713}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8808523809184952967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3117911291600889211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dab585aa613342141996fcfe54b6090a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Item
+  <ItemBaseData>k__BackingField: {fileID: 0}
+  user: {fileID: 0}
+  _itemOutputs: []
+  <stackCounters>k__BackingField: []
+  _rotScale: 1
+  targetPos: {x: 0, y: 0}
+  rotatorObject: {fileID: 3945769674920731087}
+  itemTip: {fileID: 2603260826784355713}
+  fireSFX:
+  - {fileID: 8300000, guid: 64ec3d31f84856e44a62eca14368950a, type: 3}
+  use_spd_scale: 1
+  equip_spd_scale: 1
+  resetSpdScale: 1
+  references:
+    version: 2
+    RefIds: []
+--- !u!210 &8277802969104995805
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3117911291600889211}
+  m_Enabled: 1
+  m_SortingLayerID: 789699345
+  m_SortingLayer: 1
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!95 &8606916593666797745
 Animator:
   serializedVersion: 7
@@ -348,8 +391,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1532253401
-  m_SortingLayer: 0
+  m_SortingLayerID: 789699345
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5551988997571559228, guid: dfb7e5f38c934564fab025a79b7ea96e, type: 3}

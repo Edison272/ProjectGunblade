@@ -63,10 +63,10 @@ MonoBehaviour:
           total_dot_ticks: 0
         typeData:
           Count: 3
-          Angle: 15
+          Angle: 90
           Even: 0
           melee_duration: 0.5
-          melee_size: 1
+          melee_size: -3
     - rid: 7800869177320276050
       type: {class: CooldownCounter, ns: , asm: Assembly-CSharp}
       data:
