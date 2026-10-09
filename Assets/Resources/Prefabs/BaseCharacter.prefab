@@ -447,7 +447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteLibrary
   m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: a4ef5783c9032b348b17caa02503c320, type: 3}
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 498fdc56c6a3fa341a3d076d18bb7e5b, type: 3}
 --- !u!114 &4378758342634645403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -819,7 +819,6 @@ MonoBehaviour:
     inventory: []
     inventorySlots: []
   interactEvention_range: 1
-  FactionTag: Allies
   isAIActive: 1
   _behaviorController:
     base_engage_dist: 0

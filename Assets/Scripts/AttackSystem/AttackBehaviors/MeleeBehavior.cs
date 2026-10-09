@@ -12,11 +12,11 @@ public class MeleeBehavior : AttackBehaviorBase
     static readonly Quaternion ROTATION_OFFSET = Quaternion.Euler(0, 0, 90); // RotateTowards() is stupid so we need to offset it
 
     [Header("Physics")]
-    Rigidbody2D melee_rb;
+    CircleCollider2D _meleeCollider;
 
     void Awake()
     {
-        melee_rb = GetComponent<Rigidbody2D>();
+        _meleeCollider = GetComponent<CircleCollider2D>();
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -50,16 +50,16 @@ public class MeleeBehavior : AttackBehaviorBase
 
         render_duration = mele_data.typeData.melee_duration;
         curr_duration = render_duration;
-        melee_rb.includeLayers = atk_targ.targetMask;
-        melee_rb.excludeLayers = ~melee_rb.includeLayers;
+        _meleeCollider.includeLayers = atk_targ.targetMask;
+        _meleeCollider.excludeLayers = ~_meleeCollider.includeLayers;
 
         Vector2 sourcePos = targetData.sourcePos;
         Vector2 targetPos = targetData.targetPos;
         float size = mele_data.typeData.melee_size;
 
         // adjust size & position based on new size
-        main_body.transform.localScale = main_body.transform.localScale * Mathf.Abs(size);
-        VfxBody.localScale = new Vector3(VfxBody.localScale.x, VfxBody.localScale.y * Mathf.Sign(size), 1);
+        main_body.transform.localScale = Vector2.one * Mathf.Abs(size);
+        VfxBody.localScale = new Vector3(1, 1 * Mathf.Sign(size), 1);
         main_body.transform.position = sourcePos + (targetPos - sourcePos).normalized * Mathf.Abs(size) * 0.25f;
 
         // adjust vfx height from vfx body
@@ -75,5 +75,8 @@ public class MeleeBehavior : AttackBehaviorBase
     public override void SetAttackActive(bool is_active)
     {
         base.SetAttackActive(is_active);
+        _meleeCollider.enabled = is_active;
+        main_body.gameObject.SetActive(is_active);
+        VfxBody.gameObject.SetActive(is_active);
     }
 }

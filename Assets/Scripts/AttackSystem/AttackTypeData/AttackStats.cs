@@ -13,8 +13,6 @@ namespace AttackSystem{
         [Header("Stat Data")]
         // Attack on impact
         public int damage;
-        public int pierce;
-        public int bounce;
         [SerializeField] [Range(0f, 100f)] float knockback_amt;
         
         // status effect application

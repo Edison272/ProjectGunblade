@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8319657642444204669}
   - component: {fileID: 5485014359232668658}
   - component: {fileID: 2654992479864682832}
+  - component: {fileID: 7509021060268941282}
   m_Layer: 9
   m_Name: BaseAreaEffect
   m_TagString: Untagged
@@ -105,6 +106,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59bc61a3f80fe5b49b7b94cb309bc59f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainBody: {fileID: 2200225733305399034}
+  VFXBody: {fileID: 4497488863599806808}
+  ProjRB: {fileID: 0}
+  ProjCollider: {fileID: 0}
+--- !u!50 &7509021060268941282
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2200225733305399034}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &3213290297788202525
 GameObject:
   m_ObjectHideFlags: 0

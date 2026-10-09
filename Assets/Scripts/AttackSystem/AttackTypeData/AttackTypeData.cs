@@ -14,6 +14,8 @@ public class ProjectileTypeData : AttackTypeData
 {
     [Header("Projectile Data")]
     public float projectile_speed = 10;
+    public int pierce;
+    public int bounce;
     [Range(0f, 0.5f)] public float speed_drift = 0;
     public float projectile_range = 20;
     public float homing_radius;
@@ -25,6 +27,8 @@ public class LinecastTypeData : AttackTypeData
 {
     [Header("Linecast Data")]
     public float linecast_range = 20;
+    public int pierce;
+    public int bounce;
     [Range(0f, 0.5f)] public float range_drift = 0;
     public float render_duration = 0.1f; // was projectile_speed
 }

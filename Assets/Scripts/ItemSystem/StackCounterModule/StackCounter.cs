@@ -22,7 +22,7 @@ public enum StackCountType
 public abstract class StackCounter
 {
     [Header("UI Element")]
-    public bool HasUI = true;
+    public bool HasUI = false;
     [ShowIf("HasUI")] public StackCounterUISetting UISetting;
     
 

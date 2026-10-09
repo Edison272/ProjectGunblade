@@ -10,7 +10,6 @@
     [Serializable]
     public class AttackObjectController
     {
-        public float hu = 0;
         [SerializeReference] public AttackObject[] AttackObjects = new AttackObject[] {};
         // connects interaction events to attack objects and other attack objects via mapping
         [SerializeField] private AttackObjectMap[] _attackObjectMap = new AttackObjectMap[] {};

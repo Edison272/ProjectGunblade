@@ -11,15 +11,18 @@ public class LinecastBehavior : AttackBehaviorBase
     public LineRenderer vfx_line_render;  // shows where the vfx linecast goes
     //public ImpactEffect impact_effect;
     float main_lr_alpha; // base alpha for fade
+    [Header("Liencast Data")]
+    int pierce;
+    int bounce;
     float render_duration;
     float curr_duration;
+
 
     void GenerateLinecast()
     {
         main_lr_alpha = main_line_render.startColor.a;
 
         RaycastHit2D[] contacts = Physics2D.LinecastAll(targetData.sourcePos, targetData.targetPos, targetData.targetMask);
-        int curr_pierce = atk_stats.pierce + 1;
         foreach (RaycastHit2D contact in contacts)
         {
             GameObject other = contact.transform.gameObject;
@@ -27,8 +30,8 @@ public class LinecastBehavior : AttackBehaviorBase
 
             ApplyHit(other);
             LinecastEffects(contact.point);
-            curr_pierce--;
-            if (curr_pierce == 0)
+            pierce--;
+            if (pierce == 0)
             {
                 end_pos = contact.point;
                 break;
@@ -83,6 +86,8 @@ public class LinecastBehavior : AttackBehaviorBase
         float range = line_data.typeData.linecast_range * (1 + Random.Range(line_data.typeData.range_drift, -line_data.typeData.range_drift));
         end_pos = targetData.sourcePos + (targetData.targetPos - targetData.sourcePos).normalized * range;
         targetData = targetData.WithTargetPos(end_pos);
+        pierce = line_data.typeData.pierce;
+        bounce = line_data.typeData.bounce;
 
         // generate the physics linecast (may shorten end_pos)
         GenerateLinecast();

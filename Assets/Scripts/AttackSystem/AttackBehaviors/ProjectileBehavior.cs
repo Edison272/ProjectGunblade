@@ -10,14 +10,16 @@ public class ProjectileBehavior : AttackBehaviorBase
     //public ImpactEffect impact_effect;
 
     [Header("Projectile Data")]
-    public float speed;
-    public float HomingSpdScale;
+    float speed;
+    int pierce;
+    int bounce;
+    float HomingSpdScale;
 
     [Header("Physics")]
     public Rigidbody2D ProjRB;
     public Collider2D ProjCollider;
-    float travel_time;
-    float curr_travel_time = 0;
+    float travel_time = 0;
+    float curr_travel_time = -1;
 
     void OnTriggerEnter2D(Collider2D collider)
     {
@@ -29,7 +31,7 @@ public class ProjectileBehavior : AttackBehaviorBase
 
         if (isTerrain)
         {
-            if (atk_stats.bounce > 0)
+            if (bounce > 0)
             {
                 ColliderDistance2D col_dist = collider.Distance(ProjCollider); // projCollider = this projectile's Collider2D
                 if (col_dist.isOverlapped)
@@ -43,9 +45,8 @@ public class ProjectileBehavior : AttackBehaviorBase
                     RotateToVelocity();
                 }
                 targetData = targetData.WithSourcePos(transform.position).WithTargetPos((Vector2)transform.position + ProjRB.linearVelocity);
-                travel_time *= 0.5f;
-                curr_travel_time = 0;
-                atk_stats.bounce--;
+                //travel_time *= 1.25f; // slightly increase travel time after bounce
+                bounce--;
             }
             else
             {
@@ -54,8 +55,8 @@ public class ProjectileBehavior : AttackBehaviorBase
         }
         else if (other.TryGetComponent<Character>(out _))
         {
-            atk_stats.pierce--;
-            if (atk_stats.pierce <= 0) destroyObject = true;
+            pierce--;
+            if (pierce <= 0) destroyObject = true;
         }
 
         ApplyHit(other);
@@ -101,6 +102,8 @@ public class ProjectileBehavior : AttackBehaviorBase
 
         Vector2 dir = atk_targ.GetDir().normalized;
         speed = proj_data.typeData.projectile_speed * (1 + Random.Range(proj_data.typeData.speed_drift, -proj_data.typeData.speed_drift));
+        pierce = proj_data.typeData.pierce;
+        bounce = proj_data.typeData.bounce;
         HomingSpdScale = proj_data.typeData.HomingSpdScale;
         ProjRB.includeLayers = targetData.targetMask;
         ProjRB.excludeLayers = ~ProjRB.includeLayers;
@@ -118,6 +121,7 @@ public class ProjectileBehavior : AttackBehaviorBase
 
         // lifetime
         travel_time = proj_data.typeData.projectile_range / speed;
+        curr_travel_time = 0;
     }
 
     private void ProjectileEffects(Vector2 effect_position, bool terminate = false)

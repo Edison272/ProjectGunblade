@@ -57,9 +57,9 @@ public abstract class AttackBehaviorBase : MonoBehaviour
 
     protected void EndAttack()
     {
-        attackEnabled = false;
+        AttackBehaviorPool.RemoveAttack(this);
         ActivateAttackList(OnDestroyEffects);
-        SetAttackActive(attackEnabled);
+        SetAttackActive(false);
 
         // reset any interactions
         OnHitEffects.Clear();
@@ -75,5 +75,8 @@ public abstract class AttackBehaviorBase : MonoBehaviour
         }
     }
 
-    public virtual void SetAttackActive(bool is_active) {}
+    public virtual void SetAttackActive(bool is_active)
+    {
+        attackEnabled = is_active;
+    }
 }

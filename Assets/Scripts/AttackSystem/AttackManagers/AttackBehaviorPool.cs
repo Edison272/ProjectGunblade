@@ -41,6 +41,7 @@ public static class AttackBehaviorPool
         EnsureRoot();
         Stack<AttackBehaviorBase> stack = GetStack(prefab);
 
+        // null safety check
         AttackBehaviorBase new_instance = null;
         while (stack.Count > 0 && !new_instance)
         {

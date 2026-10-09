@@ -19,7 +19,6 @@ MonoBehaviour:
   <ItemOutputs>k__BackingField:
   - rid: 6178397756706783337
   AttackObjectController:
-    hu: 0
     AttackObjects:
     - rid: 7800869134905114714
     - rid: 7800869140022952017
@@ -46,7 +45,7 @@ MonoBehaviour:
           PlacementDirection: 5
           DisplayTest: 0
         <stackCounterType>k__BackingField: 2
-        cooldownTime: 0.1
+        cooldownTime: 0.5
         StartCooldownEvent:
           InputEventType: 3
           _globalInput: 0
@@ -92,8 +91,8 @@ MonoBehaviour:
           DisplayTest: 0
         <stackCounterType>k__BackingField: 1
         basicAmmoStats:
-          maxAmmo: 80
-          currAmmo: 80
+          maxAmmo: 8
+          currAmmo: 8
           reloadSpeed: 1
           UseAmmoEvent:
             InputEventType: 3
@@ -117,19 +116,19 @@ MonoBehaviour:
         targetFaction: 0
         atk_stats:
           damage: 10
-          pierce: 0
-          bounce: 1
           knockback_amt: 0
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
         typeData:
-          Count: 1
+          Count: 5
           Angle: 10
           Even: 0
-          projectile_speed: 30
-          speed_drift: 0
+          projectile_speed: 40
+          pierce: 0
+          bounce: 0
+          speed_drift: 0.3199
           projectile_range: 10
           homing_radius: 0
           HomingSpdScale: 1
@@ -141,9 +140,7 @@ MonoBehaviour:
         targetFaction: 0
         atk_stats:
           damage: 4
-          pierce: 0
-          bounce: 0
-          knockback_amt: 7.8
+          knockback_amt: 28.1
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
@@ -153,5 +150,7 @@ MonoBehaviour:
           Angle: 360
           Even: 0
           linecast_range: 3
+          pierce: 0
+          bounce: 0
           range_drift: 0.4006
           render_duration: 0.2

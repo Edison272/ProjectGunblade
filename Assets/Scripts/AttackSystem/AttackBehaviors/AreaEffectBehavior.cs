@@ -14,6 +14,11 @@ public class AreaEffectBehavior : AttackBehaviorBase
     public Collider2D ProjCollider;
     float travel_time;
     float curr_travel_time = 0;
+
+    void Update()
+    {
+        
+    }
     public void StartAreaEffect(AreaEffect areaData, TargetData atkTarg)
     {
         Initialize(areaData, atkTarg);
@@ -28,5 +33,12 @@ public class AreaEffectBehavior : AttackBehaviorBase
         // lifetime
         // float distance = targetData.GetDir().magnitude;
         // travel_time = distance / speed * 3;
+    }
+    public override void SetAttackActive(bool is_active)
+    {
+        base.SetAttackActive(is_active);
+        ProjRB.simulated = is_active;
+        MainBody.gameObject.SetActive(is_active);
+        VFXBody.gameObject.SetActive(is_active);
     }
 }
