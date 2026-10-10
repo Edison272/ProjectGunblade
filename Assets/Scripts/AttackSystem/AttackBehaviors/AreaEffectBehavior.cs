@@ -42,7 +42,6 @@ public class AreaEffectBehavior : AttackBehaviorBase
 
     void FixedUpdate()
     {
-        Debug.Log(_currTimer);
         if (_currTimer > 0)
         {
             _currTimer -= Time.fixedDeltaTime;
@@ -50,7 +49,6 @@ public class AreaEffectBehavior : AttackBehaviorBase
             // check pulsing
             if (_currTimer <= _remainingPulses * PulseT(_baseTypeData.AreaDuration, _baseTypeData.ApplicationAmt))
             {
-                Debug.Log($"{_currTimer}, {_remainingPulses * PulseT(_baseTypeData.AreaDuration, _baseTypeData.ApplicationAmt)}");
                 _remainingPulses -= 1;
                 AreaEffects(transform.position);
                 ApplyHit(null);
@@ -106,6 +104,10 @@ public class AreaEffectBehavior : AttackBehaviorBase
     {
         //ImpactEffect.StartImpact(impact_effect, effect_position, ...);
         if (terminate) EndAttack();
+    }
+    public override TargetData GetTarget()
+    {
+        return targetData.CopyToNewPositions(transform.position, (Vector2)transform.position);
     }
     public override void SetAttackActive(bool is_active)
     {

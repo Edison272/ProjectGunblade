@@ -128,7 +128,7 @@ MonoBehaviour:
         _typeData:
           Count: 1
           Angle: 10
-          Even: 1
+          Even: 0
           range: 10
           size: 1
           RecursionLimit: 3
@@ -136,8 +136,10 @@ MonoBehaviour:
           pierce: 0
           bounce: 5
           speed_drift: 0
-          homing_radius: 0
+          HomingRadius: 0
           HomingSpdScale: 1
+          HomingDelayScale: 1
+          HomingEndScale: -1
     - rid: 7800869140022952017
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:

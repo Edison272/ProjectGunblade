@@ -27,6 +27,8 @@ public class ProjectileTypeData : AttackTypeData
     [Range(0f, 1.1f)] public float HomingSpdScale = 1;
     [Range(0f, 1f)] public float HomingDelayScale = 1; // what percentage of the lifetime is spent not homing?
     [Range(0f, 1f)] public float HomingEndScale = -1;
+
+    public float AirburstRange = 0; // allows the projectile to destroy itself when in proximity to a target. Not used if the range is 0
 }
 
 [Serializable]

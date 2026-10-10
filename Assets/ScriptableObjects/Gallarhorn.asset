@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 401ed04a628f55e46808c6fa2347d8f7, type: 3}
-  m_Name: RocketLauncher
+  m_Name: Gallarhorn
   m_EditorClassIdentifier: Assembly-CSharp::ItemSO
   item_prefab: {fileID: 3117911291600889211, guid: 67b8011cc47eda74b8991d1b9bfd1b5e, type: 3}
   <EquipTime>k__BackingField: 1
@@ -21,21 +21,21 @@ MonoBehaviour:
   AttackObjectController:
     AttackObjects:
     - rid: 7800869134905114714
-    - rid: 7800869140022952017
+    - rid: 7800869202556354763
     - rid: 7800869181359390877
     _attackObjectMap:
     - attackObjectIndex: 0
       OnHitIndexes: 
-      OnDestroyIndex: 02000000
-    - attackObjectIndex: 1
+      OnDestroyIndex: 0200000001000000
+    - attackObjectIndex: 2
       OnHitIndexes: 
-      OnDestroyIndex: ffffffff
+      OnDestroyIndex: 01000000
   StackCounters:
   - rid: 267928573218914422
   - rid: 6178397772526125197
   dynamic_aim: 1
   rotation_scale: 0.9997
-  ui_image: {fileID: -266484137676524057, guid: 9db3aee8d2f6bcf458c5edfdf87fdb22, type: 3}
+  ui_image: {fileID: -4864586392625904324, guid: 8dd3b905e6004904b8c27d3ec50643a1, type: 3}
   references:
     version: 2
     RefIds:
@@ -129,41 +129,18 @@ MonoBehaviour:
           Count: 1
           Angle: 10
           Even: 1
-          range: 30
+          range: 19
           size: 1
           RecursionLimit: 1
           projectile_speed: 15
           pierce: 0
           bounce: 5
           speed_drift: 0
-          HomingRadius: 10
-          HomingSpdScale: 0.5
-          HomingDelayScale: 0.324
-          HomingEndScale: 0.834
-    - rid: 7800869140022952017
-      type: {class: Linecast, ns: , asm: Assembly-CSharp}
-      data:
-        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
-        _instance: {fileID: 4857281296658957558, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
-        targetFaction: 0
-        atk_stats:
-          damage: 4
-          knockback_amt: 28.1
-          effect_time: 0
-          slow_amt: 0
-          total_dot_damage: 0
-          total_dot_ticks: 0
-        _typeData:
-          Count: 4
-          Angle: 360
-          Even: 0
-          range: 3
-          size: 1
-          RecursionLimit: 3
-          pierce: 0
-          bounce: 0
-          range_drift: 0.5
-          render_duration: 0.5
+          HomingRadius: 0
+          HomingSpdScale: 0.658
+          HomingDelayScale: 0.297
+          HomingEndScale: 0.921
+          AirburstRange: 3
     - rid: 7800869181359390877
       type: {class: AreaEffect, ns: , asm: Assembly-CSharp}
       data:
@@ -172,7 +149,7 @@ MonoBehaviour:
         targetFaction: 0
         atk_stats:
           damage: 0
-          knockback_amt: 100
+          knockback_amt: 0
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
@@ -189,3 +166,32 @@ MonoBehaviour:
           ApplicationAmt: 1
           StartGrowthDurationScale: 0
           StartingScale: 1
+    - rid: 7800869202556354763
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        targetFaction: 0
+        atk_stats:
+          damage: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        _typeData:
+          Count: 10
+          Angle: 360
+          Even: 0
+          range: 20
+          size: 1
+          RecursionLimit: 1
+          projectile_speed: 0
+          pierce: 0
+          bounce: 0
+          speed_drift: 0.558
+          HomingRadius: 20
+          HomingSpdScale: 1.021
+          HomingDelayScale: 0.2
+          HomingEndScale: 1
+          AirburstRange: 0
