@@ -17,6 +17,7 @@ public readonly struct TargetData
 
     // Entity data
     public readonly LayerMask targetMask;
+    public LayerMask targetMaskTerrain => targetMask | 1 << 6; // a version of the target mask with terrain layer included
     public readonly Character owner;
     public readonly Transform objectTarget;
     public readonly int RecursionLimit; // if -1, this is a fresh instance
@@ -69,7 +70,7 @@ public readonly struct TargetData
     /// Targets a transform: sets objectTarget and snaps targetPos / vfxTargetOffset to it
     public TargetData WithObjectTarget(Transform newObjectTarget, Transform objectTargetVFX = null) =>
         new TargetData(sourcePos, newObjectTarget.position, vfxSourcePos,
-                       objectTargetVFX ? objectTargetVFX.position : newObjectTarget.position,
+                       objectTargetVFX ? objectTargetVFX.localPosition : (Vector3)vfxTargetOffset,
                        targetMask, owner, newObjectTarget, RecursionLimit);
     public TargetData WithTargetMask(LayerMask newMask) =>
         new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, newMask, owner, objectTarget, RecursionLimit);
@@ -78,6 +79,13 @@ public readonly struct TargetData
     #region Helpers
     public Vector2 GetDir() => targetPos - sourcePos;
     public Vector2 GetVFXDir() => vfxTargetOffset - vfxSourcePos;
+    public ContactFilter2D GetContactFilter2D()
+    {
+        ContactFilter2D new_filter = new ContactFilter2D();
+        new_filter.layerMask = targetMask;
+        new_filter.useLayerMask = true;
+        return new_filter;
+    }
     #endregion
 }
 

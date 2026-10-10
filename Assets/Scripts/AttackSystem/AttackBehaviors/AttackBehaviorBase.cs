@@ -30,7 +30,6 @@ public abstract class AttackBehaviorBase : MonoBehaviour
         targetData = data;
         owner = data.owner;
         factionTag = owner ? owner.FactionID : FactionManager.NoFactionLayer;
-        Debug.Log(targetData.RecursionLimit);
 
         // Reset Effects
         OnHitEffects.Clear();

@@ -215,7 +215,7 @@ public class Projectile : AttackObject
     public override TargetDataRequest GetTargetDataReq()
     {
         TargetDataRequest req = base.GetTargetDataReq();
-        req.HomingRadius = _typeData.homing_radius;
+        req.HomingRadius = _typeData.HomingRadius;
         return req;
     }
 

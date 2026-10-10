@@ -22,8 +22,11 @@ public class ProjectileTypeData : AttackTypeData
     public int pierce;
     public int bounce;
     [Range(0f, 1f)] public float speed_drift = 0;
-    public float homing_radius;
-    public float HomingSpdScale = 1;
+    [Header("Homing Data")]
+    public float HomingRadius = 0;
+    [Range(0f, 1.1f)] public float HomingSpdScale = 1;
+    [Range(0f, 1f)] public float HomingDelayScale = 1; // what percentage of the lifetime is spent not homing?
+    [Range(0f, 1f)] public float HomingEndScale = -1;
 }
 
 [Serializable]
@@ -50,7 +53,7 @@ public class AreaEffectTypeData : AttackTypeData
     public float ActivationDelay = 0; // when the area will actually become effective
     public float AreaDuration = 0.5f; // 0 for instant
     public int ApplicationAmt = 1; // how many times the AOE is applied over the total duration
-    public float GetTotalTime => 0.00001f + AreaDuration + ActivationDelay;
+    public float GetTotalTime => Time.fixedDeltaTime * 3 + AreaDuration + ActivationDelay;
 
     [Header("Area Effect Size")]
     public float StartGrowthDurationScale = 0; // A portion of time of the total duration

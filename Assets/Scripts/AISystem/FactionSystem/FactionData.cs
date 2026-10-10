@@ -87,7 +87,7 @@ namespace GameAI.Factions
         // characters belonging to this faction can use this function to get a layermask to find who they can target for attacks/abilities
         public LayerMask GetTargetMask(TargetFaction targets)
         {
-            LayerMask curr_mask = 1 << 6; // terrain wall by default
+            LayerMask curr_mask = 0;
             switch (targets)
             {
                 case TargetFaction.Allies:

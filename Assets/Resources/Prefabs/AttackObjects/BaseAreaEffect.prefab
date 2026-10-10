@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5485014359232668658}
   - component: {fileID: 2654992479864682832}
   - component: {fileID: 4364205576242904027}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: BaseAreaEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainBody: {fileID: 2200225733305399034}
   VFXBody: {fileID: 4497488863599806808}
-  _currTimer: 0
   ProjCollider: {fileID: 4364205576242904027}
 --- !u!58 &4364205576242904027
 CircleCollider2D:
@@ -156,7 +155,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4497488863599806808}
   - component: {fileID: 8411814074482718100}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: VFXGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +203,7 @@ GameObject:
   - component: {fileID: 1635255437900195534}
   - component: {fileID: 5049044127776964466}
   - component: {fileID: 2805579300154638220}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: PassiveParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5040,7 +5039,7 @@ GameObject:
   - component: {fileID: 1513054312169593406}
   - component: {fileID: 273328917350473145}
   - component: {fileID: 5270606618727595942}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: PopVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}

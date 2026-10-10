@@ -30,7 +30,7 @@ MonoBehaviour:
   HoldingCapacity: 8
   TotalItemSlots: 2
   inventory:
-  - {fileID: 11400000, guid: 1848e84891918844684352c2f2d8d3bc, type: 2}
+  - {fileID: 11400000, guid: 24ba865f4f5b03e42926dd54833afedf, type: 2}
   - {fileID: 11400000, guid: 5d8f89992f642b747b8ffaf8a2a56a14, type: 2}
   inventory_slots:
   - <MainSlot>k__BackingField: 0

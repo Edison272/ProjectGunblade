@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class ProjectileBehavior : AttackBehaviorBase
 {
+    ProjectileTypeData _baseTypeData;
     [Header("VFX")]
     public GameObject main_body;
     public Transform vfx_body;
@@ -13,11 +15,15 @@ public class ProjectileBehavior : AttackBehaviorBase
     float speed;
     int pierce;
     int bounce;
-    float HomingSpdScale;
+    // homing data
+    static readonly Collider2D[] _buffer = new Collider2D[16];
+    float HomingTick => 5f / speed; //
+    float _currHomingTimer;
 
     [Header("Physics")]
     public Rigidbody2D ProjRB;
     public Collider2D ProjCollider;
+    ContactFilter2D _filter;
     float _travelTime = 0;
     float _currTravelTime = -1;
     Vector2 _prevPosition;
@@ -74,11 +80,37 @@ public class ProjectileBehavior : AttackBehaviorBase
         if (!attackEnabled) {return;}
         _prevPosition = ProjRB.position;
         // constantly readjust velocity for homing projectiles
-        if (targetData.objectTarget)
+
+        bool homingTimeActive = _currTravelTime >= _travelTime * _baseTypeData.HomingDelayScale && _currTravelTime <= _travelTime * _baseTypeData.HomingEndScale;
+        // check surrounding homing elements at
+        if (_baseTypeData.HomingRadius > 0 && homingTimeActive)
         {
-            Vector2 targetDir = ((Vector2)targetData.objectTarget.position - ProjRB.position).normalized;
-            ProjRB.linearVelocity = Vector2.Lerp(ProjRB.linearVelocity.normalized, targetDir, speed * HomingSpdScale * Time.fixedDeltaTime) * speed;
-            RotateToVelocity();
+            if (_currHomingTimer <= 0)
+            {
+                int count = Physics2D.OverlapCircle(ProjRB.position, _baseTypeData.HomingRadius, _filter, _buffer);
+                Transform new_target = null;
+                float closest_sqr_mag = -Mathf.Infinity;
+                for (int i = 0; i < count; i++)
+                {
+                    if (_buffer[i] != null && ((Vector2)_buffer[i].transform.position - ProjRB.position).sqrMagnitude > closest_sqr_mag) {
+                        new_target = _buffer[i].transform;
+                    }
+                }
+                if (new_target)
+                    targetData = targetData.WithObjectTarget(new_target);
+                _currHomingTimer += HomingTick;
+            }
+            else
+            {
+                _currHomingTimer -= Time.fixedDeltaTime;
+            }
+
+            if (targetData.objectTarget)
+            {
+                Vector2 targetDir = ((Vector2)targetData.objectTarget.position - ProjRB.position).normalized;
+                ProjRB.linearVelocity = Vector2.Lerp(ProjRB.linearVelocity.normalized, targetDir, speed * _baseTypeData.HomingSpdScale * Time.fixedDeltaTime) * speed;
+                RotateToVelocity();
+            }
         }
 
         // terminate when lifetime is up
@@ -100,14 +132,15 @@ public class ProjectileBehavior : AttackBehaviorBase
     public void StartProjectile(Projectile proj_data, TargetData atk_targ)
     {
         Initialize(proj_data, atk_targ);
+        _baseTypeData = proj_data.SpecTypeData;
 
         Vector2 dir = atk_targ.GetDir().normalized;
-        speed = proj_data.SpecTypeData.projectile_speed * (1 + Random.Range(proj_data.SpecTypeData.speed_drift, -proj_data.SpecTypeData.speed_drift));
-        pierce = proj_data.SpecTypeData.pierce;
-        bounce = proj_data.SpecTypeData.bounce;
-        HomingSpdScale = proj_data.SpecTypeData.HomingSpdScale;
-        ProjRB.includeLayers = targetData.targetMask;
+        speed = _baseTypeData.projectile_speed * (1 + Random.Range(_baseTypeData.speed_drift, -_baseTypeData.speed_drift));
+        pierce = _baseTypeData.pierce;
+        bounce = _baseTypeData.bounce;
+        ProjRB.includeLayers = targetData.targetMaskTerrain;
         ProjRB.excludeLayers = ~ProjRB.includeLayers;
+        _filter = targetData.GetContactFilter2D();
 
         targetData = targetData.WithTargetPos(atk_targ.sourcePos + dir * speed);
         main_body.transform.position = targetData.sourcePos;
@@ -120,9 +153,10 @@ public class ProjectileBehavior : AttackBehaviorBase
         ProjRB.linearVelocity = dir * speed;
         RotateToVelocity();
 
-        // lifetime
-        _travelTime = proj_data.SpecTypeData.range / speed;
+        // lifetime & timers
+        _travelTime = _baseTypeData.range / speed;
         _currTravelTime = 0;
+        _currHomingTimer = 0;
     }
 
     public override TargetData GetTarget()

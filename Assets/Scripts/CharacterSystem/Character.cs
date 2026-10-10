@@ -66,7 +66,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
     private InputEventRelay controllerRelay; // reference to the input thing controlling this guy
     
     public Action<Character> OnDeath;
-    public static readonly LayerMask find_character_mask = 1 << 6; // keep this here for now
+    public static readonly LayerMask find_character_mask; // keep this here for now
 
     #region initalizers
     // Initialize op if it's a prefab that's placed on the scene, and has 
@@ -402,17 +402,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
 
     public TargetData GetTargetData(TargetDataRequest targetDataRequest)
     {
-        TargetData newTargData = new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero, CharacterFaction.GetTargetMask(targetDataRequest.TargetFaction)).WithOwner(this);
-
-        if (targetDataRequest.HomingRadius > 0) 
-        {
-            Transform targetObject = FindClosestTargetInRange(targetDataRequest.TargetPos, targetDataRequest.HomingRadius);
-            if (targetObject)
-            {
-                newTargData.WithObjectTarget(targetObject);
-            }
-        }
-
+        TargetData newTargData = new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero, CharacterFaction.GetTargetMask(targetDataRequest.TargetFaction), this);
         return newTargData;
     }
 

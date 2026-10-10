@@ -86,23 +86,25 @@ MonoBehaviour:
     - rid: 7800869177320276061
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
-        instance: {fileID: 0}
-        _instance: {fileID: 0}
+        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        _instance: {fileID: 4857281296658957558, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
         targetFaction: 0
         atk_stats:
           damage: 0
-          pierce: 0
-          bounce: 0
           knockback_amt: 0
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
-        typeData:
+        _typeData:
           Count: 1
           Angle: 0
           Even: 0
-          linecast_range: 20
+          range: 20
+          size: 1
+          RecursionLimit: 1
+          pierce: 0
+          bounce: 0
           range_drift: 0
           render_duration: 0.1
     - rid: 7800869177320276062
@@ -113,19 +115,23 @@ MonoBehaviour:
         targetFaction: 0
         atk_stats:
           damage: 0
-          pierce: 0
-          bounce: 0
           knockback_amt: 0
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
-        typeData:
+        _typeData:
           Count: 1
           Angle: 0
           Even: 0
+          range: 20
+          size: 1
+          RecursionLimit: 1
           projectile_speed: 10
+          pierce: 0
+          bounce: 0
           speed_drift: 0
-          projectile_range: 20
-          homing_radius: 0
+          HomingRadius: 0
           HomingSpdScale: 1
+          HomingDelayScale: 1
+          HomingEndScale: -1

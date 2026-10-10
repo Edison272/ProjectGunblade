@@ -15,7 +15,7 @@ public class AreaEffectBehavior : AttackBehaviorBase
     // Growing/Shrinking the Area Effect
 
     // For "pulsing" effects which happen at fixed intervals
-    float PulseT(float total, int intervals) => intervals == 1 ? 0f : total / (intervals - 1);
+    float PulseT(float total, int intervals) => intervals <= 1 ? 0f : total / (intervals - 1);
     int _remainingPulses = 0;
     float _currTimer = -1; // keeps track of when an AreaEffect "pulses". -1 means it is inactive
 
@@ -42,13 +42,15 @@ public class AreaEffectBehavior : AttackBehaviorBase
 
     void FixedUpdate()
     {
+        Debug.Log(_currTimer);
         if (_currTimer > 0)
         {
             _currTimer -= Time.fixedDeltaTime;
 
             // check pulsing
             if (_currTimer <= _remainingPulses * PulseT(_baseTypeData.AreaDuration, _baseTypeData.ApplicationAmt))
-           {
+            {
+                Debug.Log($"{_currTimer}, {_remainingPulses * PulseT(_baseTypeData.AreaDuration, _baseTypeData.ApplicationAmt)}");
                 _remainingPulses -= 1;
                 AreaEffects(transform.position);
                 ApplyHit(null);
@@ -57,6 +59,7 @@ public class AreaEffectBehavior : AttackBehaviorBase
                     ApplyHit(target);
                 }
             } 
+            // remove the area effect
             if (_currTimer <= 0)
             {
                 AreaEffects(transform.position, true);

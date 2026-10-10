@@ -22,7 +22,7 @@ public class LinecastBehavior : AttackBehaviorBase
     {
         main_lr_alpha = main_line_render.startColor.a;
 
-        RaycastHit2D[] contacts = Physics2D.LinecastAll(targetData.sourcePos, targetData.targetPos, targetData.targetMask);
+        RaycastHit2D[] contacts = Physics2D.LinecastAll(targetData.sourcePos, targetData.targetPos, targetData.targetMaskTerrain);
         foreach (RaycastHit2D contact in contacts)
         {
             GameObject other = contact.transform.gameObject;
