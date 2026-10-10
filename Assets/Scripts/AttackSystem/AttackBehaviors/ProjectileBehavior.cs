@@ -18,8 +18,9 @@ public class ProjectileBehavior : AttackBehaviorBase
     [Header("Physics")]
     public Rigidbody2D ProjRB;
     public Collider2D ProjCollider;
-    float travel_time = 0;
-    float curr_travel_time = -1;
+    float _travelTime = 0;
+    float _currTravelTime = -1;
+    Vector2 _prevPosition;
 
     void OnTriggerEnter2D(Collider2D collider)
     {
@@ -37,14 +38,14 @@ public class ProjectileBehavior : AttackBehaviorBase
                 if (col_dist.isOverlapped)
                 {
                     // normal points from the wall toward the projectile
-                    Vector2 normmal = col_dist.normal;
-                    Debug.DrawLine(ProjRB.position, ProjRB.position + normmal * (-col_dist.distance + 0.01f), Color.red, 1);
-                    ProjRB.position += normmal * (-col_dist.distance + 0.1f); // push out of wall
-                    ProjRB.linearVelocity = Vector2.Reflect(ProjRB.linearVelocity, normmal);
+                    Vector2 normal = col_dist.normal;
+                    Debug.DrawLine(ProjRB.position, ProjRB.position + normal * (-col_dist.distance + 0.01f), Color.red, 1);
+                    ProjRB.position = _prevPosition + normal * (-col_dist.distance + 0.1f); // push out of wall
+                    ProjRB.linearVelocity = Vector2.Reflect(ProjRB.linearVelocity, normal);
                     Debug.DrawLine(ProjRB.position, ProjRB.position + ProjRB.linearVelocity, Color.green, 1);
                     RotateToVelocity();
                 }
-                //travel_time *= 1.25f; // slightly increase travel time after bounce
+                //_travelTime *= 1.25f; // slightly increase travel time after bounce
                 bounce--;
             }
             else
@@ -65,12 +66,13 @@ public class ProjectileBehavior : AttackBehaviorBase
     void Update()
     {
         // set vfx
-        vfx_body.position = Vector2.MoveTowards(vfx_body.position, ProjRB.position + targetData.vfxTargetOffset, travel_time * Time.deltaTime * speed);
+        vfx_body.position = Vector2.MoveTowards(vfx_body.position, ProjRB.position + targetData.vfxTargetOffset, _travelTime * Time.deltaTime * speed);
         
     }
     void FixedUpdate()
     {
         if (!attackEnabled) {return;}
+        _prevPosition = ProjRB.position;
         // constantly readjust velocity for homing projectiles
         if (targetData.objectTarget)
         {
@@ -80,8 +82,8 @@ public class ProjectileBehavior : AttackBehaviorBase
         }
 
         // terminate when lifetime is up
-        curr_travel_time += Time.fixedDeltaTime;
-        if (curr_travel_time >= travel_time)
+        _currTravelTime += Time.fixedDeltaTime;
+        if (_currTravelTime >= _travelTime)
         {
             ProjectileEffects(transform.position, true);
         }
@@ -119,8 +121,8 @@ public class ProjectileBehavior : AttackBehaviorBase
         RotateToVelocity();
 
         // lifetime
-        travel_time = proj_data.SpecTypeData.range / speed;
-        curr_travel_time = 0;
+        _travelTime = proj_data.SpecTypeData.range / speed;
+        _currTravelTime = 0;
     }
 
     public override TargetData GetTarget()

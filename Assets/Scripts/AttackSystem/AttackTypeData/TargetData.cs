@@ -19,9 +19,10 @@ public readonly struct TargetData
     public readonly LayerMask targetMask;
     public readonly Character owner;
     public readonly Transform objectTarget;
+    public readonly int RecursionLimit; // if -1, this is a fresh instance
 
     public TargetData(Vector2 sourcePos, Vector2 targetPos, Vector2 vfxSourcePos, Vector2 vfxTargetOffset,
-                      LayerMask targetMask = default, Character owner = null, Transform objectTarget = null)
+                      LayerMask targetMask = default, Character owner = null, Transform objectTarget = null, int recursionLimit = -1)
     {
         this.sourcePos = sourcePos;
         this.targetPos = targetPos;
@@ -30,6 +31,7 @@ public readonly struct TargetData
         this.targetMask = targetMask;
         this.owner = owner;
         this.objectTarget = objectTarget;
+        this.RecursionLimit = recursionLimit;
     }
     public TargetData CopyToNewPositions(Vector2 sourcePos, Vector2 targetPos, Vector2 vfxSourcePos, Vector2 vfxTargetOffset) =>
         new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
@@ -45,30 +47,32 @@ public readonly struct TargetData
     }
 
     #region Derivation
+    public TargetData WtihRecursionLimit(int newRecursionLimit) =>
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget, newRecursionLimit);
     // dervie a version of the target data with an owner
     public TargetData WithSourcePos(Vector2 newSourcePos) =>
-        new TargetData(newSourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
+        new TargetData(newSourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget, RecursionLimit);
     public TargetData WithTargetPos(Vector2 newTargetPos) =>
-        new TargetData(sourcePos, newTargetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
+        new TargetData(sourcePos, newTargetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget, RecursionLimit);
 
     // Control VFX
     public TargetData WithVFXOffset(Vector2 vfxSourcePos, Vector2 vfxTargetOffset) =>
-        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget, RecursionLimit);
     public TargetData WithVFXSourcePos(Vector2 vfxSourcePos) =>
-        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget, RecursionLimit);
     public TargetData WithVFXTargetOffset(Vector2 vfxTargetOffset) =>
-        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget);
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, owner, objectTarget, RecursionLimit);
     // Homing Capabilities
     public TargetData WithOwner(Character newOwner) =>
-        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, newOwner, objectTarget);
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, targetMask, newOwner, objectTarget, RecursionLimit);
 
     /// Targets a transform: sets objectTarget and snaps targetPos / vfxTargetOffset to it
     public TargetData WithObjectTarget(Transform newObjectTarget, Transform objectTargetVFX = null) =>
         new TargetData(sourcePos, newObjectTarget.position, vfxSourcePos,
                        objectTargetVFX ? objectTargetVFX.position : newObjectTarget.position,
-                       targetMask, owner, newObjectTarget);
+                       targetMask, owner, newObjectTarget, RecursionLimit);
     public TargetData WithTargetMask(LayerMask newMask) =>
-        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, newMask, owner, objectTarget);
+        new TargetData(sourcePos, targetPos, vfxSourcePos, vfxTargetOffset, newMask, owner, objectTarget, RecursionLimit);
     #endregion
 
     #region Helpers

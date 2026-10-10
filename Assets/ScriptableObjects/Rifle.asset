@@ -25,11 +25,11 @@ MonoBehaviour:
     - rid: 7800869181359390877
     _attackObjectMap:
     - attackObjectIndex: 0
-      OnHitIndex: -1
-      OnDestroyIndex: 1
+      OnHitIndexes: 
+      OnDestroyIndex: 0000000001000000
     - attackObjectIndex: 1
-      OnHitIndex: -1
-      OnDestroyIndex: 2
+      OnHitIndexes: 
+      OnDestroyIndex: ffffffff
   StackCounters:
   - rid: 267928573218914422
   - rid: 6178397772526125197
@@ -127,14 +127,15 @@ MonoBehaviour:
           total_dot_ticks: 0
         _typeData:
           Count: 1
-          Angle: 30
-          Even: 0
+          Angle: 10
+          Even: 1
           range: 10
           size: 1
-          projectile_speed: 40
+          RecursionLimit: 3
+          projectile_speed: 15
           pierce: 0
-          bounce: 0
-          speed_drift: 0.2862
+          bounce: 5
+          speed_drift: 0
           homing_radius: 0
           HomingSpdScale: 1
     - rid: 7800869140022952017
@@ -156,10 +157,11 @@ MonoBehaviour:
           Even: 0
           range: 3
           size: 1
+          RecursionLimit: 3
           pierce: 0
           bounce: 0
           range_drift: 0.5
-          render_duration: 0.1
+          render_duration: 0.5
     - rid: 7800869181359390877
       type: {class: AreaEffect, ns: , asm: Assembly-CSharp}
       data:
@@ -174,11 +176,14 @@ MonoBehaviour:
           total_dot_damage: 0
           total_dot_ticks: 0
         _typeData:
-          Count: 1
+          Count: 3
           Angle: 0
-          Even: 0
-          range: 20
+          Even: 1
+          range: 0
           size: 3
+          RecursionLimit: 3
           ActivationDelay: 0
           AreaDuration: 10
           ApplicationAmt: 5
+          StartGrowthDurationScale: 0
+          StartingScale: 1

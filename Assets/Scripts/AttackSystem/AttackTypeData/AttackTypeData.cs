@@ -10,6 +10,9 @@ public class AttackTypeData
     public bool Even = false; // true = even fan, false = scattered
     public float range = 20;
     public float size = 1;
+
+    [Header("Interactions")]
+    public int RecursionLimit = 1; // The amount of times an AttackObject can call itself through interactions
 }
 [Serializable]
 public class ProjectileTypeData : AttackTypeData
@@ -47,6 +50,10 @@ public class AreaEffectTypeData : AttackTypeData
     public float ActivationDelay = 0; // when the area will actually become effective
     public float AreaDuration = 0.5f; // 0 for instant
     public int ApplicationAmt = 1; // how many times the AOE is applied over the total duration
-    public AttackObject AreaAttack = null; // Additional 
+    public float GetTotalTime => 0.00001f + AreaDuration + ActivationDelay;
 
+    [Header("Area Effect Size")]
+    public float StartGrowthDurationScale = 0; // A portion of time of the total duration
+    public float StartingScale = 1; // apply scalar on initialization. Grow until scale reaches 1
+    public AttackObject AreaAttack = null; // Additional 
 }

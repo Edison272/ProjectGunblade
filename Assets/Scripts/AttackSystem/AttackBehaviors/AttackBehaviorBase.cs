@@ -30,8 +30,12 @@ public abstract class AttackBehaviorBase : MonoBehaviour
         targetData = data;
         owner = data.owner;
         factionTag = owner ? owner.FactionID : FactionManager.NoFactionLayer;
+        Debug.Log(targetData.RecursionLimit);
 
-        // set interactions
+        // Reset Effects
+        OnHitEffects.Clear();
+        OnDestroyEffects.Clear();
+        // Set New Effects
         if (atkObject.OnHitEffects != null) OnHitEffects.AddRange(atkObject.OnHitEffects);
         if (atkObject.OnDestroyEffects != null) OnDestroyEffects.AddRange(atkObject.OnDestroyEffects);
     }
@@ -62,20 +66,25 @@ public abstract class AttackBehaviorBase : MonoBehaviour
 
     protected void EndAttack()
     {
-        AttackBehaviorPool.RemoveAttack(this);
         ActivateAttackList(OnDestroyEffects);
+        AttackBehaviorPool.RemoveAttack(this);
         SetAttackActive(false);
-
-        // reset any interactions
-        OnHitEffects.Clear();
-        OnDestroyEffects.Clear();
     }
 
     public void ActivateAttackList(List<AttackObject> attackList)
     {
         foreach(AttackObject atkObj in attackList)
         {
-            atkObj.Attack(GetTarget());
+            TargetData newTargData = GetTarget();
+            if (atkObj == atkObject)
+            {
+                if (targetData.RecursionLimit > 0)
+                    newTargData = newTargData.WtihRecursionLimit(targetData.RecursionLimit-1);
+                else
+                // if recursion limit reached, do not create a new attack
+                    continue;
+            }
+            atkObj.Attack(newTargData);
         }
     }
 

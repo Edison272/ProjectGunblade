@@ -49,6 +49,8 @@ public abstract class AttackObject
     public virtual void Attack(TargetData atk_targ) => Attack(atk_targ, null);
     public virtual void Attack(TargetData atk_targ, List<AttackBehaviorBase> new_attacks)
     {
+        if (atk_targ.RecursionLimit == -1) // if the recursion limit is -1, it is a fresh instance. Assign it a recursion limit!
+            atk_targ = atk_targ.WtihRecursionLimit(TypeData.RecursionLimit);
         Vector2 toTarget = atk_targ.targetPos - atk_targ.sourcePos;
         float baseAngle = Mathf.Atan2(toTarget.y, toTarget.x) * Mathf.Rad2Deg;
         for (int i = 0; i < TypeData.Count; i++)

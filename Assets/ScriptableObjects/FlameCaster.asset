@@ -21,9 +21,10 @@ MonoBehaviour:
   AttackObjectController:
     AttackObjects:
     - rid: 7800869181359390807
+    - rid: 7800869195902877774
     _attackObjectMap:
     - attackObjectIndex: 0
-      OnHitIndex: -1
+      OnHitIndex: 1
       OnDestroyIndex: -1
   StackCounters:
   - rid: 267928573218914422
@@ -126,6 +127,33 @@ MonoBehaviour:
           Even: 0
           range: 20
           size: 3
-          ActivationDelay: 0
+          ActivationDelay: 4
           AreaDuration: 4
-          ApplicationAmt: 1
+          ApplicationAmt: 8
+          growth_duration: 0
+          starting_scale: 1
+    - rid: 7800869195902877774
+      type: {class: Projectile, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        targetFaction: 0
+        atk_stats:
+          damage: 0
+          knockback_amt: 0
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        _typeData:
+          Count: 7
+          Angle: 360
+          Even: 0
+          range: 1
+          size: 1
+          projectile_speed: 35
+          pierce: 0
+          bounce: 0
+          speed_drift: 0.538
+          homing_radius: 0
+          HomingSpdScale: 1

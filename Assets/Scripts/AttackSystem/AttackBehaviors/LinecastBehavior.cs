@@ -73,9 +73,10 @@ public class LinecastBehavior : AttackBehaviorBase
     {
         curr_duration -= Time.fixedDeltaTime;
 
+        if (curr_duration <= render_duration/2)
+            LinecastEffects(end_pos);
         if (curr_duration <= 0)
         {
-            if (end_pos == targetData.targetPos) LinecastEffects(targetData.targetPos);
             EndAttack();
         }
     }

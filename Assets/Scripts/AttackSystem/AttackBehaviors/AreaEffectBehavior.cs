@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // used for impact effects, explosions,and AOE
@@ -11,12 +12,15 @@ public class AreaEffectBehavior : AttackBehaviorBase
 
     AreaEffectTypeData _baseTypeData;
 
+    // Growing/Shrinking the Area Effect
 
+    // For "pulsing" effects which happen at fixed intervals
     float PulseT(float total, int intervals) => intervals == 1 ? 0f : total / (intervals - 1);
-    [Header("AreaEffect Pulse")]
     int _remainingPulses = 0;
-    public float _currTimer = -1; // keeps track of when an AreaEffect "pulses". -1 means it is inactive
-    [Header("AreaEffect Contact")]
+    float _currTimer = -1; // keeps track of when an AreaEffect "pulses". -1 means it is inactive
+
+    // For "constant" effects which happen so long as the target is standing in the field
+    
 
     [Header("Physics")]
     public Collider2D ProjCollider;
@@ -41,6 +45,8 @@ public class AreaEffectBehavior : AttackBehaviorBase
         if (_currTimer > 0)
         {
             _currTimer -= Time.fixedDeltaTime;
+
+            // check pulsing
             if (_currTimer <= _remainingPulses * PulseT(_baseTypeData.AreaDuration, _baseTypeData.ApplicationAmt))
            {
                 _remainingPulses -= 1;
@@ -51,23 +57,20 @@ public class AreaEffectBehavior : AttackBehaviorBase
                     ApplyHit(target);
                 }
             } 
-
-
             if (_currTimer <= 0)
             {
-
                 AreaEffects(transform.position, true);
-
-                if (_remainingPulses <= 0)
-                    _remainingPulses = 0;
-                    _currTimer = -1;
-
             }
         }
     }
     void Update()
     {
-
+        if (_currTimer > 0 && _currTimer < _baseTypeData.GetTotalTime)
+        {
+            float lerp_amt =  1 - _currTimer / _baseTypeData.GetTotalTime;
+            float curr_size = Mathf.Lerp(_baseTypeData.size, _baseTypeData.size * _baseTypeData.StartingScale, lerp_amt);
+            MainBody.transform.localScale = Vector2.one * curr_size;
+        }
     }
 
     public void StartAreaEffect(AreaEffect areaData, TargetData atkTarg)
@@ -78,14 +81,14 @@ public class AreaEffectBehavior : AttackBehaviorBase
 
         // targetData = atkTarg.WithTargetPos(Vector2.ClampMagnitude(atkTarg.GetDir(), _baseTypeData.range));
         MainBody.transform.position = targetData.targetPos;
-        MainBody.transform.localScale = Vector2.one * _baseTypeData.size;
+        MainBody.transform.localScale = Vector2.one * _baseTypeData.size * _baseTypeData.StartingScale;
 
         ProjCollider.includeLayers = targetData.targetMask;
         ProjCollider.excludeLayers = ~ProjCollider.includeLayers;
 
         // effect pulses
         _remainingPulses = _baseTypeData.ApplicationAmt;
-        _currTimer = 0.00001f + _baseTypeData.AreaDuration + _baseTypeData.ActivationDelay;
+        _currTimer = _baseTypeData.GetTotalTime;
 
         // vfx rotation & height
         // Vector2 dir = targetData.GetDir().normalized;
