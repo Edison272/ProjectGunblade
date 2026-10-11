@@ -35,8 +35,8 @@ public class ProjectileTypeData : AttackTypeData
 public class LinecastTypeData : AttackTypeData
 {
     [Header("Linecast Data")]
-    public int pierce;
-    public int bounce;
+    public int Pierce;
+    public int Ricochet;
     [Range(0f, 1f)] public float range_drift = 0;
     public float render_duration = 0.1f; // was projectile_speed
 }

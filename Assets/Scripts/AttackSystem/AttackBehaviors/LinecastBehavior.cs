@@ -12,8 +12,10 @@ public class LinecastBehavior : AttackBehaviorBase
     //public ImpactEffect impact_effect;
     float main_lr_alpha; // base alpha for fade
     [Header("Liencast Data")]
-    int pierce;
-    int bounce;
+    int _pierceCount;
+    // ricochet data
+    int _ricochetsRemaining;
+    Vector2 _ricochetDir = Vector2.zero;
     float render_duration;
     float curr_duration;
 
@@ -22,23 +24,29 @@ public class LinecastBehavior : AttackBehaviorBase
     {
         main_lr_alpha = main_line_render.startColor.a;
 
-        RaycastHit2D[] contacts = Physics2D.LinecastAll(targetData.sourcePos, targetData.targetPos, targetData.targetMaskTerrain);
+        RaycastHit2D[] contacts = Physics2D.LinecastAll(targetData.sourcePos, end_pos, targetData.targetMaskTerrain);
         foreach (RaycastHit2D contact in contacts)
         {
             GameObject other = contact.transform.gameObject;
             bool isTerrain = (terrainMask & (1 << other.layer)) != 0;
-            pierce--;
-            if (isTerrain || pierce == 0)
-            {
-                end_pos = contact.point;
-                break;
-            }
+
 
             if (IsOwner(other) || IsFriendly(other)) continue;
-
             ApplyHit(other);
             LinecastEffects(contact.point);
 
+            if (isTerrain || _pierceCount <= 0)
+            {
+                end_pos = contact.point;
+
+                if (isTerrain && _ricochetsRemaining > 0) {
+                    end_pos += contact.normal * 0.01f;
+                    _ricochetDir = Vector2.ClampMagnitude(Vector2.Reflect(targetData.GetDir(), contact.normal), targetData.GetDir().magnitude/1.5f);
+                }
+
+                break;
+            }
+            _pierceCount--;
         }
     }
 
@@ -77,7 +85,12 @@ public class LinecastBehavior : AttackBehaviorBase
             LinecastEffects(end_pos);
         if (curr_duration <= 0)
         {
-            EndAttack();
+            if (_ricochetDir.sqrMagnitude > 0) {
+                StartRicochet(end_pos, _ricochetDir);
+            }
+            else {
+                EndAttack();
+            }
         }
     }
 
@@ -86,10 +99,17 @@ public class LinecastBehavior : AttackBehaviorBase
         // float range = line_data.SpecTypeData.range * (1 + Random.Range(line_data.SpecTypeData.range_drift, -line_data.SpecTypeData.range_drift));
 
         Initialize(line_data, atk_targ);
-        end_pos = atk_targ.targetPos;
+        end_pos = targetData.targetPos;
+        _pierceCount = line_data.SpecTypeData.Pierce;
 
-        pierce = line_data.SpecTypeData.pierce;
-        bounce = line_data.SpecTypeData.bounce;
+        // set up ricochet. use _ricochetDir to detect if this is a fresh linecast or a reinitialized linecast
+        if (_ricochetDir.sqrMagnitude > 0) {
+            _ricochetsRemaining--;
+            _ricochetDir = Vector2.zero;
+        }
+        else {
+            _ricochetsRemaining = line_data.SpecTypeData.Ricochet;
+        }
 
         // generate the physics linecast (may shorten end_pos)
         GenerateLinecast();
@@ -100,8 +120,8 @@ public class LinecastBehavior : AttackBehaviorBase
         curr_duration = render_duration;
 
         // origin of line renders
-        SetLRPositions(0, atk_targ.sourcePos, atk_targ.vfxSourcePos);
-        SetLRPositions(1, atk_targ.sourcePos, atk_targ.vfxSourcePos);
+        SetLRPositions(0, targetData.sourcePos, targetData.vfxSourcePos);
+        SetLRPositions(1, targetData.sourcePos, targetData.vfxSourcePos);
     }
     public override TargetData GetTarget()
     {
@@ -118,4 +138,14 @@ public class LinecastBehavior : AttackBehaviorBase
         main_line_render.gameObject.SetActive(is_active);
         vfx_line_render.gameObject.SetActive(is_active);
     }
+
+    #region Linecast Functionality
+    private void StartRicochet(Vector2 riochetOrigin, Vector2 riochetDirection)
+    {
+        
+        targetData = targetData.CopyToNewPositions(riochetOrigin, riochetOrigin + riochetDirection);
+        StartLinecast((Linecast)atkObject, targetData);
+    }
+
+    #endregion
 }
