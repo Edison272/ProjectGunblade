@@ -18,7 +18,8 @@ public abstract class AttackObject
     [SerializeField] public TargetFaction targetFaction;
     public AttackStats atk_stats;
     public abstract AttackTypeData TypeData {get;}
-
+    // vfx
+    public ImpactEffect vfx_impact;
     // base interactions. Configured by Attack Object Controller
     [HideInInspector] public AttackObject[] OnHitEffects = new AttackObject[0];
     [HideInInspector] public AttackObject[] OnDestroyEffects = new AttackObject[0];

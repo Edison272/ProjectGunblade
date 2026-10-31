@@ -10,7 +10,6 @@ public class ProjectileBehavior : AttackBehaviorBase
     [Header("VFX")]
     public GameObject main_body;
     public Transform vfx_body;
-    //public ImpactEffect impact_effect;
 
     [Header("Projectile Data")]
     float speed;
@@ -147,7 +146,7 @@ public class ProjectileBehavior : AttackBehaviorBase
     }
     private void ProjectileEffects(Vector2 effect_position, bool terminate = false)
     {
-        //ImpactEffect.StartImpact(impact_effect, effect_position, ...);
+        ImpactEffect.StartImpact(atkObject.vfx_impact, effect_position, vfx_body.position - main_body.transform.position, ProjRB.linearVelocity);
         if (terminate) EndAttack();
     }
 

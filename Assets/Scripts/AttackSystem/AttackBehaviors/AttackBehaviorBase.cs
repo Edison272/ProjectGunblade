@@ -54,7 +54,7 @@ public abstract class AttackBehaviorBase : MonoBehaviour
 
     protected void ApplyHit(GameObject target, bool activateInteraction = true)
     {
-        atk_stats.ApplyData(targetData.sourcePos, target);
+        target.GetComponent<IAttackable>()?.ApplyAttack(targetData, atk_stats);
         if (activateInteraction)
             ActivateAttackList(OnHitEffects);
     }

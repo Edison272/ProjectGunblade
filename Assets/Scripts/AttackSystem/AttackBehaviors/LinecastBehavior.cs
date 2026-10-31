@@ -10,7 +10,8 @@ public class LinecastBehavior : AttackBehaviorBase
     public LineRenderer main_line_render; // shows where the actual linecast goes
     public LineRenderer vfx_line_render;  // shows where the vfx linecast goes
     //public ImpactEffect impact_effect;
-    float main_lr_alpha; // base alpha for fade
+    float _mainLineAlpha = -1;
+    float MainLineAlpha {get {return _mainLineAlpha;} set {if(_mainLineAlpha == -1) _mainLineAlpha = value;}} // base alpha for fade
     [Header("Liencast Data")]
     int _pierceCount;
     // ricochet data
@@ -22,7 +23,7 @@ public class LinecastBehavior : AttackBehaviorBase
 
     void GenerateLinecast()
     {
-        main_lr_alpha = main_line_render.startColor.a;
+        MainLineAlpha = main_line_render.startColor.a;
 
         RaycastHit2D[] contacts = Physics2D.LinecastAll(targetData.sourcePos, end_pos, targetData.targetMaskTerrain);
         foreach (RaycastHit2D contact in contacts)
@@ -33,7 +34,8 @@ public class LinecastBehavior : AttackBehaviorBase
 
             if (IsOwner(other) || IsFriendly(other)) continue;
             ApplyHit(other);
-            LinecastEffects(contact.point);
+            if (_pierceCount > 0)
+                LinecastEffects(contact.point);
 
             if (isTerrain || _pierceCount <= 0)
             {
@@ -59,7 +61,7 @@ public class LinecastBehavior : AttackBehaviorBase
     void Update()
     {
         // fade out main linerender after being shot
-        float alpha = main_lr_alpha * curr_duration / render_duration;
+        float alpha = MainLineAlpha * curr_duration / render_duration;
         Color start = main_line_render.startColor;
         Color end = main_line_render.endColor;
         main_line_render.startColor = new Color(start.r, start.g, start.b, alpha);
@@ -80,10 +82,11 @@ public class LinecastBehavior : AttackBehaviorBase
     void FixedUpdate()
     {
         curr_duration -= Time.fixedDeltaTime;
-
-        if (curr_duration <= render_duration/2)
+        if (curr_duration + Time.fixedDeltaTime > render_duration/2 && curr_duration <= render_duration/2)
+        {
             LinecastEffects(end_pos);
-        if (curr_duration <= 0)
+        }
+        else if (curr_duration <= 0)
         {
             if (_ricochetDir.sqrMagnitude > 0) {
                 StartRicochet(end_pos, _ricochetDir);
@@ -129,7 +132,7 @@ public class LinecastBehavior : AttackBehaviorBase
     }
     private void LinecastEffects(Vector2 effect_position)
     {
-        //ImpactEffect.StartImpact(impact_effect, effect_position, ...);
+        ImpactEffect.StartImpact(atkObject.vfx_impact, effect_position, targetData.vfxTargetOffset, effect_position + targetData.vfxTargetOffset - targetData.vfxSourcePos);
     }
 
     public override void SetAttackActive(bool is_active)

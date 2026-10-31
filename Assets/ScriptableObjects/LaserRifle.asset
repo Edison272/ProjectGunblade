@@ -73,9 +73,9 @@ MonoBehaviour:
           _usableInput: 0
         AmmoCounterRef: 1
         AmmoUse: 0
-        recoil_increment: 0
+        recoil_increment: 0.05
         recoil_multiplier: 0.5
-        recoil_max: 0.5
+        recoil_max: 1
     - rid: 6178397772526125197
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -107,8 +107,8 @@ MonoBehaviour:
     - rid: 7800869221090459648
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
-        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
-        _instance: {fileID: 4857281296658957558, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        instance: {fileID: 8164560864404493835, guid: 9448dacc1a6ef664d8f7f970c5d75fbe, type: 3}
+        _instance: {fileID: 4857281296658957558, guid: 9448dacc1a6ef664d8f7f970c5d75fbe, type: 3}
         targetFaction: 0
         atk_stats:
           damage: 0
@@ -117,14 +117,15 @@ MonoBehaviour:
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
+        vfx_impact: {fileID: 7731478309546684184, guid: 778b8bedb902c5541859e85450f7fc02, type: 3}
         _typeData:
           Count: 1
-          Angle: 15
+          Angle: 2
           Even: 0
-          range: 30
+          range: 15
           size: 1
           RecursionLimit: 1
           Pierce: 0
-          Ricochet: 1
-          range_drift: 0
-          render_duration: 0.1
+          Ricochet: 0
+          range_drift: 0.173
+          render_duration: 0.5

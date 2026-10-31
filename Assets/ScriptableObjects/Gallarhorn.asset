@@ -115,8 +115,8 @@ MonoBehaviour:
     - rid: 7800869134905114714
       type: {class: Projectile, ns: , asm: Assembly-CSharp}
       data:
-        instance: {fileID: 4077797797690535342, guid: 930355124f02cdf47bb513612288808c, type: 3}
-        _instance: {fileID: 1443247784854857888, guid: 930355124f02cdf47bb513612288808c, type: 3}
+        instance: {fileID: 4077797797690535342, guid: 09d613eeb6d3ea340a39bc07e26f79fb, type: 3}
+        _instance: {fileID: 1443247784854857888, guid: 09d613eeb6d3ea340a39bc07e26f79fb, type: 3}
         targetFaction: 0
         atk_stats:
           damage: 10

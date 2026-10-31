@@ -146,13 +146,13 @@ namespace GameAI.Factions
         }
         private float GetNearestScore(Character curr_character, Character target)
         {
-            float score = 1/(curr_character.GetPosition() - target.GetPosition()).sqrMagnitude + 0.001f;
+            float score = 1/(curr_character.Position - target.Position).sqrMagnitude + 0.001f;
             return score;
         }
 
         private float GetFurthestScore(Character curr_character, Character target)
         {
-            float score = (curr_character.GetPosition() - target.GetPosition()).sqrMagnitude;
+            float score = (curr_character.Position - target.Position).sqrMagnitude;
             if (score > curr_character.curr_range)
             {
                 score = -1;

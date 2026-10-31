@@ -6,8 +6,9 @@ using Random = UnityEngine.Random;
 
 using GameAI.Factions;
 using Unity.Mathematics;
+using AttackSystem;
 public enum CharacterBodyPart {None = -1, Hitbox, TrueFront, TrueBack, Front, Back, SpriteBody, MainHand, AltHand, Head, FrontParticles, BackParticles};
-public class Character : MonoBehaviour, IMovement, IHealth
+public class Character : MonoBehaviour, IMovement, IHealth, IAttackable
 {
     [SerializeField] private CharacterSO base_data;
     public string character_name => base_data.character_name;
@@ -333,7 +334,7 @@ public class Character : MonoBehaviour, IMovement, IHealth
         interactEventable_filter.SetLayerMask(IInteractable.InteractableMask);
         interactEventable_filter.useLayerMask = true; // Actively use the mask
         interactEventable_filter.useTriggers = true;
-        Physics2D.OverlapCircle(GetPosition(), interactEvention_range, interactEventable_filter, interactEventables_in_range);
+        Physics2D.OverlapCircle(Position, interactEvention_range, interactEventable_filter, interactEventables_in_range);
         IInteractable closest_interactEventable = null;
         if (interactEventables_in_range.Count > 0)
         {
@@ -362,11 +363,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
     {
         Movement.ForceMove(direction, scalar, movement_override);
     }
-    public Vector2 GetPosition() {return entity_rb.position;}
-    // public void ChangeSpeed(float scale_base, float duration, bool is_decaying, AbilityEffectComponent effect_controller = null)
-    // {
-    //     Movement.ChangeSpeed(scale_base, duration, is_decaying, effect_controller);
-    // }
     #endregion
 
     #region Damage/Health System
@@ -377,12 +373,36 @@ public class Character : MonoBehaviour, IMovement, IHealth
             StaggerAim(Random.insideUnitCircle, 0.1f);
         }
     }
-    // public virtual void ChangeHealthTick(int change_amt, float duration, float tick_rate, AbilityEffectComponent effect_controller = null) 
-    // {
-    //     Health.ChangeHealthTick(change_amt, duration, tick_rate, effect_controller);
-    // }
-    // public virtual void MaxHealthBoost(int boost_amt, float duration, AbilityEffectComponent effect_controller = null) {Health.MaxHealthBoost(boost_amt, duration, effect_controller);}
-    // public virtual void ShieldBoost(int boost_amt) {Health.ShieldBoost(boost_amt);}
+    #endregion
+
+    #region Getting Attacked
+    public void ApplyAttack(in TargetData targetData, in AttackStats attack)
+    {
+        ForceMove((Position - targetData.sourcePos).normalized, attack.knockback_amt);
+        
+        // if (effect_time > 0)
+        // {
+        //     if (slow_amt != 1)
+        //     {
+        //         //targ_move?.ChangeSpeed(slow_amt, effect_time, false);
+        //     }
+        //     if (total_dot_damage != 0)
+        //     {
+        //         float damage_per_tick = (float)total_dot_damage/total_dot_ticks;
+        //         float tick_rate = effect_time/total_dot_ticks;
+        //         // normalize tick rate if damage per tick is less than 1
+        //         if (Mathf.Abs(damage_per_tick) < 1)
+        //         {
+        //             float rescale = 1/damage_per_tick;
+        //             Debug.Log(rescale + ", dpt " + damage_per_tick);
+        //             damage_per_tick = 1;
+        //             tick_rate *= rescale;
+        //         }
+        //         //target.GetComponent<IHealth>()?.ChangeHealthTick((int)damage_per_tick, effect_time, tick_rate);
+        //     }
+        // }
+    }    
+
     #endregion
 
     #region  AI Stuff
@@ -404,32 +424,6 @@ public class Character : MonoBehaviour, IMovement, IHealth
     {
         TargetData newTargData = new TargetData(Position, Vector2.zero, Vector2.zero, Vector2.zero, CharacterFaction.GetTargetMask(targetDataRequest.TargetFaction), this);
         return newTargData;
-    }
-
-    public Transform FindClosestTargetInRange(Vector3 searchPosition, float searchRadius, List<Collider2D> resultList = null)
-    {
-        if (resultList == null)
-        {
-            resultList = new List<Collider2D>();
-        }
-        FindTargetsInRange(searchPosition, searchRadius, resultList);
-        if (resultList.Count > 0)
-        {
-            return resultList[0].transform;
-        }
-        else return null;
-    }
-    public List<Collider2D> FindTargetsInRange(Vector3 searchPosition, float searchRadius, List<Collider2D> resultList = null)
-    {
-        if (resultList == null)
-        {
-            resultList = new List<Collider2D>();
-        }
-        ContactFilter2D searchFilter = new ContactFilter2D();
-        searchFilter.SetLayerMask(Character.find_character_mask);
-        searchFilter.useLayerMask = true; // Actively use the mask
-        Physics2D.OverlapCircle(searchPosition, searchRadius, searchFilter, resultList);
-        return resultList;
     }
 
     #endregion

@@ -26,7 +26,7 @@ MonoBehaviour:
     _attackObjectMap:
     - attackObjectIndex: 0
       OnHitIndexes: 
-      OnDestroyIndex: 0000000001000000
+      OnDestroyIndex: 
     - attackObjectIndex: 1
       OnHitIndexes: 
       OnDestroyIndex: ffffffff
@@ -125,6 +125,7 @@ MonoBehaviour:
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
+        vfx_impact: {fileID: 7731478309546684184, guid: 778b8bedb902c5541859e85450f7fc02, type: 3}
         _typeData:
           Count: 1
           Angle: 10
@@ -132,14 +133,15 @@ MonoBehaviour:
           range: 10
           size: 1
           RecursionLimit: 3
-          projectile_speed: 15
+          projectile_speed: 35
           pierce: 0
           bounce: 5
-          speed_drift: 0
+          speed_drift: 0.061
           HomingRadius: 0
           HomingSpdScale: 1
           HomingDelayScale: 1
           HomingEndScale: -1
+          AirburstRange: 0
     - rid: 7800869140022952017
       type: {class: Linecast, ns: , asm: Assembly-CSharp}
       data:
@@ -153,6 +155,7 @@ MonoBehaviour:
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
+        vfx_impact: {fileID: 0}
         _typeData:
           Count: 4
           Angle: 360
@@ -160,8 +163,8 @@ MonoBehaviour:
           range: 3
           size: 1
           RecursionLimit: 3
-          pierce: 0
-          bounce: 0
+          Pierce: 0
+          Ricochet: 0
           range_drift: 0.5
           render_duration: 0.5
     - rid: 7800869181359390877
@@ -177,6 +180,7 @@ MonoBehaviour:
           slow_amt: 0
           total_dot_damage: 0
           total_dot_ticks: 0
+        vfx_impact: {fileID: 0}
         _typeData:
           Count: 3
           Angle: 0

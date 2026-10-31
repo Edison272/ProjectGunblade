@@ -127,7 +127,7 @@ MonoBehaviour:
           range: 5
           size: 1
           RecursionLimit: 3
-          pierce: 0
-          bounce: 0
+          Pierce: 0
+          Ricochet: 2
           range_drift: 0
           render_duration: 0.1
