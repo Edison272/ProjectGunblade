@@ -12,27 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b086fc4ec5ed656448ae480e00343427, type: 3}
   m_Name: BasicChar 1
   m_EditorClassIdentifier: Assembly-CSharp::CharacterSO
-  character_name: Entity
+  CharacterName: Entity
   character_image: {fileID: -6608213998346060681, guid: d406a8be393058a469592859204169d7, type: 3}
   description: bleh
-  health: 10000
-  spawn_shield: 0
-  weight: 10
-  speed: 450
+  Health:
+    <BaseHealth>k__BackingField: 100
+    <BaseShield>k__BackingField: 0
+    <CurrHealth>k__BackingField: 0
+    <MaxHealth>k__BackingField: 0
+    <shield>k__BackingField: 0
+    health_ticks: []
+  Movement:
+    <BaseMass>k__BackingField: 1000
+    <BaseSpeed>k__BackingField: 10
+    <WeightScale>k__BackingField: 0
+    <SpeedScale>k__BackingField: 0
+    showRuntimeData: 0
+    <MoveSpeed>k__BackingField: 0
+    <MoveSpeedModifiers>k__BackingField: []
   AimStrength: 14.66
   range: 4
   close_range: 3
   interaction_range: 1
-  char_prefab: {fileID: 5274262720743981671, guid: 72823a3baad24b44c8123bf0ba1b64a8, type: 3}
+  char_prefab: {fileID: 5274262720743981671, guid: 4d27f70030fba1a4cb15c18e7e76b59f, type: 3}
   detection_mask:
     serializedVersion: 2
     m_Bits: 0
   HoldingCapacity: 8
   TotalItemSlots: 2
   inventory:
-  - {fileID: 11400000, guid: b0cc0780a51e00d4eaf5265cb42d2479, type: 2}
+  - {fileID: 11400000, guid: 74e14edb00935914a80272a16ddfabdb, type: 2}
   inventory_slots:
   - <MainSlot>k__BackingField: 0
     <AltSlot>k__BackingField: -1
-  - <MainSlot>k__BackingField: 1
-    <AltSlot>k__BackingField: -1
+  DetectionRange: 0

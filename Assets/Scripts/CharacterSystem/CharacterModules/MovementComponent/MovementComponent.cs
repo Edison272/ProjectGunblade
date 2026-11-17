@@ -8,49 +8,38 @@ using UnityEngine.UIElements;
 public class MovementComponent
 {
     [field: Header("Base Data")]
-    public readonly float BaseMoveSpeed = 100;
-    public readonly float BaseMass = 7;
-    public readonly float BaseLinearDamp = 7; 
+    [field: SerializeField] public float BaseMass {get; private set;} = 10;
+    [field: SerializeField] public float BaseSpeed {get; private set;} = 3;   
+    readonly float SlideTime = 0.05f;
+    // speed data scalar
+    [field: Header("Scaling Data")]
+    [field: SerializeField] public float WeightScale {get; private set;} = 1; // how much the operator can resist external forces
+    [field: SerializeField] public float SpeedScale {get; private set;} = 1; // maximum speed an operator can move at
     
-    [field: Header("Movement")]
+    [field: Header("Runtime Data")]
+    [SerializeField] private bool showRuntimeData = false;
     [field: SerializeField] public float MoveSpeed {get; private set;} = 1; // maximum speed an operator can move at
     public Vector2 MoveDir {get; private set;} = Vector2.zero;
     public Vector2 MovePos {get; private set;} = Vector2.zero;
     public Vector2 MoveSpeedDir => MoveDir * MoveSpeed;
     public bool DestinationReached {get; private set;} = false;
-    public Vector2 LastMoveDir {get; private set;} = Vector2.zero;
     public Rigidbody2D EntityRB {get; private set;}
-
-    [field: Header("Stat Changes")]
-    [field: SerializeField] public List<SpeedModifier> MoveSpeedModifiers {get; private set;} = new List<SpeedModifier>();
-
-    // speed data scalar
-    [field: SerializeField] public float SpeedScale {get; private set;} = 1; // maximum speed an operator can move at
-    [field: SerializeField] public float WeightScale {get; private set;} = 1; // how much the operator can resist external forces
+    [field: SerializeField] public List<SpeedModifier> MoveSpeedModifiers {get; private set;} = new List<SpeedModifier>();  
 
     #region Constructor
     public MovementComponent(MovementComponent copied, Rigidbody2D rigidbody)
     {
-        this.EntityRB = rigidbody;
-        BaseMoveSpeed = copied.BaseMoveSpeed;
+        EntityRB = rigidbody;
         BaseMass = copied.BaseMass;
-        EntityRB.mass = BaseMass;
-        BaseLinearDamp = EntityRB.linearDamping;
-    }
-    public MovementComponent(CharacterSO character_data, Rigidbody2D entity_rb)
-    {
-        EntityRB = entity_rb;
-        BaseMoveSpeed = character_data.speed;
-        BaseMass = character_data.weight;
-        BaseLinearDamp = character_data.weight;
-        MoveSpeed = BaseMoveSpeed;
-
-        EntityRB = entity_rb;
-        EntityRB.mass = BaseMass;
-        EntityRB.linearDamping = BaseLinearDamp;
+        BaseSpeed = copied.BaseSpeed;
+        ResetMovementComponent();
     }
     public void ResetMovementComponent()
     {
+        MoveSpeed = BaseSpeed;
+        EntityRB.mass = BaseMass;
+        EntityRB.linearDamping = 1/SlideTime;
+        
         MoveDir = Vector2.zero;
         MovePos = Vector2.zero;
         DestinationReached = true;
@@ -59,9 +48,6 @@ public class MovementComponent
 
         SpeedScale = 1f;
         WeightScale = 1f;
-
-        EntityRB.mass = BaseMass;
-        EntityRB.linearDamping = BaseLinearDamp;
     }
     #endregion
     
@@ -85,9 +71,11 @@ public class MovementComponent
     }
     public void UpdateMovement()
     {
+        float targetSpeed = BaseSpeed * SpeedScale;   // desired terminal speed
         EntityRB.mass = BaseMass * WeightScale;
-        EntityRB.linearDamping = BaseLinearDamp * WeightScale;
-        MoveSpeed = BaseMoveSpeed * WeightScale * WeightScale * SpeedScale;
+        EntityRB.linearDamping = 1/SlideTime; // decelerate in ~ 0.1s
+        MoveSpeed = EntityRB.linearDamping * EntityRB.mass * targetSpeed;
+        
         
         // if (MoveSpeed_modifiers.Count > 0)
         // {
@@ -135,7 +123,7 @@ public class MovementComponent
     private Vector2 GetPosition() {return EntityRB.position;}
     public float GetTravelTime() // return how long it is expected to take for the operator to reach their position
     {
-        return (MovePos - GetPosition()).magnitude / BaseMoveSpeed;
+        return (MovePos - GetPosition()).magnitude / BaseSpeed;
     }
     #endregion
     #region Change Stats

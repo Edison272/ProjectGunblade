@@ -9,11 +9,13 @@ using GameAI.Factions;
 public class CharacterSpawner : MonoBehaviour
 {
     public int FactionID = FactionManager.EnemyFactionID;
-    public Character[] SpawnCharacters;
+    public CharacterSO[] SpawnCharacters;
+    public float SpawnSpeed = 1;
 
     public void Start()
     {
-        StartSpawn();
+        //StartSpawn();
+        InvokeRepeating("StartSpawn", 0, SpawnSpeed);
     }
     public Character[] StartSpawn()
     {
@@ -35,7 +37,7 @@ public class CharacterSpawner : MonoBehaviour
         for (int i = 0; i < SpawnCharacters.Length; i++)
         {
             int locIndex = spawnLocations.Length * i/SpawnCharacters.Length;
-            newSpawns[i] = SpawnCharacters[i].Instantiate(spawnLocations[locIndex].position, FactionID);
+            newSpawns[i] = SpawnCharacters[i].Spawn(spawnLocations[locIndex].position, FactionID);
         }
         return newSpawns;
     }

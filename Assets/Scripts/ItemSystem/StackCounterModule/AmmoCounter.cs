@@ -132,7 +132,6 @@ public class AmmoCounter : StackCounter
     }
     public override float GetReadinessTime()
     {
-        Debug.Log($"foul {reloadSpeed}");
         return currAmmo > 0 ? 0 : reloadSpeed;
     }
     #endregion

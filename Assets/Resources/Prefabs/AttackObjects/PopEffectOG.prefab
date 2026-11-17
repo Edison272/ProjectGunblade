@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 119489825362257751}
-  - component: {fileID: 5439799982413945755}
   m_Layer: 9
   m_Name: VFXGroup
   m_TagString: Untagged
@@ -33,19 +32,6 @@ Transform:
   - {fileID: 3115853188358747185}
   m_Father: {fileID: 5528051572855653490}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &5439799982413945755
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1393071982190661650}
-  m_Enabled: 1
-  m_SortingLayerID: 789699345
-  m_SortingLayer: 1
-  m_SortingOrder: 1
-  m_SortAtRoot: 0
-  m_Sort3DAs2D: 0
 --- !u!1 &2398743717311584501
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,6 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5528051572855653490}
   - component: {fileID: 7731478309546684184}
+  - component: {fileID: 5644953858733679771}
   m_Layer: 9
   m_Name: PopEffectOG
   m_TagString: Untagged
@@ -94,6 +81,20 @@ MonoBehaviour:
   main_body: {fileID: 2398743717311584501}
   vfx_body: {fileID: 1393071982190661650}
   max_impact_time: 0.3
+  curr_impact_time: 0
+--- !u!210 &5644953858733679771
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2398743717311584501}
+  m_Enabled: 1
+  m_SortingLayerID: 789699345
+  m_SortingLayer: 1
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &7248575081339645847
 GameObject:
   m_ObjectHideFlags: 0
@@ -5013,9 +5014,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1532253401
-  m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingLayerID: 789699345
+  m_SortingLayer: 1
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0

@@ -120,7 +120,7 @@ MonoBehaviour:
         targetFaction: 0
         atk_stats:
           damage: 10
-          knockback_amt: 0
+          knockback_amt: 5.2
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0

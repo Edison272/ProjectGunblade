@@ -41,7 +41,7 @@ MonoBehaviour:
           PlacementDirection: 5
           DisplayTest: 0
         <stackCounterType>k__BackingField: 2
-        cooldownTime: 0.1
+        cooldownTime: 0.5
         StartCooldownEvent:
           InputEventType: 3
           _globalInput: 0
@@ -62,9 +62,10 @@ MonoBehaviour:
         stackCounterRefs: 0000000001000000
         _animationRequest:
           AnimParameterName: Use
+          AnimationClip: LightFire
           AnimParameterType: 9
           <_animParamValue>k__BackingField: 0
-          AnimSpeed: 1
+          AnimSpeed: 0.1
         OutputEvent:
           InputEventType: 2
           _globalInput: 0
@@ -87,8 +88,8 @@ MonoBehaviour:
           DisplayTest: 0
         <stackCounterType>k__BackingField: 1
         basicAmmoStats:
-          maxAmmo: 20
-          currAmmo: 20
+          maxAmmo: 30
+          currAmmo: 30
           reloadSpeed: 1
           UseAmmoEvent:
             InputEventType: 3
@@ -112,7 +113,7 @@ MonoBehaviour:
         targetFaction: 0
         atk_stats:
           damage: 0
-          knockback_amt: 49.2
+          knockback_amt: 100
           effect_time: 0
           slow_amt: 0
           total_dot_damage: 0
@@ -120,12 +121,15 @@ MonoBehaviour:
         vfx_impact: {fileID: 7731478309546684184, guid: 778b8bedb902c5541859e85450f7fc02, type: 3}
         _typeData:
           Count: 1
-          Angle: 2
+          Angle: 3
           Even: 0
-          range: 15
+          Range: 20
           size: 1
+          AttackDelay: 0.5
+          ExtraBurst: 2
+          BurstDuration: 0.15
           RecursionLimit: 1
           Pierce: 0
           Ricochet: 0
           range_drift: 0.173
-          render_duration: 0.5
+          render_duration: 0.15

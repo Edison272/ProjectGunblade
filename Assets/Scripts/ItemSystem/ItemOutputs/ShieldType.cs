@@ -39,7 +39,7 @@ public class ShieldOutput : ItemOutput
         throw new NotImplementedException();
     }
 
-    protected override void InternalActivateEffect(float stackCounterVal, int attackRefIndex)
+    protected override void InternalActivateEffect(int attackRefIndex)
     {
 
     }

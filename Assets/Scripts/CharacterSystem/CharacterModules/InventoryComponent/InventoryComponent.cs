@@ -193,14 +193,9 @@ public class InventoryComponent
     }
     
     // gets the slot most "ready"
-    public float GetHighestReadinessSlot()
-    {
-        return CurrentSlot.GetSlotReadiness();
-    }
-    public Item GetCurrentSlotItem()
-    {
-        return inventory[CurrentSlot.MainSlot];
-    }
+    public float GetHighestReadinessSlot() {return CurrentSlot.GetSlotReadiness();}
+    public Item GetCurrentSlotItem() {return inventory[CurrentSlot.MainSlot];}
+    public float GetItemRange() {return CurrentSlot.GetItemRange();}
 
     #endregion
 

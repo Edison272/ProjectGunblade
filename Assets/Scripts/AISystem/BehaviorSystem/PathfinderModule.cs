@@ -118,6 +118,8 @@ public class PathfinderModule
         }
         else
         {
+            Debug.LogWarning("Gimmie A*");
+            
             bool pathfound = MapManager.FindPath(Vector2Int.FloorToInt(_character.Position), Vector2Int.FloorToInt(targetPos), path);
 
             if (pathfound) {

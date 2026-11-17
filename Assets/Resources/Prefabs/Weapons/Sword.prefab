@@ -138,13 +138,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab585aa613342141996fcfe54b6090a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <baseData>k__BackingField: {fileID: 11400000, guid: 18eda5ba9d656594a93db11e41a1a9d4, type: 2}
+  <ItemBaseData>k__BackingField: {fileID: 0}
   user: {fileID: 0}
   _itemOutputs: []
   <stackCounters>k__BackingField: []
   _rotScale: 1
   targetPos: {x: 0, y: 0}
-  itemobject: {fileID: 0}
   rotatorObject: {fileID: 3945769674920731087}
   itemTip: {fileID: 4656779501656366177}
   fireSFX: []

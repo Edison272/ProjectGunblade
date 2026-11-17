@@ -7,10 +7,6 @@ namespace GameAI.Factions
 {
     /// <summary>
     /// Global singleton that owns every active FactionData instance in the game.
-    /// NPCs look up their faction here rather than holding a direct reference to
-    /// each other, so any NPC can ask "what's my faction's relation to the player's
-    /// faction" or "what's the last position my faction reported" without needing
-    /// to know about any specific other agent.
     /// </summary>
     public class FactionManager : MonoBehaviour
     {
@@ -79,7 +75,6 @@ namespace GameAI.Factions
                 return faction;
             
             faction = new FactionData(Factions.Count, FactionName, NoFactionLayer); // any factions are considered to be factionless
-            Debug.Log(FactionID);
             Factions.Add(faction);
             return faction;
         }

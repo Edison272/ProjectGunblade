@@ -44,9 +44,10 @@ namespace GameAI.Factions
         #region Membership
         public Squad AddMember(Character member, Squad squad = null)
         {
-            if (squad == null)
-                squad = AssignSquad(member);
-            
+            if (squad == null) {
+                squad = new Squad(this);
+                Squads.Add(squad);
+            }
             squad.AddMember(member);
             return squad;
         }
@@ -56,6 +57,7 @@ namespace GameAI.Factions
         }
         public void RemoveSquad(Squad squad)
         {
+            Debug.Log("Squad Lost");
             Squads.Remove(squad);
         }
 

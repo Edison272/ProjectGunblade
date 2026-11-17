@@ -32,15 +32,13 @@ public class AnatomyComponent
     public Transform main_hand; //always set to main hand object 
     public Transform alt_hand; //always set to off hand object
     public Transform head;
-    public Transform front_particles;
-    public Transform back_particles;
     public Transform true_front;
     public Transform true_back;
 
     [field: Header("VFX")]
     public float base_sprite_height;
     public float base_head_height;
-    public Animator animator;
+    Animator SpriteAnimator;
     protected Vector2 sprite_center; // center of mass of this srpite
     private float hitbox_radius;
     // character has 4 VFX states based on aim direciton, stored as two booleans, X and Y
@@ -59,10 +57,10 @@ public class AnatomyComponent
 
     #region Initalizers
     // called on awake by the character class
-    public void Setup(Rigidbody2D entity_rb, Animator animator)
+    public void Setup(Rigidbody2D entity_rb, Animator SpriteAnimator)
     {
         this.entity_rb = entity_rb;
-        this.animator = animator;
+        this.SpriteAnimator = SpriteAnimator;
         
         hitbox_radius = main_body.GetComponent<CircleCollider2D>().radius;
         akimbo_hand_pos = ((Vector2) main_hand.localPosition, (Vector2) alt_hand.localPosition);
@@ -72,7 +70,7 @@ public class AnatomyComponent
         base_head_height = head.localPosition.y;
 
         // set basic sibling order of entity VFX (operator faces BOTTOM RIGHT by default)
-        animator.SetBool("FaceFront", true);
+        SpriteAnimator.SetBool("FaceFront", true);
         main_hand.SetSiblingIndex(4);
         front.SetSiblingIndex(3);
         vfx_body.transform.SetSiblingIndex(2);
@@ -162,7 +160,7 @@ public class AnatomyComponent
             main_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item1 : akimbo_hand_pos.Item2;
             alt_hand.localPosition = direction_state.Item2 == direction_state.Item1? akimbo_hand_pos.Item2 : akimbo_hand_pos.Item1;
 
-            animator.SetBool("FaceFront", direction_state.Item2); // face front
+            SpriteAnimator.SetBool("FaceFront", direction_state.Item2); // face front
         }
     }
     void SingleAim() // aim one weapon from center of mass
@@ -177,7 +175,7 @@ public class AnatomyComponent
             front.SetSiblingIndex(back.GetSiblingIndex());
             back.SetSiblingIndex(front.GetSiblingIndex() == 3 ? 1 : 3);
 
-            animator.SetBool("FaceFront", direction_state.Item2); // face front
+            SpriteAnimator.SetBool("FaceFront", direction_state.Item2); // face front
         }
     }
 
@@ -216,10 +214,10 @@ public class AnatomyComponent
                 body_part = head;
                 break;
             case CharacterBodyPart.FrontParticles:
-                body_part = front_particles;
+                body_part = true_front;
                 break;
             case CharacterBodyPart.BackParticles:
-                body_part = back_particles;
+                body_part = true_back;
                 break;
         }
         return body_part;

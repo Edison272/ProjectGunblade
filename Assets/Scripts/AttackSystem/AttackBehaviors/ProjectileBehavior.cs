@@ -134,7 +134,7 @@ public class ProjectileBehavior : AttackBehaviorBase
         RotateToVelocity();
 
         // lifetime & timers
-        _travelTime = _baseTypeData.range / (speed+0.01f);
+        _travelTime = _baseTypeData.Range / (speed+0.01f);
         _currTravelTime = 0;
         bool areaCheckNeeded = _baseTypeData.AirburstRange > 0 || _baseTypeData.HomingRadius > 0;
         _areaCheckTimer = areaCheckNeeded ? 0 : -1;

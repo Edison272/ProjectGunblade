@@ -242,7 +242,7 @@ public class Linecast : AttackObject
     }
 
     protected override void Launch(GameObject spawned, TargetData shot) {
-        float range = _typeData.range * (1 + Random.Range(_typeData.range_drift, -_typeData.range_drift));
+        float range = _typeData.Range * (1 + Random.Range(_typeData.range_drift, -_typeData.range_drift));
         Vector2 targ_pos = shot.sourcePos + (shot.targetPos - shot.sourcePos).normalized * range;
         spawned.GetComponent<LinecastBehavior>().StartLinecast(this, shot.WithTargetPos(targ_pos));
     }
@@ -282,7 +282,7 @@ public class AreaEffect : AttackObject
     }
 
     protected override void Launch(GameObject spawned, TargetData shot) {
-        spawned.GetComponent<AreaEffectBehavior>().StartAreaEffect(this, shot.WithTargetPos(shot.sourcePos + Vector2.ClampMagnitude(shot.GetDir(), _typeData.range)));
+        spawned.GetComponent<AreaEffectBehavior>().StartAreaEffect(this, shot.WithTargetPos(shot.sourcePos + Vector2.ClampMagnitude(shot.GetDir(), _typeData.Range)));
     }
 }
 #endregion

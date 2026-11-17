@@ -32,7 +32,7 @@ public class BehaviorController
     // BehaviorModule current_module;
 
     [Header("Positioning")]
-    public float base_engage_dist = 6f;
+    public float base_engage_dist = 100f;
     public Vector2 anchor_position; // the general point which the operator hovers around
     public Vector2 move_to_pos; // the resulting position the bot aims to move to
     private Vector2Int prev_tile_pos;
@@ -52,6 +52,8 @@ public class BehaviorController
     // finding targets
     public Character TargetChar;
 
+    [Header("Behaviors")]
+    public float Aggression = 0.75f; // moves in closer to attack
 
 #region Initializers
     public BehaviorController(Character c)
@@ -93,6 +95,17 @@ public class BehaviorController
         {
             
             TargetAimPos = TargetChar.Position;
+            if ((TargetAimPos - ThisCharacter.Position).sqrMagnitude > Math.Pow(base_engage_dist, 2))
+            {
+                TargetChar = null;
+                ThisCharacter.MainEnd();
+                return;
+            }
+
+            float target_dist = GetEngagementRange() * Aggression;
+            Vector2 target_vec = TargetChar.TilePosition - ThisCharacter.TilePosition;
+            if (target_vec.sqrMagnitude > Mathf.Pow(target_dist, 2))
+                TargetMovePos = Vector2Int.FloorToInt(ThisCharacter.TilePosition + target_vec.normalized * Mathf.Max(0, target_vec.magnitude-target_dist));
             
             ThisCharacter.Aim(TargetAimPos);
             if (curr_time <= 0)
@@ -160,6 +173,12 @@ public class BehaviorController
         // {
         //     Pathfinder.SetNewPath(movePos);
         // }
+    }
+
+    // determines the distance an AI should keep from their target, based on the action they're performing
+    private float GetEngagementRange()
+    {
+        return ThisCharacter.Inventory.GetItemRange();
     }
     #endregion
 

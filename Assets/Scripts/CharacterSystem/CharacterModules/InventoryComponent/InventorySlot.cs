@@ -74,6 +74,16 @@ public class InventorySlot
 
         return needsReset;
     }
+
+    // gets the effective range of an item
+    public float GetItemRange()
+    {
+        float range = 0;
+        if (MainSlot > -1)
+            range = _inventoryRef[MainSlot].GetAttackRange();
+
+        return range;
+    }
     #endregion
     
     #region Setting Indexes
@@ -104,7 +114,6 @@ public class InventorySlot
             speed += is_unequip ? _inventoryRef[MainSlot].UnequipTime : _inventoryRef[MainSlot].EquipTime;
         if (AltSlot > -1)
             speed += is_unequip ? _inventoryRef[AltSlot].UnequipTime : _inventoryRef[AltSlot].EquipTime;
-        Debug.Log($"Changing Item in {speed}");
         return speed;
     }
     #endregion

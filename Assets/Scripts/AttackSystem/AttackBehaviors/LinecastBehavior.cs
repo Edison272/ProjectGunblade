@@ -119,7 +119,7 @@ public class LinecastBehavior : AttackBehaviorBase
 
         // same speed as a full-range shot: duration scales with actual distance
         float actual_dist = Vector2.Distance(targetData.sourcePos, end_pos);
-        render_duration = Mathf.Max(line_data.SpecTypeData.render_duration * actual_dist / line_data.TypeData.range, 0.0001f);
+        render_duration = Mathf.Max(line_data.SpecTypeData.render_duration * actual_dist / line_data.TypeData.Range, 0.0001f);
         curr_duration = render_duration;
 
         // origin of line renders

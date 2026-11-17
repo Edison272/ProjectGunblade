@@ -58,7 +58,7 @@ public class GunOutput : ItemOutput
         return false;
     }
 
-    protected override void InternalActivateEffect(float stackCounterVal, int attackRefIndex)
+    protected override void InternalActivateEffect(int attackRefIndex)
     {
         if (attackRefIndex > -1) 
         {
@@ -91,7 +91,7 @@ public class MeleeOutput : ItemOutput
         throw new NotImplementedException();
     }
 
-    protected override void InternalActivateEffect(float stackCounterVal, int attackRefIndex)
+    protected override void InternalActivateEffect(int attackRefIndex)
     {
 
     }
@@ -118,7 +118,7 @@ public class CasterOutput : ItemOutput
         throw new NotImplementedException();
     }
 
-    protected override void InternalActivateEffect(float stackCounterVal, int attackRefIndex)
+    protected override void InternalActivateEffect(int attackRefIndex)
     {
 
     }

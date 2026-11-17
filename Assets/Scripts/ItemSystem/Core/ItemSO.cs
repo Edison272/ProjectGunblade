@@ -1,11 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEditor;
-using ItemStatModules;
-using Unity.VisualScripting;
+
 
 /// <summary>
 /// This script has 3 goals

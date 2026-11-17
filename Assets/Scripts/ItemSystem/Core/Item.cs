@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
+using UnityEngine.Splines;
 
 
 public enum ItemType {Weapon, Support}
@@ -42,6 +43,9 @@ public class Item : MonoBehaviour
     private float item_y_offset = 0f; // the y distance from item tip and item's main body position
     private float user_y_offset = 0f; // the y distance from the item's main body position to the user's position
     
+
+    // attacking
+    private Queue<(float, int, AnimationRequest)> _useRequestQueue = new Queue<(float, int, AnimationRequest)>(); // attacks are off loaded to a queue. (Timestamp, attack index, animation request)
 
     private InputEventRelay _externalInputRelay; // reference to another input relay which controls the item
     public InputEventRelay ItemInputRelay {get; private set;} // a locally defined input relay
@@ -100,7 +104,11 @@ public class Item : MonoBehaviour
     #endregion
     public void Update()
     {
-        
+        if (_useRequestQueue.Count > 0 && _useRequestQueue.Peek().Item1 <= Time.time)
+        {
+            (float, int, AnimationRequest) use_req = _useRequestQueue.Dequeue();
+            UseItem(use_req.Item2,use_req.Item3);
+        }
     }
     #region Aiming
     public void Aim(Vector2 aim_pos)
@@ -272,6 +280,20 @@ public class Item : MonoBehaviour
     }
     #endregion
     #region USE THE ITEM
+    // adds Use Call to the queue.
+    public void UseItemRequest(int attackIndex, AnimationRequest animRequest)
+    {
+        AttackTypeData atk_data =  ItemBaseData.AttackObjectController.GetAttack(attackIndex).TypeData;
+
+        float atk_obj_time_offset = Time.time + atk_data.AttackDelay;
+        _useRequestQueue.Enqueue((atk_obj_time_offset, attackIndex, animRequest));
+
+        for (int i = 0; i < atk_data.ExtraBurst; i++) {
+            atk_obj_time_offset += atk_data.BurstDuration/atk_data.ExtraBurst;
+            _useRequestQueue.Enqueue((atk_obj_time_offset, attackIndex, animRequest));
+        }
+        ItemInputRelay.Invoke(UsableEvent.Used);
+    }
     public void UseItem(int attackIndex, AnimationRequest animRequest, float readinessScore = -1)
     {
         AttackObject atk_obj =  ItemBaseData.AttackObjectController.GetAttack(attackIndex);
@@ -338,7 +360,15 @@ public class Item : MonoBehaviour
     #endregion
 
     #region Getting Data
+    public float GetAttackRange(int index_override = -1)
+    {
+        int search_index = 0;
+        if (index_override != -1)
+            search_index = index_override;
 
+        AttackObject atk_obj =  ItemBaseData.AttackObjectController.GetAttack(search_index);
+        return atk_obj.TypeData.Range;
+    }
 
     #endregion
 }

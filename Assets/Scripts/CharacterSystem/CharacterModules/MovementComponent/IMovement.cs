@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 public interface IMovement
 {
-    Rigidbody2D entity_rb {get;}
+    Rigidbody2D EntityRB {get;}
 
     MovementComponent Movement {get;}
     // void SetMove(Vector2 set_MoveDir); // set the MoveDir

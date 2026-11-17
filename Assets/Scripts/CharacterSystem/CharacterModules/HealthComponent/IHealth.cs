@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.Android;
 
 public interface IHealth
-{    HealthComponent Health {get;}
+{    
+    public HealthComponent Health {get;}
     void ChangeHealth(int change_amt);
     //void MaxHealthBoost(int boost_amt, float duration, AbilityEffectComponent effect_controller = null);
     //void ChangeHealthTick(int change_amt, float duration, float tick_rate, AbilityEffectComponent effect_controller = null);

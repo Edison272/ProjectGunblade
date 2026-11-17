@@ -47,7 +47,6 @@ public class PlayerController : MonoBehaviour
     private bool _isCommanding = false;
     private FactionData _playerFaction;
     private Squad _playerSquad => active_character.CharacterSquad;
-    private int _squadSelector = 0;
     private Vector2 cmd_view_move_dir; // used to move camera when scoping map
 
     void Awake()
@@ -126,8 +125,8 @@ public class PlayerController : MonoBehaviour
         _inputMovement.performed += ctx => {cmd_view_move_dir = ctx.ReadValue<Vector2>();};
         _inputMovement.canceled += ctx => {cmd_view_move_dir = Vector2.zero;};
 
-        CommandInputRelay.ConnectEvent(CharacterEvent.MainStart,  (Action)(() => {SelectMapPosition(pointer_world_pos);}));
-        CommandInputRelay.ConnectEvent(CharacterEvent.Interact,  (Action)(() => {CycleSquads();}));
+        CommandInputRelay.ConnectEvent(CharacterEvent.MainStart,  (Action)(() => {FactionInspector.SetAnchor(pointer_world_pos);}));
+        CommandInputRelay.ConnectEvent(CharacterEvent.Interact,  (Action)(() => {FactionInspector.SetSquadSelection();}));
 
         #endregion
 
@@ -146,7 +145,7 @@ public class PlayerController : MonoBehaviour
         // setup faction control
         _playerFaction = FactionManager.Instance.RegisterFaction(FactionManager.PlayerFactionID);
         FactionInspector.SetFaction(_playerFaction);
-        FactionInspector.SetSquadSelection(_squadSelector);
+        FactionInspector.SetSquadSelection(0);
         // setup UI components
         SetCommandMode(false);  
 
@@ -177,9 +176,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {        
-        pointer_world_pos = _pointerController.GetSourceTo_worldPos(active_character.Position);
-        CharacterInputRelay.Invoke(CharacterEvent.LookPos, pointer_world_pos);   
-    
+        if (active_character)
+        {
+            pointer_world_pos = _pointerController.GetSourceTo_worldPos(active_character.Position);
+            CharacterInputRelay.Invoke(CharacterEvent.LookPos, pointer_world_pos);   
+        }
             
 
         if (_isCommanding && cmd_view_move_dir != Vector2.zero)
@@ -191,7 +192,10 @@ public class PlayerController : MonoBehaviour
     }
     private void SetLookPosition(Vector2 lookDelta)
     {
-        _pointerController.UpdateDelta(lookDelta, active_character.Position);
+        if (active_character)
+            _pointerController.UpdateDelta(lookDelta, active_character.Position);
+
+        FactionInspector.SetCursorPosition(pointer_world_pos);
     }
 
     #region UI Interaction
@@ -226,36 +230,5 @@ public class PlayerController : MonoBehaviour
 
         
     }
-
-    public void CycleSquads(int force_index = -1)
-    {
-        if (force_index > 0)
-            _squadSelector = force_index;
-        else
-            _squadSelector += 1;
-        _squadSelector = _squadSelector % _playerFaction.Squads.Count;
-        // skip player squad
-        if (_playerFaction.Squads[_squadSelector] == _playerSquad)
-        {
-            _squadSelector += 1;
-            _squadSelector = _squadSelector % _playerFaction.Squads.Count;
-        }
-
-        FactionInspector.SetSquadSelection(_squadSelector);
-    }
-
-    // used while commanding to select a location on the map to direct people
-    public void SelectMapPosition(Vector2 selectPos)
-    {
-        Squad targetSquad = _playerFaction.Squads[_squadSelector];
-        foreach(Character member in targetSquad.Members)
-        {
-            if (member == active_character)
-                continue;
-                
-            member._behaviorController.SetTargetMovePos(selectPos);
-        }
-    }
-
     #endregion
 }

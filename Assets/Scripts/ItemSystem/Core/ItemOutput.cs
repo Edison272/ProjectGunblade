@@ -80,20 +80,26 @@ public abstract class ItemOutput
     // checks the status of all stack counters to determine what attack to launch
     public void ActivateEffect()
     {
+        int attack_ref_index = GetAttackRefIndex();
+        if (attack_ref_index > -1)
+            _baseItem.UseItemRequest(attackObjectRefs[attack_ref_index], _animationRequest);
+
+        InternalActivateEffect(attack_ref_index);
+    }
+
+    // checks stack counters to see what index will likely be picked
+    public int GetAttackRefIndex()
+    {
         float stack_counter = CheckStackCounters();
         if (stack_counter < 0)
         {
-            return;
+            return -1;
         }
-        int attack_ref_index = (int)Mathf.Floor(stack_counter * (attackObjectRefs.Length-1));
-        if (attack_ref_index > -1)
-            _baseItem.UseItem(attackObjectRefs[attack_ref_index], _animationRequest);
-
-        InternalActivateEffect(stack_counter, attack_ref_index);
+        return (int)Mathf.Floor(stack_counter * (attackObjectRefs.Length-1));
     }
 
     // used to activate the internal effect
-    protected abstract void InternalActivateEffect(float stackCounterVal, int attackRefIndex);
+    protected abstract void InternalActivateEffect(int attackRefIndex);
     public abstract bool NeedsReset();
 
     #region Recast Support

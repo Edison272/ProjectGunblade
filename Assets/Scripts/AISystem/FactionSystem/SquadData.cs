@@ -24,8 +24,8 @@ namespace GameAI.Factions
         public readonly HashSet<Character> Members = new HashSet<Character>();
         public readonly SquadBlackboard SquadBoard;
 
-        public Vector2 Position => Leader.Position;
-        public Vector2 AnchorPosition; // The general position that the squad forms around
+        public Vector2 Position => Leader ? Leader.Position : _position;
+        public Vector2 _position;
         
         public Squad(FactionData factionData)
         {
@@ -56,7 +56,6 @@ namespace GameAI.Factions
         {
             if (Members.Contains(member)) Members.Remove(member);
             if (Members.Count == 0) Faction.RemoveSquad(this);
-
             else {
                 if (Leader == null)
                 {

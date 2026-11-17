@@ -8,8 +8,11 @@ public class AttackTypeData
     public int Count = 1; // how many shots?
     public float Angle = 0; // the angular spread
     public bool Even = false; // true = even fan, false = scattered
-    public float range = 20;
+    public float Range = 20;
     public float size = 1;
+    public float AttackDelay = 0; // for whatever reason you might want to delay the attack after it's been called
+    public int ExtraBurst = 1; // How many extra shots per input?
+    public float BurstDuration = 0; // Time Delay between bursts
 
     [Header("Interactions")]
     public int RecursionLimit = 1; // The amount of times an AttackObject can call itself through interactions
