@@ -47,7 +47,8 @@ public abstract class ItemOutput
 
     public virtual ItemOutput SetInputRelay(InputEventRelay inputRelay)
     {
-        inputRelay.ConnectEvent(OutputEvent.InputEvent, ActivateEffect);
+        inputRelay.ConnectEvent(OutputEvent.InputEvent, InputEffect);
+        inputRelay.ConnectEvent(UsableEvent.EffectTriggered, OutputEffect);
         return this;
     }
     #endregion
@@ -78,13 +79,11 @@ public abstract class ItemOutput
 
     // Activates this item's effect
     // checks the status of all stack counters to determine what attack to launch
-    public void ActivateEffect()
+    public virtual void InputEffect()
     {
         int attack_ref_index = GetAttackRefIndex();
         if (attack_ref_index > -1)
             _baseItem.UseItemRequest(attackObjectRefs[attack_ref_index], _animationRequest);
-
-        InternalActivateEffect(attack_ref_index);
     }
 
     // checks stack counters to see what index will likely be picked
@@ -97,9 +96,7 @@ public abstract class ItemOutput
         }
         return (int)Mathf.Floor(stack_counter * (attackObjectRefs.Length-1));
     }
-
-    // used to activate the internal effect
-    protected abstract void InternalActivateEffect(int attackRefIndex);
+    protected abstract void OutputEffect();
     public abstract bool NeedsReset();
 
     #region Recast Support

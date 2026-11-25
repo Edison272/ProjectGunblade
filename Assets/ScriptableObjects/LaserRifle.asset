@@ -61,10 +61,9 @@ MonoBehaviour:
         attackObjectRefs: 00000000
         stackCounterRefs: 0000000001000000
         _animationRequest:
+          SetTrigger: 1
           AnimParameterName: Use
           AnimationClip: LightFire
-          AnimParameterType: 9
-          <_animParamValue>k__BackingField: 0
           AnimSpeed: 0.1
         OutputEvent:
           InputEventType: 2
@@ -74,9 +73,9 @@ MonoBehaviour:
           _usableInput: 0
         AmmoCounterRef: 1
         AmmoUse: 0
-        recoil_increment: 0.05
+        recoil_increment: 0.1
         recoil_multiplier: 0.5
-        recoil_max: 1
+        recoil_max: 3
     - rid: 6178397772526125197
       type: {class: AmmoCounter, ns: , asm: Assembly-CSharp}
       data:
@@ -96,7 +95,7 @@ MonoBehaviour:
             _globalInput: 0
             _interfaceInput: 0
             _characterInput: 0
-            _usableInput: 2
+            _usableInput: 5
           ReloadEvent:
             InputEventType: 3
             _globalInput: 0
@@ -125,7 +124,7 @@ MonoBehaviour:
           Even: 0
           Range: 20
           size: 1
-          AttackDelay: 0.5
+          AttackDelay: 0
           ExtraBurst: 2
           BurstDuration: 0.15
           RecursionLimit: 1

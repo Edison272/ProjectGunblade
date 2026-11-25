@@ -57,16 +57,17 @@ public class GunOutput : ItemOutput
         }
         return false;
     }
-
-    protected override void InternalActivateEffect(int attackRefIndex)
+    public override void InputEffect()
     {
-        if (attackRefIndex > -1) 
-        {
-            _currRecoil = Mathf.Min(recoil_max, (_currRecoil  + recoil_increment) * recoil_multiplier);
-            _baseItem.user.StaggerAim(Random.insideUnitCircle, _currRecoil);
-            _baseItem.NeedsReset = NeedsReset();
-        }
-        
+        base.InputEffect();
+        _baseItem.NeedsReset = NeedsReset();
+    }
+
+    protected override void OutputEffect()
+    {
+        _currRecoil = Mathf.Min(recoil_max, (_currRecoil  + recoil_increment) * recoil_multiplier);
+        _baseItem.user.StaggerAim(Random.insideUnitCircle, _currRecoil);
+        _baseItem.NeedsReset = NeedsReset();
     }
 }
 
@@ -90,10 +91,9 @@ public class MeleeOutput : ItemOutput
     {
         throw new NotImplementedException();
     }
-
-    protected override void InternalActivateEffect(int attackRefIndex)
+    protected override void OutputEffect()
     {
-
+        throw new NotImplementedException();
     }
 }
 
@@ -117,9 +117,8 @@ public class CasterOutput : ItemOutput
     {
         throw new NotImplementedException();
     }
-
-    protected override void InternalActivateEffect(int attackRefIndex)
+    protected override void OutputEffect()
     {
-
+        throw new NotImplementedException();
     }
 }

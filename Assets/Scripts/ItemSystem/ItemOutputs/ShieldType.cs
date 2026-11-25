@@ -30,7 +30,7 @@ public class ShieldOutput : ItemOutput
     public override ItemOutput SetInputRelay(InputEventRelay inputRelay)
     {
         base.SetInputRelay(inputRelay);
-        inputRelay.ConnectEvent(OutputEvent.InputEvent, ActivateEffect);
+        inputRelay.ConnectEvent(OutputEvent.InputEvent, InputEffect);
         return this;
     }
 
@@ -38,10 +38,9 @@ public class ShieldOutput : ItemOutput
     {
         throw new NotImplementedException();
     }
-
-    protected override void InternalActivateEffect(int attackRefIndex)
+    protected override void OutputEffect()
     {
-
+        throw new NotImplementedException();
     }
     private void BlockEvent()
     {

@@ -42,7 +42,7 @@ public class Item : MonoBehaviour
     // VFX STUFF
     private float item_y_offset = 0f; // the y distance from item tip and item's main body position
     private float user_y_offset = 0f; // the y distance from the item's main body position to the user's position
-    
+    private float _equipTime;
 
     // attacking
     private Queue<(float, int, AnimationRequest)> _useRequestQueue = new Queue<(float, int, AnimationRequest)>(); // attacks are off loaded to a queue. (Timestamp, attack index, animation request)
@@ -104,10 +104,25 @@ public class Item : MonoBehaviour
     #endregion
     public void Update()
     {
+        // for use requests
         if (_useRequestQueue.Count > 0 && _useRequestQueue.Peek().Item1 <= Time.time)
         {
             (float, int, AnimationRequest) use_req = _useRequestQueue.Dequeue();
-            UseItem(use_req.Item2,use_req.Item3);
+            if (use_req.Item2 != -1)
+                UseAttack(use_req.Item2);
+            if (use_req.Item3 != null)
+                UseAnimation(use_req.Item3);
+        }
+
+        // when equipped from inventory, wait on a cooldown before making the item usable
+        if (_equipTime > 0)
+        {
+            _equipTime -= Time.deltaTime;
+            if (_equipTime <= 0)
+            {
+                _equipTime = 0;
+                SetItemInputRelay(true);
+            }
         }
     }
     #region Aiming
@@ -162,6 +177,7 @@ public class Item : MonoBehaviour
                 (UsableEvent.Used, typeof(Action)),
                 (UsableEvent.ResetStart, typeof(Action)), 
                 (UsableEvent.ResetEnd, typeof(Action)), 
+                (UsableEvent.EffectTriggered, typeof(Action)),
                 (CharacterEvent.LookPos , typeof(Action<Vector2>)), 
             }
         );
@@ -220,7 +236,6 @@ public class Item : MonoBehaviour
     {
         if (animator.GetBool("IsEquipped") == is_equipped)
             return;
-        
         animator.speed = 1/EquipTime;
         if (!is_equipped)
         {
@@ -228,6 +243,10 @@ public class Item : MonoBehaviour
             animator.ResetTrigger("Resetting");
             animator.ResetTrigger("Use");
             SetItemInputRelay(false);
+        }
+        else
+        {
+            _equipTime = ItemBaseData.EquipTime;
         }
         ReadinessScore = _bestReadinessScore;;
         animator.SetBool("IsEquipped", is_equipped); // call set equipped function through editor
@@ -246,7 +265,6 @@ public class Item : MonoBehaviour
         ItemInputRelay.SetEventActive(CharacterEvent.AltEnd,isActive);
     }
     // Methods called by animator to actually equip the item and make it usuable
-    private void AnimEquip(){SetItemInputRelay(true);}
 
     #endregion
 
@@ -286,20 +304,33 @@ public class Item : MonoBehaviour
         AttackTypeData atk_data =  ItemBaseData.AttackObjectController.GetAttack(attackIndex).TypeData;
 
         float atk_obj_time_offset = Time.time + atk_data.AttackDelay;
-        _useRequestQueue.Enqueue((atk_obj_time_offset, attackIndex, animRequest));
+        if (atk_data.AttackDelay > 0)
+        {
+            _useRequestQueue.Enqueue((Time.time, -1, animRequest));
+            _useRequestQueue.Enqueue((atk_obj_time_offset, attackIndex, null));
+        }
+        else
+        {
+            _useRequestQueue.Enqueue((atk_obj_time_offset, attackIndex, animRequest));
+        }
+
+        ItemInputRelay.Invoke(UsableEvent.Used);
 
         for (int i = 0; i < atk_data.ExtraBurst; i++) {
             atk_obj_time_offset += atk_data.BurstDuration/atk_data.ExtraBurst;
             _useRequestQueue.Enqueue((atk_obj_time_offset, attackIndex, animRequest));
         }
-        ItemInputRelay.Invoke(UsableEvent.Used);
+
+        ReadinessScore = 0;
     }
-    public void UseItem(int attackIndex, AnimationRequest animRequest, float readinessScore = -1)
+    private void UseAttack(int attackIndex)
     {
         AttackObject atk_obj =  ItemBaseData.AttackObjectController.GetAttack(attackIndex);
         if (atk_obj == null)
+        {
             return;
-        
+        }
+
         // request targetting data from attack type
         TargetDataRequest targetDataReq = atk_obj.GetTargetDataReq();
         targetDataReq.TargetPos = targetPos;
@@ -312,14 +343,15 @@ public class Item : MonoBehaviour
             itemTip.transform.position,
             new Vector2(0, item_y_offset + user_y_offset)
         );
-
         ItemBaseData.AttackObjectController.StartAttack(attackIndex, get_atk_targ);
-        animRequest.Animate(animator);
-        ItemInputRelay.Invoke(UsableEvent.Used);
         SFXManager.PlaySFXClip(fireSFX, transform.position, 1f);
-
-        if (readinessScore > -1)
-            ReadinessScore = readinessScore;
+        ItemInputRelay.Invoke(UsableEvent.EffectTriggered);
+    }
+    private void UseAnimation(AnimationRequest animRequest)
+    {
+        if (animRequest == null)
+            return;
+        animRequest.Animate(animator);
     }
     #endregion
 
@@ -334,6 +366,7 @@ public class Item : MonoBehaviour
         animator.speed = 1/ResetTime;
         animator.ResetTrigger("Use");
         animator.SetTrigger("Resetting");
+        _useRequestQueue.Clear();
     }
     /// <summary>
     /// Called by the animator after the reset animator finishes

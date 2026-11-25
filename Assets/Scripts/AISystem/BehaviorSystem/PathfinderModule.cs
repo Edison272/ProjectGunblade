@@ -30,6 +30,7 @@ public class PathfinderModule
     private bool _hasLOS; 
     private int _avoidRange = 1;
     public Vector2 MoveDir {get; private set;} = Vector2.zero;
+    private bool _findingPath = false;
 
     // state data
     public bool IsPathing => MoveDir.sqrMagnitude > 0;
@@ -116,14 +117,15 @@ public class PathfinderModule
             _targetPosition = Vector2Int.FloorToInt(targetPos) + MapManager.TILE_CENTER_OFFSET;
             return true;
         }
-        else
+        else if (!_findingPath)
         {
             Debug.LogWarning("Gimmie A*");
-            
+            _findingPath = true;
             bool pathfound = MapManager.FindPath(Vector2Int.FloorToInt(_character.Position), Vector2Int.FloorToInt(targetPos), path);
 
             if (pathfound) {
                 _targetPosition = path.Pop();
+                _findingPath = false;
                 return true;
             }
         }

@@ -18,7 +18,7 @@ public struct BasicAmmoStats
         maxAmmo = 30;
         currAmmo = maxAmmo;
         reloadSpeed = 1f;
-        UseAmmoEvent = new InputEventSelector(UsableEvent.Used);
+        UseAmmoEvent = new InputEventSelector(UsableEvent.EffectTriggered);
         ReloadEvent = new InputEventSelector(UsableEvent.ResetEnd);
     }
 

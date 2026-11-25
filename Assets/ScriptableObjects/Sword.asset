@@ -20,7 +20,7 @@ MonoBehaviour:
   - rid: 6178397756706783337
   AttackObjectController:
     AttackObjects:
-    - rid: 7800869221090459648
+    - rid: 946522689814397169
     _attackObjectMap:
     - attackObjectIndex: 0
       OnHitIndexes: 
@@ -43,7 +43,7 @@ MonoBehaviour:
           PlacementDirection: 5
           DisplayTest: 0
         <stackCounterType>k__BackingField: 2
-        cooldownTime: 0.5
+        cooldownTime: 1
         StartCooldownEvent:
           InputEventType: 3
           _globalInput: 0
@@ -56,6 +56,34 @@ MonoBehaviour:
           _interfaceInput: 0
           _characterInput: 0
           _usableInput: 3
+    - rid: 946522689814397169
+      type: {class: Linecast, ns: , asm: Assembly-CSharp}
+      data:
+        instance: {fileID: 8164560864404493835, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        _instance: {fileID: 4857281296658957558, guid: ce0752e27ab2d304387cf7f57e9c0806, type: 3}
+        targetFaction: 0
+        atk_stats:
+          damage: 10
+          knockback_amt: 38.5
+          effect_time: 0
+          slow_amt: 0
+          total_dot_damage: 0
+          total_dot_ticks: 0
+        vfx_impact: {fileID: 0}
+        _typeData:
+          Count: 10
+          Angle: 60
+          Even: 1
+          Range: 3
+          size: 1
+          AttackDelay: 0.3
+          ExtraBurst: 1
+          BurstDuration: 0
+          RecursionLimit: 1
+          Pierce: 0
+          Ricochet: 0
+          range_drift: 0
+          render_duration: 0.1
     - rid: 6178397756706783337
       type: {class: GunOutput, ns: , asm: Assembly-CSharp}
       data:
@@ -63,11 +91,10 @@ MonoBehaviour:
         attackObjectRefs: 00000000
         stackCounterRefs: 00000000
         _animationRequest:
+          SetTrigger: 1
           AnimParameterName: Use
           AnimationClip: Swing
-          AnimParameterType: 9
-          <_animParamValue>k__BackingField: 0
-          AnimSpeed: 0.3
+          AnimSpeed: 0.5
         OutputEvent:
           InputEventType: 2
           _globalInput: 0
@@ -79,31 +106,3 @@ MonoBehaviour:
         recoil_increment: 0.05
         recoil_multiplier: 0.5
         recoil_max: 1
-    - rid: 7800869221090459648
-      type: {class: Linecast, ns: , asm: Assembly-CSharp}
-      data:
-        instance: {fileID: 8164560864404493835, guid: 999f097eff6003c45b7391f8684aa0fa, type: 3}
-        _instance: {fileID: 4857281296658957558, guid: 999f097eff6003c45b7391f8684aa0fa, type: 3}
-        targetFaction: 0
-        atk_stats:
-          damage: 10
-          knockback_amt: 6.4
-          effect_time: 0
-          slow_amt: 0
-          total_dot_damage: 0
-          total_dot_ticks: 0
-        vfx_impact: {fileID: 7731478309546684184, guid: 778b8bedb902c5541859e85450f7fc02, type: 3}
-        _typeData:
-          Count: 3
-          Angle: 40
-          Even: 0
-          Range: 5
-          size: 1
-          AttackDelay: 0
-          ExtraBurst: 0
-          BurstDuration: 0.3
-          RecursionLimit: 3
-          Pierce: 0
-          Ricochet: 0
-          range_drift: 0.362
-          render_duration: 0.15

@@ -46,4 +46,5 @@ public enum UsableEvent
     Used,
     ResetStart, 
     ResetEnd, 
+    EffectTriggered,
 }
